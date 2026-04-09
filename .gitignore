@@ -48,7 +48,6 @@ next-env.d.ts
 
 # installed packages
 node_modules/
-package-lock.json
 
 # Playwright
 /test-results/
