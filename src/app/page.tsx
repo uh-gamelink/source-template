@@ -1,19 +1,26 @@
-import { Col, Container, Image, Row } from 'react-bootstrap';
+import { Container } from 'react-bootstrap';
 
-/** The Home page. */
 const Home = () => (
   <main>
-    <Container id="landing-page" fluid className="py-3">
-      <Row className="align-middle text-center">
-        <Col xs={4}>
-          <Image src="next.svg" width="150px" alt="" />
-        </Col>
+    <Container className="py-3">
+      <h1>
+        Welcome to UH
+        <br />
+        GameLink
+      </h1>
 
-        <Col xs={8} className="d-flex flex-column justify-content-center">
-          <h1>Welcome to this template</h1>
-          <p>Now get to work and modify this app!</p>
-        </Col>
-      </Row>
+      <p>
+        UH GameLink is a web application designed to help University of Hawai&apos;i students
+        connect with other students through video games. Many students play games casually or
+        competitively, but it can be difficult to find other UH students with similar interests,
+        schedules, or favorite games. This project aims to make it easier for students to meet new
+        people, discover gaming communities, and build connections through shared games.
+      </p>
+
+      <p>
+        Feel free to explore the site&apos;s library, find other players, and link up with
+        community!
+      </p>
     </Container>
   </main>
 );
