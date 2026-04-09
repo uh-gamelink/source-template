@@ -45,7 +45,6 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
   ],
   pages: {
     signIn: '/auth/signin',
-    signOut: '/auth/signout',
   },
   callbacks: {
     session({ session, token }) {
