@@ -1,8 +1,19 @@
-import { PrismaClient, Role, Condition } from '@prisma/client';
+import "dotenv/config";
+console.log("DATABASE_URL:", process.env.DATABASE_URL);
+import { PrismaClient, Role } from '@prisma/client';
 import { hash } from 'bcrypt';
 import * as config from '../config/settings.development.json';
 
-const prisma = new PrismaClient();
+
+import { PrismaNeon } from '@prisma/adapter-neon';
+
+const adapter = new PrismaNeon({
+  connectionString: process.env.DATABASE_URL!,
+});
+
+const prisma = new PrismaClient({
+  adapter,
+});
 
 async function main() {
   console.log('Seeding the database');
@@ -24,7 +35,7 @@ async function main() {
     // console.log(`  Created user: ${user.email} with role: ${user.role}`);
   });
   for (const data of config.defaultData) {
-    const condition = data.condition as Condition || Condition.good;
+    const condition = data.condition || 'good';
     console.log(`  Adding stuff: ${JSON.stringify(data)}`);
     await prisma.stuff.upsert({
       where: { id: config.defaultData.indexOf(data) + 1 },
