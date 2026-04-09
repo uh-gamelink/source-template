@@ -1,4 +1,22 @@
+import Image from 'next/image';
 import { Container } from 'react-bootstrap';
+
+const games = [
+  '/games/apex-legends.jpg',
+  '/games/counter-strike-2.png',
+  '/games/fortnite.png',
+  '/games/genshin-impact.png',
+  '/games/league-of-legends.png',
+  '/games/minecraft.png',
+  '/games/overwatch-2.jpg',
+  '/games/rocket-league.png',
+  '/games/stardew-valley.png',
+  '/games/super-smash-bros.png',
+  '/games/valorant.png',
+];
+
+// duplicate the list so the scroll loops more smoothly
+const scrollingGames = [...games, ...games];
 
 const Home = () => (
   <main>
@@ -21,6 +39,22 @@ const Home = () => (
         Feel free to explore the site&apos;s library, find other players, and link up with
         community!
       </p>
+
+      <div className="game-belt">
+        <div className="game-track">
+          {scrollingGames.map((src, index) => (
+            <div className="game-item" key={`${src}-${index}`}>
+              <Image
+                src={src}
+                alt={`Game cover ${index + 1}`}
+                width={180}
+                height={240}
+                className="game-image"
+              />
+            </div>
+          ))}
+        </div>
+      </div>
     </Container>
   </main>
 );

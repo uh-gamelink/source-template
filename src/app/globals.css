@@ -12,3 +12,36 @@ body {
   display: flex;
   flex-direction: column;
 }
+
+.game-belt {
+  overflow: hidden;
+  width: 100%;
+  margin-top: 2rem;
+  padding: 1rem 0;
+}
+
+.game-track {
+  display: flex;
+  width: max-content;
+  gap: 1rem;
+  animation: scroll-games 50s linear infinite;
+}
+
+.game-item {
+  flex: 0 0 auto;
+}
+
+.game-image {
+  border-radius: 12px;
+  object-fit: cover;
+  height: auto;
+}
+
+@keyframes scroll-games {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
