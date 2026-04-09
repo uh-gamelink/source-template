@@ -2,10 +2,18 @@ import "dotenv/config";
 console.log("DATABASE_URL:", process.env.DATABASE_URL);
 
 import { PrismaClient, Role, Condition } from "@prisma/client";
+import { PrismaPg } from "@prisma/adapter-pg";
 import { hash } from "bcrypt";
 import * as config from "../config/settings.development.json";
 
-const prisma = new PrismaClient();
+const connectionString = process.env.DATABASE_URL;
+
+if (!connectionString) {
+  throw new Error("DATABASE_URL is not set");
+}
+
+const adapter = new PrismaPg({ connectionString });
+const prisma = new PrismaClient({ adapter });
 
 async function main() {
   console.log("Seeding the database");
@@ -29,12 +37,12 @@ async function main() {
     });
   }
 
-  for (const data of config.defaultData) {
+  for (const [index, data] of config.defaultData.entries()) {
     const condition = (data.condition as Condition) || Condition.good;
     console.log(`  Adding stuff: ${JSON.stringify(data)}`);
 
     await prisma.stuff.upsert({
-      where: { id: config.defaultData.indexOf(data) + 1 },
+      where: { id: index + 1 },
       update: {},
       create: {
         name: data.name,
