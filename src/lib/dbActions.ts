@@ -1,76 +1,84 @@
 'use server';
 
-import { Condition } from '@prisma/client';
-import { Stuff } from '@prisma/client';
 import { hash } from 'bcrypt';
 import { redirect } from 'next/navigation';
 import { prisma } from './prisma';
 
 /**
- * Adds a new stuff to the database.
- * @param stuff, an object with the following properties: name, quantity, owner, condition.
+ * Admin-only: adds a new game to the catalog.
  */
-export async function addStuff(stuff: { name: string; quantity: number; owner: string; condition: string }) {
-  // console.log(`addStuff data: ${JSON.stringify(stuff, null, 2)}`);
-  let condition: Condition = 'good';
-  if (stuff.condition === 'poor') {
-    condition = 'poor';
-  } else if (stuff.condition === 'excellent') {
-    condition = 'excellent';
-  } else {
-    condition = 'fair';
-  }
-  await prisma.stuff.create({
+export async function addGameAdmin(game: {
+  title: string;
+  developer: string;
+  platform?: string;
+  tags: string;
+  description?: string;
+  imageUrl?: string;
+}) {
+  await prisma.game.create({
     data: {
-      name: stuff.name,
-      quantity: stuff.quantity,
-      owner: stuff.owner,
-      condition,
+      title: game.title.trim(),
+      developer: game.developer.trim(),
+      platform: game.platform?.trim() || null,
+      tags: game.tags
+        .split(',')
+        .map((tag) => tag.trim())
+        .filter(Boolean),
+      description: game.description?.trim() || null,
+      imageUrl: game.imageUrl?.trim() || null,
     },
   });
-  // After adding, redirect to the list page
-  redirect('/list');
+
+  redirect('/admin/games');
 }
 
 /**
- * Edits an existing stuff in the database.
- * @param stuff, an object with the following properties: id, name, quantity, owner, condition.
+ * Admin-only: edits an existing game in the catalog.
  */
-export async function editStuff(stuff: Stuff) {
-  // console.log(`editStuff data: ${JSON.stringify(stuff, null, 2)}`);
-  await prisma.stuff.update({
-    where: { id: stuff.id },
+export async function editGameAdmin(game: {
+  id: number;
+  title: string;
+  developer: string;
+  platform?: string;
+  tags: string;
+  description?: string;
+  imageUrl?: string;
+}) {
+  await prisma.game.update({
+    where: { id: game.id },
     data: {
-      name: stuff.name,
-      quantity: stuff.quantity,
-      owner: stuff.owner,
-      condition: stuff.condition,
+      title: game.title.trim(),
+      developer: game.developer.trim(),
+      platform: game.platform?.trim() || null,
+      tags: game.tags
+        .split(',')
+        .map((tag) => tag.trim())
+        .filter(Boolean),
+      description: game.description?.trim() || null,
+      imageUrl: game.imageUrl?.trim() || null,
     },
   });
-  // After updating, redirect to the list page
-  redirect('/list');
+
+  redirect('/admin/games');
 }
 
 /**
- * Deletes an existing stuff from the database.
- * @param id, the id of the stuff to delete.
+ * Admin-only: deletes a game from the catalog.
  */
-export async function deleteStuff(id: number) {
-  // console.log(`deleteStuff id: ${id}`);
-  await prisma.stuff.delete({
+export async function deleteGameAdmin(id: number) {
+  await prisma.game.delete({
     where: { id },
   });
-  // After deleting, redirect to the list page
-  redirect('/list');
+
+  redirect('/admin/games');
 }
 
 /**
  * Creates a new user in the database.
- * @param credentials, an object with the following properties: email, password.
  */
 export async function createUser(credentials: { email: string; password: string }) {
-  // console.log(`createUser data: ${JSON.stringify(credentials, null, 2)}`);
   const password = await hash(credentials.password, 10);
+
   await prisma.user.create({
     data: {
       email: credentials.email,
@@ -81,11 +89,10 @@ export async function createUser(credentials: { email: string; password: string 
 
 /**
  * Changes the password of an existing user in the database.
- * @param credentials, an object with the following properties: email, password.
  */
 export async function changePassword(credentials: { email: string; password: string }) {
-  // console.log(`changePassword data: ${JSON.stringify(credentials, null, 2)}`);
   const password = await hash(credentials.password, 10);
+
   await prisma.user.update({
     where: { email: credentials.email },
     data: {

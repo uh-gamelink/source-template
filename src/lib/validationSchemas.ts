@@ -1,16 +1,20 @@
 import * as Yup from 'yup';
 
-export const AddStuffSchema = Yup.object({
-  name: Yup.string().required(),
-  quantity: Yup.number().positive().required(),
-  condition: Yup.string().oneOf(['excellent', 'good', 'fair', 'poor']).required(),
-  owner: Yup.string().required(),
+export const AddGameAdminSchema = Yup.object({
+  title: Yup.string().required('Title is required'),
+  developer: Yup.string().required('Developer is required'),
+  platform: Yup.string().nullable(),
+  tags: Yup.string().required('Tags are required'),
+  description: Yup.string().nullable(),
+  imageUrl: Yup.string().nullable(),
 });
 
-export const EditStuffSchema = Yup.object({
+export const EditGameAdminSchema = Yup.object({
   id: Yup.number().required(),
-  name: Yup.string().required(),
-  quantity: Yup.number().positive().required(),
-  condition: Yup.string().oneOf(['excellent', 'good', 'fair', 'poor']).required(),
-  owner: Yup.string().required(),
+  title: Yup.string().required('Title is required'),
+  developer: Yup.string().required('Developer is required'),
+  platform: Yup.string().nullable(),
+  tags: Yup.string().required('Tags are required'),
+  description: Yup.string().nullable(),
+  imageUrl: Yup.string().nullable(),
 });
