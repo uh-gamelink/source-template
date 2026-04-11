@@ -4,6 +4,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 enum Role {
@@ -28,10 +29,10 @@ model Game {
   imageUrl    String?
 }
 
-model Players {
-  id          Int       @id @default(autoincrement())
-  username    String  @unique
-  imageUrl    String?
-  game        string
-  rank        String
+model Player {
+  id       Int     @id @default(autoincrement())
+  username String  @unique
+  imageUrl String?
+  game     String
+  rank     String
 }
