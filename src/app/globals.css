@@ -125,3 +125,8 @@ body {
   margin-top: 2rem;
   padding-top: 1rem;
 }
+
+.custom-navbar .dropdown-menu {
+  background-color: rgb(21, 9, 102);
+  border-color: rgb(96, 145, 170);
+}

@@ -71,7 +71,6 @@ const NavBar: React.FC = () => {
               <NavDropdown
                 id="login-dropdown"
                 title="Login"
-                menuVariant="dark"
               >
                 <NavDropdown.Item id="login-dropdown-sign-in" href="/auth/signin">
                   <PersonFill className="me-2" />
