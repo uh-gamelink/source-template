@@ -14,9 +14,9 @@ const CommunityPage = async () => {
   return (
     <Container className="py-4">
       <h1 className=" mb-3">Community Players</h1>
-      <Row className="g-3">
+      <Row className="g-5">
         {players.map((player) => (
-           <Col key={player.id} xs={12} md={6} lg={4}>
+          <Col key={player.id} xs={12} md={6} lg={4}>
             <PlayerCard player={player} />
           </Col>
         ))}
