@@ -4,7 +4,7 @@ import { Card, Image } from 'react-bootstrap';
 
 type Player = {
   username: string;
-  imageUrl?: string;
+  imageUrl?: string | null;
   game: string;
   rank: string;
 };
