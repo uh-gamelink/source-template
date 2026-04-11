@@ -22,9 +22,7 @@ const Home = () => (
   <main>
     <Container className="py-3 mt-5">
       <h1>
-        Welcome to 
-        <br />
-        UH GameLink
+        Welcome to UH GameLink
       </h1>
       <br />
       <p>

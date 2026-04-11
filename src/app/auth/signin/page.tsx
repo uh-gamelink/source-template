@@ -34,11 +34,11 @@ const SignIn = () => {
                     <input name="email" type="text" className="form-control" />
                   </Form.Group>
                   <Form.Group>
-                    <Form.Label>Password</Form.Label>
+                    <Form.Label className="pt-2">Password</Form.Label>
                     <input name="password" type="password" className="form-control" />
                   </Form.Group>
-                  <Button type="submit" className="mt-3">
-                    Signin
+                  <Button type="submit" className="mt-3 custom-reg-btn">
+                    Sign in
                   </Button>
                 </Form>
               </Card.Body>

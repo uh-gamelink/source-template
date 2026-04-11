@@ -148,6 +148,28 @@ body {
 
 .custom-card-body .form-control {
   background-color: transparent !important;   /* makes it transparent */
-  border: 1px solid rgba(98, 149, 156, 0.669)!important;       /* light blue border */
-  color: #b0e0e6 !important;                  /* text color */
+  border: 1px solid rgba(98, 149, 156, 0.526)!important;       /* light blue border */
+  color: #b0e0e6b8 !important;                  /* text color */
+}
+
+.custom-reg-btn {
+  background-color: #8ad5dfde !important; /* light blue */
+  border: none !important;
+  color: rgb(21, 9, 102) !important; /* your dark background color */
+  font-weight: 500;
+  border-radius: 8px;
+}
+
+/* Hover effect */
+.custom-reg-btn:hover {
+  background-color: #87cfeba3 !important;
+  color: rgb(21, 9, 102) !important;
+}
+
+.custom-reset-btn {
+  background-color:  transparent !important; /* light blue */
+  border-color: #b0e0e6;
+  color: #b0e0e6 ; 
+  font-weight: 500;
+  border-radius: 8px;
 }
