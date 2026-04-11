@@ -5,6 +5,8 @@ body {
   height: 100%;
   padding: 0;
   margin: 0;
+  color: rgb(126, 181, 208);
+  background-color: rgb(21, 9, 102);
 }
 .wrapper {
   box-sizing: border-box;
@@ -44,4 +46,124 @@ body {
   to {
     transform: translateX(-50%);
   }
+}
+
+
+#login-dropdown,
+#login-dropdown-sign-in,
+#login-dropdown-sign-out,
+#login-dropdown-sign-up {
+  color: rgb(126, 181, 208) !important;
+}
+
+/* Hover effect */
+#login-dropdown-sign-in:hover,
+#login-dropdown-sign-out:hover,
+#login-dropdown-sign-up:hover {
+  color: rgb(126, 181, 208) !important;
+  background-color: transparent !important;
+}
+
+/* ALL dropdown items inside navbar */
+.navbar .dropdown-item,
+.navbar .dropdown-toggle {
+  color: rgb(126, 181, 208) !important;
+}
+
+/* Hover */
+.navbar .dropdown-item:hover {
+  color: rgb(126, 181, 208) !important;
+  background-color: transparent !important;
+}
+
+/* Dropdown title (Login / user email) */
+#login-dropdown {
+  color: rgb(126, 181, 208) !important;
+}
+
+/* Dropdown items (Sign in / Sign out / Sign up) */
+#login-dropdown-sign-in,
+#login-dropdown-sign-out,
+#login-dropdown-sign-up,
+#login-dropdown-sign-in:hover,
+#login-dropdown-sign-out:hover,
+#login-dropdown-sign-up:hover {
+  color: rgb(126, 181, 208) !important;
+}
+
+
+/* Navbar */
+.custom-navbar {
+  background-color: rgb(21, 9, 102);
+  border-bottom: 2px solid #b0e0e65d;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+
+.custom-brand,
+.custom-brand span,
+.custom-navbar .nav-link,
+.custom-navbar .navbar-brand,
+.custom-navbar .dropdown-toggle {
+  color: rgb(126, 181, 208) !important;
+}
+
+.custom-navbar .nav-link:hover,
+.custom-navbar .navbar-brand:hover,
+.custom-navbar .dropdown-toggle:hover {
+  color: rgb(126, 181, 208) !important;
+}
+
+/* Active nav link */
+.custom-navbar .nav-link.active {
+  color: rgb(96, 145, 170) !important;
+  font-weight: 500;
+}
+
+.footer {
+  border-top: 2px solid #b0e0e67d;
+  margin-top: 2rem;
+  padding-top: 1rem;
+}
+
+.custom-navbar .dropdown-menu {
+  background-color: rgb(21, 9, 102);
+  border-color: rgb(96, 145, 170);
+}
+
+ .custom-card-body{
+  background: rgba(31, 18, 125, 0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(176, 224, 230, 0.4);
+  border-radius: 12px;
+  color: #b0e0e6;
+}
+
+
+.custom-card-body .form-control {
+  background-color: transparent !important;   /* makes it transparent */
+  border: 1px solid rgba(98, 149, 156, 0.526)!important;       /* light blue border */
+  color: #b0e0e6b8 !important;                  /* text color */
+}
+
+.custom-reg-btn {
+  background-color: #8ad5dfde !important; /* light blue */
+  border: none !important;
+  color: rgb(21, 9, 102) !important; /* your dark background color */
+  font-weight: 500;
+  border-radius: 8px;
+}
+
+/* Hover effect */
+.custom-reg-btn:hover {
+  background-color: #87cfeba3 !important;
+  color: rgb(21, 9, 102) !important;
+}
+
+.custom-reset-btn {
+  background-color:  transparent !important; /* light blue */
+  border-color: #b0e0e6;
+  color: #b0e0e6 ; 
+  font-weight: 500;
+  border-radius: 8px;
 }

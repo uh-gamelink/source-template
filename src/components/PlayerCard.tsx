@@ -1,6 +1,6 @@
 'use client';
 
-import { Card, Image } from 'react-bootstrap';
+import { Card, Container, Image } from 'react-bootstrap';
 import Link from 'next/link';
 
 type Player = {
@@ -11,28 +11,34 @@ type Player = {
 };
 
 const PlayerCard = ({ player }: { player: Player }) => (
-  <Card className="w-100 h-100">
-    
-    <Card.Header className="text-center">
-      <Image
-        src={player.imageUrl || '/default-player.png'}
-        width={200}
-        height={200}
-        rounded
-        alt={player.username}
-        style={{ objectFit: 'cover', borderRadius: '12px' }}
-      />
-    </Card.Header>
+<Card className="h-100 custom-card-body" style={{ width: '250px' }}>
+  <Container className="ms-2">
+  <Card.Body className="p-3">
+    <Card.Title className="pb-2">{player.username}</Card.Title>
+    <Image
+      src={player.imageUrl || '/default-player.png'}
+      width={175}
+      height={175}
+      rounded
+      alt={player.username}
+      style={{
+        objectFit: 'cover',
+        borderRadius: '12px',
+        border: '4px solid #b0e0e682',
+      }}
+      className="mb-3"
+    />
 
-    <Card.Body className="text-center">
-      <Card.Title>{player.username}</Card.Title>
+    <div>Game: {player.game}</div>
+    <div>Rank: {player.rank}</div>
 
-      <div>Game: {player.game}</div>
-      <div>Rank: {player.rank}</div>
-      <Link href="/auth/signin">Connect</Link>
-    </Card.Body>
+    <a className="pb-2" href="/auth/signin" className="d-block mt-2">
+      Connect
+    </a>
 
-  </Card>
+  </Card.Body>
+  </Container>
+</Card>
 );
 
 export default PlayerCard;
