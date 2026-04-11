@@ -40,6 +40,12 @@ const NavBar: React.FC = () => {
             <Nav.Link as={Link} href="/community" active={pathName === "/community"}>
               Community
             </Nav.Link>
+            
+            {session && (
+              <Nav.Link as={Link} href="/profile" active={pathName === "/profile"}>
+                Profile
+              </Nav.Link>
+            )}
           </Nav>
 
           <Nav>
