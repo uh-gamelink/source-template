@@ -10,23 +10,23 @@ type Player = {
 };
 
 const PlayerCard = ({ player }: { player: Player }) => (
-  <Card className="h-100 text-center">
+  <Card style={{ width: '250px'}}>
     <Card.Header>
       <Image
         src={player.imageUrl || '/default-player.png'}
-        width={100}
-        height={100}
-        roundedCircle
+        width={200}
+        height={200}
+        rounded
         alt={player.username}
-      />
+        className="card-body d-flex justify-content-center align-items-center">
+      </Image>
     </Card.Header>
 
     <Card.Body>
       <Card.Title>{player.username}</Card.Title>
       <Card.Text>
-        {player.game}
-        <br />
-        {player.rank}
+        <div>Game: {player.game}</div>
+        <div>Rank: {player.rank}</div>
       </Card.Text>
     </Card.Body>
   </Card>
