@@ -1,6 +1,5 @@
 'use client';
 
-// import { register } from 'module';
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation'; // Import the router
 import { Container, Row, Col, Form, Image, Card, Button } from 'react-bootstrap';
@@ -52,6 +51,7 @@ const CreateProfile = () => {
                             rows={3} 
                             placeholder="Share about yourself" 
                             className="text-wrap"
+                            defaultValue={""}
                             required
                           />
                       </Form.Group>
@@ -64,6 +64,7 @@ const CreateProfile = () => {
                           rows={3} 
                           placeholder="Favorite pastimes" 
                           className="text-wrap"
+                          defaultValue={""}
                           required
                         />
                       </Form.Group>
