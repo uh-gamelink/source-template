@@ -24,7 +24,7 @@ const NavBar: React.FC = () => {
           className="d-flex align-items-center gap-2 custom-brand"
         >
           <GiGamepad size={32} />
-          <span>UH GameLink</span>
+          <span><strong> UH GameLink</strong> </span>
         </Navbar.Brand>
 
         <Navbar.Toggle aria-controls="main-navbar-nav" className="custom-navbar-toggle" />
