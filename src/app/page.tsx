@@ -20,11 +20,13 @@ const scrollingGames = [...games, ...games];
 
 const Home = () => (
   <main>
-    <Container className="py-3 mt-5">
+    <Container className="py-1 mt-5">
       <h1>
-        Welcome to UH GameLink
+        Welcome to
+        <br />
+        UH GameLink
       </h1>
-      <br />
+      <div className="shortline pb-4">____________________________</div>
       <p>
         UH GameLink is a web application designed to help University of Hawai&apos;i students
         connect with other students through video games. Many students play games casually or

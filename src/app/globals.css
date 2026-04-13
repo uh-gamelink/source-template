@@ -173,3 +173,13 @@ body {
   font-weight: 500;
   border-radius: 8px;
 }
+
+.shortline {
+  color:#b0e0e664; 
+}
+
+h1{
+  font-size: 40px;
+  font-family: 'Impact', sans-serif;
+  letter-spacing: 0.05rem;
+}
