@@ -39,7 +39,6 @@ const Home = () => (
         Feel free to explore the site&apos;s library, find other players, and link up with
         community!
       </p>
-      <br />
       <div className="game-belt">
         <div className="game-track">
           {scrollingGames.map((src, index) => (

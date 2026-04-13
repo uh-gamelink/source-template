@@ -49,12 +49,21 @@ body {
   }
 }
 
+.custom-navbar-toggle {
+  border: 1px solid rgb(65, 132, 255) !important;
+}
+
+.custom-navbar-toggle .navbar-toggler-icon,
+.custom-navbar .navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='rgb(65,132,255)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E") !important;
+}
 
 #login-dropdown,
 #login-dropdown-sign-in,
 #login-dropdown-sign-out,
 #login-dropdown-sign-up {
   color: rgb(65, 132, 255);
+  border-color:rgb(65, 132, 255) ;
 }
 
 /* Hover effect */
@@ -69,6 +78,9 @@ body {
 .navbar .dropdown-item,
 .navbar .dropdown-toggle {
   color: rgb(65, 132, 255);
+}
+.custom-navbar .navbar-toggler {
+  border-color: rgb(65, 132, 255); /* optional: border matches */
 }
 
 /* Hover */
@@ -105,10 +117,7 @@ body {
 .custom-brand span,
 .custom-navbar .nav-link,
 .custom-navbar .navbar-brand,
-.custom-navbar .dropdown-toggle {
-  color: rgb(65, 132, 255);
-}
-
+.custom-navbar .dropdown-toggle,
 .custom-navbar .nav-link:hover,
 .custom-navbar .navbar-brand:hover,
 .custom-navbar .dropdown-toggle:hover {
@@ -129,7 +138,7 @@ body {
 
 .custom-navbar .dropdown-menu {
   background-color: rgb(21, 9, 102);
-  border-color: rgb(96, 145, 170);
+  border-color: rgb(92, 148, 252);
 }
 
  .custom-card-body{
@@ -137,14 +146,15 @@ body {
   backdrop-filter: blur(10px);
   border: 1px solid rgb(65, 132, 255, 0.4);
   border-radius: 12px;
-  color: #b0e0e6;
+  color: rgb(92, 148, 252);
 }
 
  .custom-card-body{
   background: rgba(31, 18, 125, 0.5);
   border: 3px solid rgba(65, 132, 255, 0.505);
   border-radius: 12px;
-  color: #b0e0e6;
+  color:rgb(92, 148, 252);
+  font-weight: 530;
 }
 
 .custom-card-body .form-control {
