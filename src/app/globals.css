@@ -9,6 +9,14 @@ body {
   color: rgb(65, 132, 255);
   background-color: rgb(21, 9, 102);
 }
+
+h1{
+  font-size: 50px;
+  font-family: 'Impact', sans-serif;
+  letter-spacing: 0.5px;
+  font-weight: 50;
+}
+
 .wrapper {
   box-sizing: border-box;
   min-height: 100%;
@@ -66,7 +74,6 @@ body {
   border-color:rgb(65, 132, 255) ;
 }
 
-/* Hover effect */
 #login-dropdown-sign-in:hover,
 #login-dropdown-sign-out:hover,
 #login-dropdown-sign-up:hover {
@@ -74,27 +81,17 @@ body {
   background-color: transparent;
 }
 
-/* ALL dropdown items inside navbar */
 .navbar .dropdown-item,
-.navbar .dropdown-toggle {
-  color: rgb(65, 132, 255);
-}
-.custom-navbar .navbar-toggler {
-  border-color: rgb(65, 132, 255); /* optional: border matches */
+.navbar .dropdown-toggle,
+.custom-navbar .navbar-toggler{ 
+  border-color: rgb(65, 132, 255);
 }
 
-/* Hover */
 .navbar .dropdown-item:hover {
   color: rgb(65, 132, 255);
   background-color: transparent;
 }
 
-/* Dropdown title (Login / user email) */
-#login-dropdown {
-  color: rgb(65, 132, 255);
-}
-
-/* Dropdown items (Sign in / Sign out / Sign up) */
 #login-dropdown-sign-in,
 #login-dropdown-sign-out,
 #login-dropdown-sign-up,
@@ -104,8 +101,6 @@ body {
   color: rgb(65, 132, 255);
 }
 
-
-/* Navbar */
 .custom-navbar {
   background-color: rgb(21, 9, 102);
   border-bottom: 2px solid rgba(65, 132, 255, 0.4);
@@ -124,7 +119,6 @@ body {
   color: rgb(65, 132, 255);
 }
 
-
 .custom-navbar .nav-link.active {
   color: rgba(65, 132, 255, 0.763);
   font-weight: 500;
@@ -142,43 +136,34 @@ body {
 }
 
  .custom-card-body{
-  background: rgba(31, 18, 125, 0.8);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgb(65, 132, 255, 0.4);
-  border-radius: 12px;
-  color: rgb(92, 148, 252);
-}
-
- .custom-card-body{
   background: rgba(31, 18, 125, 0.5);
-  border: 3px solid rgba(65, 132, 255, 0.505);
+  border: 2px solid rgba(65, 132, 255, 0.505);
   border-radius: 12px;
   color:rgb(92, 148, 252);
   font-weight: 530;
 }
 
 .custom-card-body .form-control {
-  background-color: transparent !important;   /* makes it transparent */
-  border: 1px solid rgb(65, 132, 255, 0.526)!important;       /* light blue border */
-  color:rgb(65, 132, 255) !important;                  /* text color */
+  background-color: transparent !important;  
+  border: 1px solid rgb(65, 132, 255, 0.526)!important;   
+  color:rgb(65, 132, 255) !important;                
 }
 
 .custom-reg-btn {
-  background-color: rgb(65, 132, 255) !important; /* light blue */
+  background-color: rgb(65, 132, 255) !important; 
   border: none !important;
-  color: rgb(21, 9, 102) !important; /* your dark background color */
+  color: rgb(21, 9, 102) !important; 
   font-weight: 500;
   border-radius: 8px;
 }
 
-/* Hover effect */
 .custom-reg-btn:hover {
   background-color: #87cfeba3 !important;
   color: rgb(21, 9, 102) !important;
 }
 
 .custom-reset-btn {
-  background-color:  transparent !important; /* light blue */
+  background-color:  transparent !important;
   border-color: rgb(65, 132, 255);
   color: rgb(65, 132, 255);
   font-weight: 500;
@@ -187,11 +172,4 @@ body {
 
 .shortline {
   color:rgb(65, 132, 255, 0.385);
-}
-
-h1{
-  font-size: 50px;
-  font-family: 'Impact', sans-serif;
-  letter-spacing: 0.5px;
-  font-weight: 50;
 }
