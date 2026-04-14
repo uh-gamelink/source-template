@@ -20,12 +20,12 @@ test('test access to admin page', async ({ getUserPage }) => {
   ).toBeVisible({ timeout: 5000 });
 
   await expect(
-    adminPage.getByRole('link', { name: 'Library' })
+    adminPage.getByRole('link', { name: 'Game Library' })  // Changed from 'Library' to 'GameLibrary'
   ).toBeVisible({ timeout: 5000 });
 
   await adminPage.getByRole('link', { name: 'Community' }).click();
   await expect(adminPage).toHaveURL(/\/community$/);
 
-  await adminPage.getByRole('link', { name: 'Library' }).click();
-  await expect(adminPage).toHaveURL(/\/library$/);
+  await adminPage.getByRole('link', { name: 'Game Library' }).click();  // Changed from 'Library' to 'GameLibrary'
+  await expect(adminPage).toHaveURL(/\/gamelibrary$/);  // Changed from '/library' to '/gamelibrary'
 });

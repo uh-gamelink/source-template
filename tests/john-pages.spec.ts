@@ -20,12 +20,12 @@ test('can authenticate a specific user', async ({ getUserPage }) => {
   ).toBeVisible({ timeout: 5000 });
 
   await expect(
-    customUserPage.getByRole('link', { name: 'Library' })
+    customUserPage.getByRole('link', { name: 'Game Library' })  // Changed from 'Library' to 'GameLibrary'
   ).toBeVisible({ timeout: 5000 });
 
   await customUserPage.getByRole('link', { name: 'Community' }).click();
   await expect(customUserPage).toHaveURL(/\/community$/);
 
-  await customUserPage.getByRole('link', { name: 'Library' }).click();
-  await expect(customUserPage).toHaveURL(/\/library$/);
+  await customUserPage.getByRole('link', { name: 'Game Library' }).click();  // Changed from 'Library' to 'GameLibrary'
+  await expect(customUserPage).toHaveURL(/\/gamelibrary$/);  // Changed from '/library' to '/gamelibrary'
 });

@@ -106,6 +106,7 @@ const defaultGames = [
   },
 ];
 
+
 /**
  * Seed profile data keyed by user email.
  * The email must match one of the accounts in config.defaultAccounts.
@@ -130,6 +131,45 @@ const defaultProfiles: Record<
     profilePicture: "/default-profile.png",
   },
 };
+
+const playerList = [
+  {
+    username: "ZeBass",
+    imageUrl: "https://pbs.twimg.com/profile_images/1278566466082574336/-kjvFHAS_400x400.jpg",
+    game: "Overwatch 2",
+    rank: "Gold",
+  },
+  {
+    username: "Mathedealer1",
+    imageUrl: "https://pbs.twimg.com/profile_images/1448767886147796992/ajwp5OkK_400x400.jpg",
+    game: "Valorant",
+    rank: "Platinum",
+  },
+  {
+    username: "koldqt",
+    imageUrl: "https://pbs.twimg.com/profile_images/2041633459760963584/1D_5n0o3_400x400.jpg",
+    game: "Valorant",
+    rank: "Gold",
+  },
+  {
+    username: "Tesidn",
+    imageUrl: "https://pbs.twimg.com/profile_images/1516725783863062531/BxrqeNqA_400x400.jpg",
+    game: "Valorant",
+    rank: "Silver",
+  },
+  {
+    username: "bazingahi50",
+    imageUrl: "https://media.licdn.com/dms/image/v2/C4D03AQGmJwN3A7jqoQ/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1606074819411?e=2147483647&v=beta&t=m0J9ATpipaJ2iMhTTnj4nqCnL_qqvhKRsQ5hJHiXE08",
+    game: "Valorant",
+    rank: "Silver",
+  },
+  {
+    username: "bullzye",
+    imageUrl: "/players/player5.png",
+    game: "Counter-Strike 2",
+    rank: "Gold Nova",
+  },
+];
 
 async function main() {
   console.log("Seeding the database");
@@ -196,6 +236,24 @@ async function main() {
         tags: game.tags,
         description: game.description,
         imageUrl: game.imageUrl,
+      },
+    });
+  }
+  for (const player of playerList) {
+    console.log(`  Adding player: ${player.username}`);
+
+    await prisma.player.upsert({
+      where: { username: player.username },
+      update: {
+        imageUrl: player.imageUrl,
+        game: player.game,
+        rank: player.rank,
+      },
+      create: {
+        username: player.username,
+        imageUrl: player.imageUrl,
+        game: player.game,
+        rank: player.rank,
       },
     });
   }

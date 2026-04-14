@@ -37,3 +37,11 @@ model Game {
   description String?
   imageUrl    String?
 }
+
+model Player {
+  id       Int     @id @default(autoincrement())
+  username String  @unique
+  imageUrl String?
+  game     String
+  rank     String
+}
