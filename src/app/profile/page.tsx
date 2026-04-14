@@ -1,20 +1,82 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { Container, Row, Col, Card } from 'react-bootstrap';
 import Image from 'next/image';
+import Link from 'next/link';
+
+type ProfileData = {
+  email: string;
+  profile: {
+    description: string;
+    interests: string;
+    profilePicture: string | null;
+  } | null;
+};
 
 export default function ProfilePage() {
-  const user = {
-    username: 'Player1',
-    description: 'Sample description here.',
-    profileImage: '',
-    library: ['Game 1', 'Game 2', 'Game 3'],
-    interests: ['Interest 1', 'Interest 2', 'Interest 3'],
-  };
+  const [user, setUser] = useState<ProfileData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const res = await fetch('/api/profile/me');
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          setError(data.error || 'Failed to load profile.');
+          setLoading(false);
+          return;
+        }
+
+        setUser(data);
+      } catch (err) {
+        console.error(err);
+        setError('Something went wrong while loading your profile.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProfile();
+  }, []);
+
+  if (loading) {
+    return (
+      <Container className="py-5">
+        <Card>
+          <Card.Body>Loading profile...</Card.Body>
+        </Card>
+      </Container>
+    );
+  }
+
+  if (error || !user) {
+    return (
+      <Container className="py-5">
+        <Card>
+          <Card.Body>{error || 'Profile not found.'}</Card.Body>
+        </Card>
+      </Container>
+    );
+  }
+
+  const interestsList = user.profile?.interests
+    ? user.profile.interests.split(',').map((item) => item.trim()).filter(Boolean)
+    : [];
+
+  const library: string[] = [];
+
+  const profileImage =
+    user.profile?.profilePicture && !user.profile.profilePicture.startsWith('blob:')
+      ? user.profile.profilePicture
+      : '';
 
   return (
     <Container className="py-5">
-
       <Card
         style={{
           borderRadius: '15px',
@@ -23,8 +85,6 @@ export default function ProfilePage() {
         }}
       >
         <Card.Body>
-
-          {/* HEADER */}
           <div
             style={{
               display: 'flex',
@@ -33,7 +93,6 @@ export default function ProfilePage() {
               marginBottom: '25px',
             }}
           >
-            {/* Profile Picture */}
             <div
               style={{
                 width: '80px',
@@ -43,9 +102,9 @@ export default function ProfilePage() {
                 border: '2px solid #ccc',
               }}
             >
-              {user.profileImage ? (
+              {profileImage ? (
                 <Image
-                  src={user.profileImage}
+                  src={profileImage}
                   alt="profile"
                   width={80}
                   height={80}
@@ -68,64 +127,65 @@ export default function ProfilePage() {
               )}
             </div>
 
-            {/* Title */}
             <h1 style={{ margin: 0, fontWeight: '600' }}>
               Your Profile
             </h1>
           </div>
 
           <Row>
-
-            {/* LEFT */}
             <Col md={4}>
-              <p><strong>Username:</strong> {user.username}</p>
+              <p><strong>Username:</strong> {user.email}</p>
 
               <p>
                 <strong>Description:</strong><br />
-                {user.description}
+                {user.profile?.description || 'No description added yet.'}
               </p>
 
-              <a href="/profile/edit">Edit</a>
+              <Link href="/profile/edit">Edit</Link>
             </Col>
 
-            {/* MIDDLE */}
             <Col md={4}>
               <h5 style={{ marginBottom: '15px' }}>Library</h5>
 
-              {user.library.map((game, index) => (
-                <div
-                  key={index}
-                  style={{
-                    padding: '8px 0',
-                    borderBottom: '1px solid #eee',
-                  }}
-                >
-                  {game}
-                </div>
-              ))}
+              {library.length > 0 ? (
+                library.map((game, index) => (
+                  <div
+                    key={index}
+                    style={{
+                      padding: '8px 0',
+                      borderBottom: '1px solid #eee',
+                    }}
+                  >
+                    {game}
+                  </div>
+                ))
+              ) : (
+                <div>No games added yet.</div>
+              )}
             </Col>
 
-            {/* RIGHT */}
             <Col md={4}>
               <h5 style={{ marginBottom: '15px' }}>Interests</h5>
 
-              {user.interests.map((interest, index) => (
-                <div
-                  key={index}
-                  style={{
-                    padding: '8px 0',
-                    borderBottom: '1px solid #eee',
-                  }}
-                >
-                  {interest}
-                </div>
-              ))}
+              {interestsList.length > 0 ? (
+                interestsList.map((interest, index) => (
+                  <div
+                    key={index}
+                    style={{
+                      padding: '8px 0',
+                      borderBottom: '1px solid #eee',
+                    }}
+                  >
+                    {interest}
+                  </div>
+                ))
+              ) : (
+                <div>No interests added yet.</div>
+              )}
             </Col>
-
           </Row>
         </Card.Body>
       </Card>
-
     </Container>
   );
 }

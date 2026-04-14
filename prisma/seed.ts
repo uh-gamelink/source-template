@@ -106,6 +106,31 @@ const defaultGames = [
   },
 ];
 
+/**
+ * Seed profile data keyed by user email.
+ * The email must match one of the accounts in config.defaultAccounts.
+ */
+const defaultProfiles: Record<
+  string,
+  { description: string; interests: string; profilePicture: string | null }
+> = {
+  "admin@foo.com": {
+    description: "UH GameLink admin account.",
+    interests: "Gaming communities, moderation, site testing",
+    profilePicture: "/default-profile.png",
+  },
+  "john@foo.com": {
+    description: "Casual and competitive gamer looking for people to queue with.",
+    interests: "Valorant, Apex Legends, League of Legends",
+    profilePicture: "/default-profile.png",
+  },
+  "jane@foo.com": {
+    description: "Enjoys co-op games and meeting new players around campus.",
+    interests: "Minecraft, Stardew Valley, Overwatch 2",
+    profilePicture: "/default-profile.png",
+  },
+};
+
 async function main() {
   console.log("Seeding the database");
 
@@ -115,7 +140,7 @@ async function main() {
     const role = (account.role as Role) || Role.USER;
     console.log(`  Creating user: ${account.email} with role: ${role}`);
 
-    await prisma.user.upsert({
+    const user = await prisma.user.upsert({
       where: { email: account.email },
       update: {
         password,
@@ -125,6 +150,29 @@ async function main() {
         email: account.email,
         password,
         role,
+      },
+    });
+
+    const profileSeed = defaultProfiles[account.email] ?? {
+      description: `Hi, I'm ${account.email.split("@")[0]} and I'm looking for other UH GameLink users to play with.`,
+      interests: "Gaming, meeting new people, campus community",
+      profilePicture: "/default-profile.png",
+    };
+
+    console.log(`  Creating/updating profile for: ${account.email}`);
+
+    await prisma.profile.upsert({
+      where: { userId: user.id },
+      update: {
+        description: profileSeed.description,
+        interests: profileSeed.interests,
+        profilePicture: profileSeed.profilePicture,
+      },
+      create: {
+        description: profileSeed.description,
+        interests: profileSeed.interests,
+        profilePicture: profileSeed.profilePicture,
+        userId: user.id,
       },
     });
   }
