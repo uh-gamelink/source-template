@@ -56,3 +56,4 @@ node_modules/
 /playwright/.cache/
 /playwright/.auth/
 tests/playwright-auth-sessions/
+.env*.local

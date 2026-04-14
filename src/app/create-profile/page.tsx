@@ -2,11 +2,13 @@
 
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { upload } from '@vercel/blob/client';
 import { Container, Row, Col, Form, Image, Card, Button, Alert } from 'react-bootstrap';
 import { PersonCircle } from 'react-bootstrap-icons';
 
 const CreateProfile = () => {
   const [preview, setPreview] = useState<string | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -15,19 +17,22 @@ const CreateProfile = () => {
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files ? e.target.files[0] : null;
 
+    if (preview) {
+      URL.revokeObjectURL(preview);
+    }
+
     if (file) {
-      const objectUrl = URL.createObjectURL(file);
-      setPreview(objectUrl);
+      setSelectedFile(file);
+      setPreview(URL.createObjectURL(file));
     } else {
+      setSelectedFile(null);
       setPreview(null);
     }
   };
 
   useEffect(() => {
     return () => {
-      if (preview) {
-        URL.revokeObjectURL(preview);
-      }
+      if (preview) URL.revokeObjectURL(preview);
     };
   }, [preview]);
 
@@ -37,11 +42,21 @@ const CreateProfile = () => {
     setIsSubmitting(true);
 
     const formData = new FormData(e.currentTarget);
-
     const description = formData.get('description');
     const interests = formData.get('interests');
 
     try {
+      let profilePicture = '/default-profile.png';
+
+      if (selectedFile) {
+        const blob = await upload(selectedFile.name, selectedFile, {
+          access: 'public',
+          handleUploadUrl: '/api/avatar/upload',
+        });
+
+        profilePicture = blob.url;
+      }
+
       const res = await fetch('/api/profile', {
         method: 'POST',
         headers: {
@@ -50,7 +65,7 @@ const CreateProfile = () => {
         body: JSON.stringify({
           description,
           interests,
-          profilePicture: preview,
+          profilePicture,
         }),
       });
 
@@ -62,10 +77,10 @@ const CreateProfile = () => {
         return;
       }
 
-      router.push('/');
+      router.push('/profile');
     } catch (err) {
       console.error(err);
-      setError('Something went wrong while saving your profile.');
+      setError('Something went wrong while creating your profile.');
       setIsSubmitting(false);
     }
   };
@@ -76,7 +91,6 @@ const CreateProfile = () => {
         <Row className="justify-content-center my-5">
           <Col xs={12} md={10} lg={8}>
             <h1 className="text-center mb-3">Create a Profile</h1>
-
             <Card>
               <Form onSubmit={handleSubmit}>
                 <Card.Body>
@@ -89,7 +103,6 @@ const CreateProfile = () => {
                           as="textarea"
                           rows={3}
                           placeholder="Share about yourself"
-                          defaultValue=""
                           required
                         />
                       </Form.Group>
@@ -101,7 +114,6 @@ const CreateProfile = () => {
                           as="textarea"
                           rows={3}
                           placeholder="Favorite pastimes"
-                          defaultValue=""
                           required
                         />
                       </Form.Group>
@@ -124,26 +136,18 @@ const CreateProfile = () => {
                         <Form.Label>Upload Profile Picture</Form.Label>
                         <Form.Control
                           type="file"
-                          accept="image/*"
+                          accept="image/png,image/jpeg,image/webp"
                           onChange={handleImageChange}
                         />
                       </Form.Group>
                     </Col>
                   </Row>
 
-                  {error && (
-                    <Alert variant="danger" className="mt-3 mb-0">
-                      {error}
-                    </Alert>
-                  )}
+                  {error && <Alert variant="danger" className="mt-3 mb-0">{error}</Alert>}
                 </Card.Body>
 
                 <Card.Footer>
-                  <Button
-                    type="submit"
-                    className="mx-auto d-block"
-                    disabled={isSubmitting}
-                  >
+                  <Button type="submit" className="mx-auto d-block" disabled={isSubmitting}>
                     {isSubmitting ? 'Creating...' : 'Create Profile'}
                   </Button>
                 </Card.Footer>

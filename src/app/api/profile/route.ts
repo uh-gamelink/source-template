@@ -39,12 +39,12 @@ export async function POST(request: Request) {
       update: {
         description,
         interests,
-        profilePicture: profilePicture ?? '/default-profile.png',
+        profilePicture,
       },
       create: {
         description,
         interests,
-        profilePicture: profilePicture ?? '/default-profile.png',
+        profilePicture,
         userId: user.id,
       },
     });
