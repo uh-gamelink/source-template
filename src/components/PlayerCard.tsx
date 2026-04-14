@@ -1,7 +1,6 @@
 'use client';
 
 import { Card, Container, Image } from 'react-bootstrap';
-import Link from 'next/link';
 
 type Player = {
   username: string;
@@ -32,7 +31,7 @@ const PlayerCard = ({ player }: { player: Player }) => (
     <div>Game: {player.game}</div>
     <div>Rank: {player.rank}</div>
 
-    <a className="pb-2" href="/auth/signin" className="d-block mt-2">
+    <a className="pb-2" href="/auth/signin">
       Connect
     </a>
 

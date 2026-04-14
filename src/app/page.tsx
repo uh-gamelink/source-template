@@ -20,13 +20,13 @@ const scrollingGames = [...games, ...games];
 
 const Home = () => (
   <main>
-    <Container className="py-3">
+    <Container className="py-1 mt-5">
       <h1>
-        Welcome to UH
+        Welcome to
         <br />
-        GameLink
+        UH GameLink
       </h1>
-
+      <div className="shortline pb-4">____________________________</div>
       <p>
         UH GameLink is a web application designed to help University of Hawai&apos;i students
         connect with other students through video games. Many students play games casually or
@@ -34,12 +34,11 @@ const Home = () => (
         schedules, or favorite games. This project aims to make it easier for students to meet new
         people, discover gaming communities, and build connections through shared games.
       </p>
-
+      <br />
       <p>
         Feel free to explore the site&apos;s library, find other players, and link up with
         community!
       </p>
-
       <div className="game-belt">
         <div className="game-track">
           {scrollingGames.map((src, index) => (

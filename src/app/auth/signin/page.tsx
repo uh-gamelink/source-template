@@ -23,10 +23,10 @@ const SignIn = () => {
   return (
     <main>
       <Container>
-        <Row className="justify-content-center">
+        <Row className="justify-content-center ">
           <Col xs={5}>
-            <h1 className="text-center">Sign In</h1>
-            <Card>
+            <h1 className="text-center mt-5 mb-2">Sign In</h1>
+            <Card className="custom-card-body">
               <Card.Body>
                 <Form method="post" onSubmit={handleSubmit}>
                   <Form.Group controlId="formBasicEmail">
@@ -34,11 +34,11 @@ const SignIn = () => {
                     <input name="email" type="text" className="form-control" />
                   </Form.Group>
                   <Form.Group>
-                    <Form.Label>Password</Form.Label>
+                    <Form.Label className="pt-2">Password</Form.Label>
                     <input name="password" type="password" className="form-control" />
                   </Form.Group>
-                  <Button type="submit" className="mt-3">
-                    Signin
+                  <Button type="submit" className="mt-3 custom-reg-btn">
+                    Sign in
                   </Button>
                 </Form>
               </Card.Body>

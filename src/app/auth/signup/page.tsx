@@ -48,8 +48,8 @@ const SignUp = () => {
       <Container>
         <Row className="justify-content-center">
           <Col xs={5}>
-            <h1 className="text-center">Sign Up</h1>
-            <Card>
+            <h1 className="text-center mt-5 mb-2">Sign Up</h1>
+            <Card className="custom-card-body">
               <Card.Body>
                 <Form onSubmit={handleSubmit(onSubmit)}>
                   <Form.Group className="form-group">
@@ -62,7 +62,7 @@ const SignUp = () => {
                     <div className="invalid-feedback">{errors.email?.message}</div>
                   </Form.Group>
 
-                  <Form.Group className="form-group">
+                  <Form.Group className="form-group pt-2">
                     <Form.Label>Password</Form.Label>
                     <input
                       type="password"
@@ -71,7 +71,7 @@ const SignUp = () => {
                     />
                     <div className="invalid-feedback">{errors.password?.message}</div>
                   </Form.Group>
-                  <Form.Group className="form-group">
+                  <Form.Group className="form-group pt-2">
                     <Form.Label>Confirm Password</Form.Label>
                     <input
                       type="password"
@@ -80,15 +80,15 @@ const SignUp = () => {
                     />
                     <div className="invalid-feedback">{errors.confirmPassword?.message}</div>
                   </Form.Group>
-                  <Form.Group className="form-group py-3">
-                    <Row>
+                  <Form.Group className="form-group py-2">
+                    <Row className="pt-2">
                       <Col>
-                        <Button type="submit" className="btn btn-primary">
+                        <Button type="submit" className="custom-reg-btn">
                           Register
                         </Button>
                       </Col>
                       <Col>
-                        <Button type="button" onClick={() => reset()} className="btn btn-warning float-right">
+                        <Button type="button" onClick={() => reset()} className="custom-reset-btn float-right">
                           Reset
                         </Button>
                       </Col>
@@ -97,7 +97,7 @@ const SignUp = () => {
                 </Form>
               </Card.Body>
               <Card.Footer>
-                Already have an account?
+                Already have an account? 
                 <a href="/auth/signin">Sign in</a>
               </Card.Footer>
             </Card>

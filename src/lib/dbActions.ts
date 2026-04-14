@@ -3,6 +3,7 @@
 import { hash } from 'bcrypt';
 import { redirect } from 'next/navigation';
 import { prisma } from './prisma';
+import { Role } from '@prisma/client';
 
 /**
  * Admin-only: adds a new game to the catalog.
@@ -83,6 +84,7 @@ export async function createUser(credentials: { email: string; password: string 
     data: {
       email: credentials.email,
       password,
+      role: Role.USER,
     },
   });
 }

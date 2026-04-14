@@ -22,7 +22,7 @@ const defaultGames = [
     platform: "PC / PlayStation / Xbox / Switch",
     tags: ["Battle Royale", "FPS", "Hero Shooter"],
     description: "A squad-based battle royale shooter with unique character abilities.",
-    imageUrl: "/gameLib/apex-legends.webp",
+    imageUrl: "/gamesLib/apex-legends.webp",
   },
   {
     title: "Counter-Strike 2",
@@ -30,7 +30,7 @@ const defaultGames = [
     platform: "PC",
     tags: ["FPS", "Tactical Shooter", "Competitive"],
     description: "A competitive tactical first-person shooter focused on team-based objective play.",
-    imageUrl: "/gameLib/counter-strike-2.png",
+    imageUrl: "/gamesLib/counter-strike-2.png",
   },
   {
     title: "Fortnite",
@@ -38,7 +38,7 @@ const defaultGames = [
     platform: "PC / PlayStation / Xbox / Switch / Mobile",
     tags: ["Battle Royale", "Shooter", "Survival"],
     description: "A fast-paced battle royale game known for building mechanics and live events.",
-    imageUrl: "/gameLib/fortnite.png",
+    imageUrl: "/gamesLib/fortnite.png",
   },
   {
     title: "Genshin Impact",
@@ -46,7 +46,7 @@ const defaultGames = [
     platform: "PC / PlayStation / Mobile",
     tags: ["Action RPG", "Open World", "Adventure"],
     description: "An open-world action RPG centered on exploration, elemental combat, and story quests.",
-    imageUrl: "/gameLib/genshin-impact.png",
+    imageUrl: "/gamesLib/genshin-impact.png",
   },
   {
     title: "League of Legends",
@@ -54,7 +54,7 @@ const defaultGames = [
     platform: "PC",
     tags: ["MOBA", "Strategy", "Competitive"],
     description: "A competitive multiplayer online battle arena game with a large roster of champions.",
-    imageUrl: "/gameLib/league-of-legends.png",
+    imageUrl: "/gamesLib/league-of-legends.png",
   },
   {
     title: "Minecraft",
@@ -62,7 +62,7 @@ const defaultGames = [
     platform: "Multi-platform",
     tags: ["Sandbox", "Survival", "Creative", "Adventure"],
     description: "A sandbox game built around exploration, crafting, building, and survival.",
-    imageUrl: "/gameLib/minecraft.webp",
+    imageUrl: "/gamesLib/minecraft.webp",
   },
   {
     title: "Overwatch 2",
@@ -70,7 +70,7 @@ const defaultGames = [
     platform: "PC / PlayStation / Xbox / Switch",
     tags: ["Hero Shooter", "FPS", "Team-Based"],
     description: "A team-based hero shooter focused on objective play and character abilities.",
-    imageUrl: "/gameLib/overwatch-2.png",
+    imageUrl: "/gamesLib/overwatch-2.png",
   },
   {
     title: "Rocket League",
@@ -78,7 +78,7 @@ const defaultGames = [
     platform: "PC / PlayStation / Xbox / Switch",
     tags: ["Sports", "Racing", "Competitive"],
     description: "A high-speed competitive game that mixes soccer with rocket-powered cars.",
-    imageUrl: "/gameLib/rocket-league.png",
+    imageUrl: "/gamesLib/rocket-league.png",
   },
   {
     title: "Stardew Valley",
@@ -86,7 +86,7 @@ const defaultGames = [
     platform: "PC / PlayStation / Xbox / Switch / Mobile",
     tags: ["Farming Sim", "RPG", "Life Sim", "Indie"],
     description: "A farming and life simulation game focused on building a farm and connecting with a town.",
-    imageUrl: "/gameLib/stardew-valley.png",
+    imageUrl: "/gamesLib/stardew-valley.png",
   },
   {
     title: "Super Smash Bros. Ultimate",
@@ -94,7 +94,7 @@ const defaultGames = [
     platform: "Nintendo Switch",
     tags: ["Fighting", "Party", "Competitive"],
     description: "A crossover platform fighting game featuring characters from many major franchises.",
-    imageUrl: "/gameLib/super-smash-bros.png",
+    imageUrl: "/gamesLib/super-smash-bros.png",
   },
   {
     title: "Valorant",
@@ -102,7 +102,7 @@ const defaultGames = [
     platform: "PC",
     tags: ["FPS", "Tactical Shooter", "Competitive", "Hero Shooter"],
     description: "A 5v5 tactical hero shooter built around precise gunplay and agent abilities.",
-    imageUrl: "/gameLib/valorant.webp",
+    imageUrl: "/gamesLib/valorant.webp",
   },
 ];
 
@@ -144,6 +144,30 @@ const playerList = [
     rank: "Gold Nova",
   },
 ];
+/**
+ * Seed profile data keyed by user email.
+ * The email must match one of the accounts in config.defaultAccounts.
+ */
+const defaultProfiles: Record<
+  string,
+  { description: string; interests: string; profilePicture: string | null }
+> = {
+  "admin@foo.com": {
+    description: "UH GameLink admin account.",
+    interests: "Gaming communities, moderation, site testing",
+    profilePicture: "/default-profile.png",
+  },
+  "john@foo.com": {
+    description: "Casual and competitive gamer looking for people to queue with.",
+    interests: "Valorant, Apex Legends, League of Legends",
+    profilePicture: "/default-profile.png",
+  },
+  "jane@foo.com": {
+    description: "Enjoys co-op games and meeting new players around campus.",
+    interests: "Minecraft, Stardew Valley, Overwatch 2",
+    profilePicture: "/default-profile.png",
+  },
+};
 
 async function main() {
   console.log("Seeding the database");
@@ -154,7 +178,7 @@ async function main() {
     const role = (account.role as Role) || Role.USER;
     console.log(`  Creating user: ${account.email} with role: ${role}`);
 
-    await prisma.user.upsert({
+    const user = await prisma.user.upsert({
       where: { email: account.email },
       update: {
         password,
@@ -164,6 +188,29 @@ async function main() {
         email: account.email,
         password,
         role,
+      },
+    });
+
+    const profileSeed = defaultProfiles[account.email] ?? {
+      description: `Hi, I'm ${account.email.split("@")[0]} and I'm looking for other UH GameLink users to play with.`,
+      interests: "Gaming, meeting new people, campus community",
+      profilePicture: "/default-profile.png",
+    };
+
+    console.log(`  Creating/updating profile for: ${account.email}`);
+
+    await prisma.profile.upsert({
+      where: { userId: user.id },
+      update: {
+        description: profileSeed.description,
+        interests: profileSeed.interests,
+        profilePicture: profileSeed.profilePicture,
+      },
+      create: {
+        description: profileSeed.description,
+        interests: profileSeed.interests,
+        profilePicture: profileSeed.profilePicture,
+        userId: user.id,
       },
     });
   }

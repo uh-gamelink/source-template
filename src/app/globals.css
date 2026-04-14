@@ -5,9 +5,18 @@ body {
   height: 100%;
   padding: 0;
   margin: 0;
-  color: rgb(126, 181, 208);
+  font-size: 18px;
+  color: rgb(65, 132, 255);
   background-color: rgb(21, 9, 102);
 }
+
+h1{
+  font-size: 50px;
+  font-family: 'Impact', sans-serif;
+  letter-spacing: 0.5px;
+  font-weight: 50;
+}
+
 .wrapper {
   box-sizing: border-box;
   min-height: 100%;
@@ -48,54 +57,53 @@ body {
   }
 }
 
+.custom-navbar-toggle {
+  border: 1px solid rgb(65, 132, 255) !important;
+}
+
+.custom-navbar-toggle .navbar-toggler-icon,
+.custom-navbar .navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='rgb(65,132,255)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E") !important;
+}
 
 #login-dropdown,
 #login-dropdown-sign-in,
 #login-dropdown-sign-out,
 #login-dropdown-sign-up {
-  color: rgb(126, 181, 208) !important;
+  color: rgb(65, 132, 255);
+  border-color:rgb(65, 132, 255) ;
 }
 
-/* Hover effect */
 #login-dropdown-sign-in:hover,
 #login-dropdown-sign-out:hover,
 #login-dropdown-sign-up:hover {
-  color: rgb(126, 181, 208) !important;
-  background-color: transparent !important;
+  color: rgb(65, 132, 255) ;
+  background-color: transparent;
 }
 
-/* ALL dropdown items inside navbar */
 .navbar .dropdown-item,
-.navbar .dropdown-toggle {
-  color: rgb(126, 181, 208) !important;
+.navbar .dropdown-toggle,
+.custom-navbar .navbar-toggler{ 
+  border-color: rgb(65, 132, 255);
 }
 
-/* Hover */
 .navbar .dropdown-item:hover {
-  color: rgb(126, 181, 208) !important;
-  background-color: transparent !important;
+  color: rgb(65, 132, 255);
+  background-color: transparent;
 }
 
-/* Dropdown title (Login / user email) */
-#login-dropdown {
-  color: rgb(126, 181, 208) !important;
-}
-
-/* Dropdown items (Sign in / Sign out / Sign up) */
 #login-dropdown-sign-in,
 #login-dropdown-sign-out,
 #login-dropdown-sign-up,
 #login-dropdown-sign-in:hover,
 #login-dropdown-sign-out:hover,
 #login-dropdown-sign-up:hover {
-  color: rgb(126, 181, 208) !important;
+  color: rgb(65, 132, 255);
 }
 
-
-/* Navbar */
 .custom-navbar {
   background-color: rgb(21, 9, 102);
-  border-bottom: 2px solid #b0e0e65d;
+  border-bottom: 2px solid rgba(65, 132, 255, 0.4);
   padding-top: 0.75rem;
   padding-bottom: 0.75rem;
 }
@@ -104,66 +112,65 @@ body {
 .custom-brand span,
 .custom-navbar .nav-link,
 .custom-navbar .navbar-brand,
-.custom-navbar .dropdown-toggle {
-  color: rgb(126, 181, 208) !important;
-}
 
+.custom-navbar .dropdown-toggle,
 .custom-navbar .nav-link:hover,
 .custom-navbar .navbar-brand:hover,
 .custom-navbar .dropdown-toggle:hover {
-  color: rgb(126, 181, 208) !important;
+  color: rgb(65, 132, 255);
 }
 
-/* Active nav link */
 .custom-navbar .nav-link.active {
-  color: rgb(96, 145, 170) !important;
+  color: rgba(65, 132, 255, 0.763);
   font-weight: 500;
 }
 
 .footer {
-  border-top: 2px solid #b0e0e67d;
+  border-top: 2px solid rgba(65, 132, 255, 0.4);
   margin-top: 2rem;
   padding-top: 1rem;
 }
 
 .custom-navbar .dropdown-menu {
   background-color: rgb(21, 9, 102);
-  border-color: rgb(96, 145, 170);
+  border-color: rgb(92, 148, 252);
 }
 
  .custom-card-body{
-  background: rgba(31, 18, 125, 0.8);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(176, 224, 230, 0.4);
+  background: rgba(31, 18, 125, 0.5);
+  border: 2px solid rgba(65, 132, 255, 0.505);
   border-radius: 12px;
-  color: #b0e0e6;
+  color:rgb(92, 148, 252);
+  font-weight: 530;
 }
 
-
 .custom-card-body .form-control {
-  background-color: transparent !important;   /* makes it transparent */
-  border: 1px solid rgba(98, 149, 156, 0.526)!important;       /* light blue border */
-  color: #b0e0e6b8 !important;                  /* text color */
+  background-color: transparent !important;  
+  border: 1px solid rgb(65, 132, 255, 0.526)!important;   
+  color:rgb(65, 132, 255) !important;                
 }
 
 .custom-reg-btn {
-  background-color: #8ad5dfde !important; /* light blue */
+  background-color: rgb(65, 132, 255) !important; 
   border: none !important;
-  color: rgb(21, 9, 102) !important; /* your dark background color */
+  color: rgb(21, 9, 102) !important; 
   font-weight: 500;
   border-radius: 8px;
 }
 
-/* Hover effect */
 .custom-reg-btn:hover {
   background-color: #87cfeba3 !important;
   color: rgb(21, 9, 102) !important;
 }
 
 .custom-reset-btn {
-  background-color:  transparent !important; /* light blue */
-  border-color: #b0e0e6;
-  color: #b0e0e6 ; 
+  background-color:  transparent !important;
+  border-color: rgb(65, 132, 255);
+  color: rgb(65, 132, 255);
   font-weight: 500;
   border-radius: 8px;
+}
+
+.shortline {
+  color:rgb(65, 132, 255, 0.385);
 }

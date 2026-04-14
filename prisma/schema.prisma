@@ -13,10 +13,20 @@ enum Role {
 }
 
 model User {
-  id       Int    @id @default(autoincrement())
-  email    String @unique
+  id       Int      @id @default(autoincrement())
+  email    String   @unique
   password String
-  role     Role   @default(USER)
+  role     Role
+  profile  Profile?
+}
+
+model Profile {
+  id             Int      @id @default(autoincrement())
+  description    String
+  interests      String
+  profilePicture String?
+  userId         Int      @unique
+  user           User     @relation(fields: [userId], references: [id])
 }
 
 model Game {
