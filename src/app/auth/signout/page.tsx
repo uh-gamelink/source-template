@@ -10,12 +10,12 @@ const SignOut = () => (
     <Row>
       <Col xs={4} />
       <Col>
-        <Button variant="danger" onClick={() => signOut({ callbackUrl: '/'})}>
+        <Button variant="danger" className="custom-tag-btn" onClick={() => signOut({ callbackUrl: '/'})}>
           Sign Out
         </Button>
       </Col>
       <Col>
-        <Button variant="secondary" href="/">
+        <Button variant="secondary" className="custom-reset-btn"  href="/">
           Cancel
         </Button>
       </Col>
