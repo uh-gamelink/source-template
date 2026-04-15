@@ -20,9 +20,10 @@ export default function GameLibraryClient({ games }: { games: Game[] }) {
       <Row className="g-4">
         {games.map((game) => (
           <Col md={4} key={game.id}>
-            <Card className="h-100 shadow-sm custom-card-body">
+            <Card className="h-100 shadow-sm custom-card-library">
 
               <Card.Img
+                className="mt-5"
                 variant="top"
                 src={game.imageUrl || ''}
                 style={{
