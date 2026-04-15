@@ -20,7 +20,7 @@ export default function GameLibraryClient({ games }: { games: Game[] }) {
       <Row className="g-4">
         {games.map((game) => (
           <Col md={4} key={game.id}>
-            <Card className="h-100 shadow-sm custom-card-library">
+            <Card className="h-100 shadow-sm custom-card-body">
 
               <Card.Img
                 className="mt-5"
@@ -35,7 +35,7 @@ export default function GameLibraryClient({ games }: { games: Game[] }) {
 
               <Card.Body>
                 <Card.Title>{game.title}</Card.Title>
-
+                
                 <Card.Text>
                   <strong>Developer:</strong> {game.developer}
                 </Card.Text>

@@ -10,14 +10,14 @@ type Player = {
 };
 
 const PlayerCard = ({ player }: { player: Player }) => (
-<Card className="h-100 custom-card-body" style={{ width: '250px' }}>
+<Card className="h-100 custom-card-body" style={{ width: '235px' }}>
   <Container className="ms-2">
   <Card.Body className="p-3">
     <Card.Title className="pb-2">{player.username}</Card.Title>
     <Image
       src={player.imageUrl || '/default-player.png'}
-      width={175}
-      height={175}
+      width={155}
+      height={160}
       rounded
       alt={player.username}
       style={{

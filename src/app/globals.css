@@ -126,30 +126,16 @@ h1{
 }
 
  .custom-card-body{
-  background: rgba(31, 18, 125, 0.5);
+  background: rgba(37, 22, 145, 0.5);
   border: 2px solid rgba(65, 132, 255, 0.505);
   border-radius: 12px;
   color:rgb(92, 148, 252);
-  font-weight: 530;
+  font-weight: 400;
 }
 
 .custom-card-body .form-control {
   background-color: transparent !important;  
   /*border: 1px solid rgb(65, 132, 255, 0.526)!important;*/   
-  color:rgb(65, 132, 255) !important;                
-}
-
- .custom-card-library{
-  background: rgba(37, 22, 145, 0.5);
-  border-radius: 12px;
-  border: 2px solid rgba(65, 132, 255, 0.505);
-  color:rgb(92, 148, 252);
-  font-weight: 400;
-}
-
-.custom-card-library .form-control {
-  background-color: transparent !important;  
-  border: 1px solid rgb(65, 132, 255, 0.526)!important;   
   color:rgb(65, 132, 255) !important;                
 }
 
