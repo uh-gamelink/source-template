@@ -6,47 +6,74 @@ import { upload } from '@vercel/blob/client';
 import { Container, Row, Col, Form, Image, Card, Button, Alert } from 'react-bootstrap';
 import { PersonCircle } from 'react-bootstrap-icons';
 
-const CreateProfile = () => {
+const ProfileForm = () => {
   const [preview, setPreview] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // 🔥 NEW
+  const [isEdit, setIsEdit] = useState(false);
+  const [description, setDescription] = useState('');
+  const [interests, setInterests] = useState('');
+  const [existingImage, setExistingImage] = useState<string | null>(null);
+
   const router = useRouter();
 
+  // 🔥 FETCH EXISTING PROFILE (EDIT MODE)
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const res = await fetch('/api/profile');
+
+        if (res.ok) {
+          const data = await res.json();
+
+          if (data) {
+            setIsEdit(true);
+            setDescription(data.description || '');
+            setInterests(data.interests || '');
+            setExistingImage(data.profilePicture || null);
+            setPreview(data.profilePicture || null);
+          }
+        }
+      } catch (err) {
+        console.error('Failed to load profile:', err);
+      }
+    };
+
+    fetchProfile();
+  }, []);
+
+  // 🔥 IMAGE HANDLING
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files ? e.target.files[0] : null;
 
-    if (preview) {
-      URL.revokeObjectURL(preview);
-    }
+    if (preview) URL.revokeObjectURL(preview);
 
     if (file) {
       setSelectedFile(file);
       setPreview(URL.createObjectURL(file));
     } else {
       setSelectedFile(null);
-      setPreview(null);
+      setPreview(existingImage);
     }
   };
 
   useEffect(() => {
     return () => {
-      if (preview) URL.revokeObjectURL(preview);
+      if (preview && selectedFile) URL.revokeObjectURL(preview);
     };
-  }, [preview]);
+  }, [preview, selectedFile]);
 
+  // 🔥 SUBMIT HANDLER (CREATE OR EDIT)
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError('');
     setIsSubmitting(true);
 
-    const formData = new FormData(e.currentTarget);
-    const description = formData.get('description');
-    const interests = formData.get('interests');
-
     try {
-      let profilePicture = '/default-profile.png';
+      let profilePicture = existingImage || '/default-profile.png';
 
       if (selectedFile) {
         const blob = await upload(selectedFile.name, selectedFile, {
@@ -58,7 +85,7 @@ const CreateProfile = () => {
       }
 
       const res = await fetch('/api/profile', {
-        method: 'POST',
+        method: isEdit ? 'PUT' : 'POST', // 🔥 KEY CHANGE
         headers: {
           'Content-Type': 'application/json',
         },
@@ -80,7 +107,7 @@ const CreateProfile = () => {
       router.push('/profile');
     } catch (err) {
       console.error(err);
-      setError('Something went wrong while creating your profile.');
+      setError('Something went wrong.');
       setIsSubmitting(false);
     }
   };
@@ -90,16 +117,24 @@ const CreateProfile = () => {
       <Container>
         <Row className="justify-content-center my-5">
           <Col xs={12} md={10} lg={8}>
-            <h1 className="text-center mb-3">Create a Profile</h1>
+
+            {/* 🔥 TITLE CHANGES */}
+            <h1 className="text-center mb-3">
+              {isEdit ? 'Edit Profile' : 'Create a Profile'}
+            </h1>
+
             <Card className="custom-card-body">
               <Form onSubmit={handleSubmit}>
                 <Card.Body>
                   <Row>
+
+                    {/* LEFT SIDE */}
                     <Col md={6}>
                       <Form.Group className="mb-3">
                         <Form.Label>Description</Form.Label>
                         <Form.Control
-                          name="description"
+                          value={description}
+                          onChange={(e) => setDescription(e.target.value)}
                           as="textarea"
                           rows={3}
                           placeholder="Share about yourself"
@@ -110,18 +145,19 @@ const CreateProfile = () => {
                       <Form.Group className="mb-3">
                         <Form.Label>Interests</Form.Label>
                         <Form.Control
-                          name="interests"
+                          value={interests}
+                          onChange={(e) => setInterests(e.target.value)}
                           as="textarea"
                           rows={3}
-                          className="form-control-text"
                           placeholder="Favorite pastimes"
-                         
                           required
                         />
                       </Form.Group>
                     </Col>
 
+                    {/* RIGHT SIDE */}
                     <Col md={6} className="d-flex flex-column justify-content-center align-items-center">
+
                       {preview ? (
                         <Image
                           src={preview}
@@ -131,10 +167,10 @@ const CreateProfile = () => {
                           alt="Profile Preview"
                         />
                       ) : (
-                        <PersonCircle size={150} className="icon" />
+                        <PersonCircle size={150} />
                       )}
 
-                      <Form.Group controlId="formFile" className="mt-3 text-center ">
+                      <Form.Group className="mt-3 text-center">
                         <Form.Label>Upload Profile Picture</Form.Label>
                         <Form.Control
                           type="file"
@@ -143,18 +179,31 @@ const CreateProfile = () => {
                         />
                       </Form.Group>
                     </Col>
+
                   </Row>
 
-                  {error && <Alert variant="danger" className="mt-3 mb-0">{error}</Alert>}
+                  {error && (
+                    <Alert variant="danger" className="mt-3 mb-0">
+                      {error}
+                    </Alert>
+                  )}
                 </Card.Body>
 
                 <Card.Footer>
-                  <Button type="submit" className="mx-auto d-block custom-reg-btn" disabled={isSubmitting}>
-                    {isSubmitting ? 'Creating...' : 'Create Profile'}
+                  <Button
+                    type="submit"
+                    className="mx-auto d-block custom-reg-btn"
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting
+                      ? (isEdit ? 'Saving...' : 'Creating...')
+                      : (isEdit ? 'Save Changes' : 'Create Profile')}
                   </Button>
                 </Card.Footer>
+
               </Form>
             </Card>
+
           </Col>
         </Row>
       </Container>
@@ -162,4 +211,4 @@ const CreateProfile = () => {
   );
 };
 
-export default CreateProfile;
+export default ProfileForm;
