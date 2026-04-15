@@ -69,14 +69,16 @@ h1{
 #login-dropdown,
 #login-dropdown-sign-in,
 #login-dropdown-sign-out,
-#login-dropdown-sign-up {
+#login-dropdown-sign-up, 
+#login-dropdown-change-password{
   color: rgb(65, 132, 255);
   border-color:rgb(65, 132, 255) ;
 }
 
 #login-dropdown-sign-in:hover,
 #login-dropdown-sign-out:hover,
-#login-dropdown-sign-up:hover {
+#login-dropdown-sign-up:hover 
+#login-dropdown-change-password:hover{
   color: rgb(65, 132, 255) ;
   background-color: transparent;
 }
@@ -92,15 +94,6 @@ h1{
   background-color: transparent;
 }
 
-#login-dropdown-sign-in,
-#login-dropdown-sign-out,
-#login-dropdown-sign-up,
-#login-dropdown-sign-in:hover,
-#login-dropdown-sign-out:hover,
-#login-dropdown-sign-up:hover {
-  color: rgb(65, 132, 255);
-}
-
 .custom-navbar {
   background-color: rgb(21, 9, 102);
   border-bottom: 2px solid rgba(65, 132, 255, 0.4);
@@ -112,7 +105,6 @@ h1{
 .custom-brand span,
 .custom-navbar .nav-link,
 .custom-navbar .navbar-brand,
-
 .custom-navbar .dropdown-toggle,
 .custom-navbar .nav-link:hover,
 .custom-navbar .navbar-brand:hover,
