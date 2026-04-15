@@ -79,7 +79,7 @@ h1{
 #login-dropdown-sign-out:hover,
 #login-dropdown-sign-up:hover 
 #login-dropdown-change-password:hover{
-  color: rgb(65, 132, 255) ;
+  color: rgb(50, 100, 191) ;
   background-color: transparent;
 }
 
@@ -105,10 +105,7 @@ h1{
 .custom-brand span,
 .custom-navbar .nav-link,
 .custom-navbar .navbar-brand,
-.custom-navbar .dropdown-toggle,
-.custom-navbar .nav-link:hover,
-.custom-navbar .navbar-brand:hover,
-.custom-navbar .dropdown-toggle:hover {
+.custom-navbar .dropdown-toggle {
   color: rgb(65, 132, 255);
 }
 
@@ -161,6 +158,19 @@ h1{
   color: rgb(65, 132, 255);
   font-weight: 500;
   border-radius: 8px;
+}
+
+.custom-tag-btn {
+  background-color: rgb(65, 132, 255) !important; 
+  border: none !important;
+  color: rgb(21, 9, 102) !important; 
+  font-weight: 800;
+  border-radius: 8px;
+}
+
+.custom-tag-btn:hover{
+  background-color: rgb(65, 132, 255) !important; 
+  color: rgb(21, 9, 102) !important; 
 }
 
 .shortline {

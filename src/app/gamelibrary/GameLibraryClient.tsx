@@ -20,7 +20,7 @@ export default function GameLibraryClient({ games }: { games: Game[] }) {
       <Row className="g-4">
         {games.map((game) => (
           <Col md={4} key={game.id}>
-            <Card className="h-100 shadow-sm">
+            <Card className="h-100 shadow-sm custom-card-body">
 
               <Card.Img
                 variant="top"
@@ -51,7 +51,7 @@ export default function GameLibraryClient({ games }: { games: Game[] }) {
 
                 <div>
                   {game.tags.map((tag) => (
-                    <span key={tag} className="badge bg-secondary me-1">
+                    <span key={tag} className="badge custom-tag-btn me-1">
                       {tag}
                     </span>
                   ))}
