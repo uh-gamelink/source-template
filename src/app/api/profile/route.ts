@@ -2,13 +2,13 @@ import { NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 
-export async function POST(request: Request) {
+export async function PUT(request: Request) {
   try {
     const session = await auth();
 
     if (!session?.user?.email) {
       return NextResponse.json(
-        { error: 'You must be signed in to create a profile.' },
+        { error: 'You must be signed in to update your profile.' },
         { status: 401 },
       );
     }
@@ -50,13 +50,13 @@ export async function POST(request: Request) {
     });
 
     return NextResponse.json(
-      { message: 'Profile saved successfully.', profile },
+      { message: 'Profile updated successfully.', profile },
       { status: 200 },
     );
   } catch (error) {
-    console.error('Error saving profile:', error);
+    console.error('Error updating profile:', error);
     return NextResponse.json(
-      { error: 'Failed to save profile.' },
+      { error: 'Failed to update profile.' },
       { status: 500 },
     );
   }

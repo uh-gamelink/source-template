@@ -12,7 +12,6 @@ const ProfileForm = () => {
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // 🔥 NEW
   const [isEdit, setIsEdit] = useState(false);
   const [description, setDescription] = useState('');
   const [interests, setInterests] = useState('');
@@ -20,21 +19,21 @@ const ProfileForm = () => {
 
   const router = useRouter();
 
-  // 🔥 FETCH EXISTING PROFILE (EDIT MODE)
+  // 🔥 FETCH EXISTING PROFILE
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const res = await fetch('/api/profile');
+        const res = await fetch('/api/profile/me');
 
         if (res.ok) {
           const data = await res.json();
 
-          if (data) {
+          if (data?.profile) {
             setIsEdit(true);
-            setDescription(data.description || '');
-            setInterests(data.interests || '');
-            setExistingImage(data.profilePicture || null);
-            setPreview(data.profilePicture || null);
+            setDescription(data.profile.description || '');
+            setInterests(data.profile.interests || '');
+            setExistingImage(data.profile.profilePicture || null);
+            setPreview(data.profile.profilePicture || null);
           }
         }
       } catch (err) {
@@ -49,7 +48,9 @@ const ProfileForm = () => {
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files ? e.target.files[0] : null;
 
-    if (preview) URL.revokeObjectURL(preview);
+    if (preview && preview.startsWith('blob:')) {
+      URL.revokeObjectURL(preview);
+    }
 
     if (file) {
       setSelectedFile(file);
@@ -62,11 +63,13 @@ const ProfileForm = () => {
 
   useEffect(() => {
     return () => {
-      if (preview && selectedFile) URL.revokeObjectURL(preview);
+      if (preview && preview.startsWith('blob:')) {
+        URL.revokeObjectURL(preview);
+      }
     };
-  }, [preview, selectedFile]);
+  }, [preview]);
 
-  // 🔥 SUBMIT HANDLER (CREATE OR EDIT)
+  // 🔥 SUBMIT HANDLER
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError('');
@@ -85,7 +88,7 @@ const ProfileForm = () => {
       }
 
       const res = await fetch('/api/profile', {
-        method: isEdit ? 'PUT' : 'POST', // 🔥 KEY CHANGE
+        method: isEdit ? 'PUT' : 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -96,10 +99,16 @@ const ProfileForm = () => {
         }),
       });
 
-      const data = await res.json();
+      let data: { error?: string } | null = null;
+
+      try {
+        data = await res.json();
+      } catch {
+        data = null;
+      }
 
       if (!res.ok) {
-        setError(data.error || 'Failed to save profile.');
+        setError(data?.error || 'Failed to save profile.');
         setIsSubmitting(false);
         return;
       }
@@ -117,8 +126,6 @@ const ProfileForm = () => {
       <Container>
         <Row className="justify-content-center my-5">
           <Col xs={12} md={10} lg={8}>
-
-            {/* 🔥 TITLE CHANGES */}
             <h1 className="text-center mb-3">
               {isEdit ? 'Edit Profile' : 'Create a Profile'}
             </h1>
@@ -128,7 +135,7 @@ const ProfileForm = () => {
                 <Card.Body>
                   <Row>
 
-                    {/* LEFT SIDE */}
+                    {/* LEFT */}
                     <Col md={6}>
                       <Form.Group className="mb-3">
                         <Form.Label>Description</Form.Label>
@@ -155,7 +162,7 @@ const ProfileForm = () => {
                       </Form.Group>
                     </Col>
 
-                    {/* RIGHT SIDE */}
+                    {/* RIGHT */}
                     <Col md={6} className="d-flex flex-column justify-content-center align-items-center">
 
                       {preview ? (
