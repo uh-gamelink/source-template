@@ -165,7 +165,7 @@ const playerList = [
   },
   {
     username: "bullzye",
-    imageUrl: "/players/player5.png",
+    imageUrl: "https://i.pinimg.com/736x/31/33/12/313312899252ca116155d9c8e173a962.jpg",
     game: "Counter-Strike 2",
     rank: "Gold Nova",
   },
