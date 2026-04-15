@@ -176,3 +176,26 @@ h1{
 .shortline {
   color:rgb(65, 132, 255, 0.385);
 }
+
+.icon{
+  color: rgba(65, 132, 255, 0.696)
+}
+
+.form-control[type="file"]::file-selector-button {
+  background-color:rgba(65, 132, 255);  /* light blue */
+  color: rgb(21, 9, 102);
+  border: none;
+  font-weight: 530;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.form-control[type="file"]::file-selector-button:hover {
+  background-color: #44a1f7;  /* slightly darker on hover */
+}
+
+.form-control::placeholder {
+  color: #1e6bdebd;   /* light blue */
+  opacity: 1;       /* prevents fading */
+}

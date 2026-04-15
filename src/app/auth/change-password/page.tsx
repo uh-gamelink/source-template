@@ -56,7 +56,7 @@ const ChangePassword = () => {
       <Container>
         <Row className="justify-content-center">
           <Col xs={5}>
-            <h1 className="text-center">Change Password</h1>
+            <h1 className="text-center pt-5">Change Password</h1>
             <Card className="custom-card-body">
               <Card.Body>
                 <Form onSubmit={handleSubmit(onSubmit)}>

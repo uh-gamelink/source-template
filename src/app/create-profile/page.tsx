@@ -91,7 +91,7 @@ const CreateProfile = () => {
         <Row className="justify-content-center my-5">
           <Col xs={12} md={10} lg={8}>
             <h1 className="text-center mb-3">Create a Profile</h1>
-            <Card>
+            <Card className="custom-card-body">
               <Form onSubmit={handleSubmit}>
                 <Card.Body>
                   <Row>
@@ -113,7 +113,9 @@ const CreateProfile = () => {
                           name="interests"
                           as="textarea"
                           rows={3}
+                          className="form-control-text"
                           placeholder="Favorite pastimes"
+                         
                           required
                         />
                       </Form.Group>
@@ -129,10 +131,10 @@ const CreateProfile = () => {
                           alt="Profile Preview"
                         />
                       ) : (
-                        <PersonCircle size={150} className="text-secondary" />
+                        <PersonCircle size={150} className="icon" />
                       )}
 
-                      <Form.Group controlId="formFile" className="mt-3 text-center">
+                      <Form.Group controlId="formFile" className="mt-3 text-center ">
                         <Form.Label>Upload Profile Picture</Form.Label>
                         <Form.Control
                           type="file"
@@ -147,7 +149,7 @@ const CreateProfile = () => {
                 </Card.Body>
 
                 <Card.Footer>
-                  <Button type="submit" className="mx-auto d-block" disabled={isSubmitting}>
+                  <Button type="submit" className="mx-auto d-block custom-reg-btn" disabled={isSubmitting}>
                     {isSubmitting ? 'Creating...' : 'Create Profile'}
                   </Button>
                 </Card.Footer>
