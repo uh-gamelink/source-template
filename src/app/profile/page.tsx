@@ -77,7 +77,7 @@ export default function ProfilePage() {
 
   return (
     <Container className="py-5">
-      <Card
+      <Card className="custom-card-body"
         style={{
           borderRadius: '15px',
           boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
@@ -99,7 +99,7 @@ export default function ProfilePage() {
                 height: '80px',
                 borderRadius: '50%',
                 overflow: 'hidden',
-                border: '2px solid #ccc',
+                border: '2px solid rgba(92, 148, 252, 0.79)',
               }}
             >
               {profileImage ? (
@@ -154,7 +154,7 @@ export default function ProfilePage() {
                     key={index}
                     style={{
                       padding: '8px 0',
-                      borderBottom: '1px solid #eee',
+                      borderBottom: '1px solid rgb(92, 148, 252)'
                     }}
                   >
                     {game}
@@ -174,11 +174,11 @@ export default function ProfilePage() {
                     key={index}
                     style={{
                       padding: '8px 0',
-                      borderBottom: '1px solid #eee',
+                      borderBottom: '1px solid rgba(92, 148, 252, 0.45)'
                     }}
                   >
                     {interest}
-                  </div>
+                  </div >
                 ))
               ) : (
                 <div>No interests added yet.</div>
