@@ -3,7 +3,16 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { upload } from '@vercel/blob/client';
-import { Container, Row, Col, Form, Image, Card, Button, Alert } from 'react-bootstrap';
+import {
+  Container,
+  Row,
+  Col,
+  Form,
+  Image,
+  Card,
+  Button,
+  Alert,
+} from 'react-bootstrap';
 import { PersonCircle } from 'react-bootstrap-icons';
 
 const ProfileForm = () => {
@@ -14,12 +23,12 @@ const ProfileForm = () => {
 
   const [isEdit, setIsEdit] = useState(false);
   const [description, setDescription] = useState('');
-  const [interests, setInterests] = useState('');
+  const [interests, setInterests] = useState<string[]>([]);
+  const [newInterest, setNewInterest] = useState('');
   const [existingImage, setExistingImage] = useState<string | null>(null);
 
   const router = useRouter();
 
-  // 🔥 FETCH EXISTING PROFILE
   useEffect(() => {
     const fetchProfile = async () => {
       try {
@@ -31,7 +40,14 @@ const ProfileForm = () => {
           if (data?.profile) {
             setIsEdit(true);
             setDescription(data.profile.description || '');
-            setInterests(data.profile.interests || '');
+            setInterests(
+              data.profile.interests
+                ? data.profile.interests
+                    .split(',')
+                    .map((item: string) => item.trim())
+                    .filter(Boolean)
+                : [],
+            );
             setExistingImage(data.profile.profilePicture || null);
             setPreview(data.profile.profilePicture || null);
           }
@@ -44,7 +60,6 @@ const ProfileForm = () => {
     fetchProfile();
   }, []);
 
-  // 🔥 IMAGE HANDLING
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files ? e.target.files[0] : null;
 
@@ -69,10 +84,39 @@ const ProfileForm = () => {
     };
   }, [preview]);
 
-  // 🔥 SUBMIT HANDLER
+  const handleAddInterest = () => {
+    const trimmed = newInterest.trim();
+
+    if (!trimmed) return;
+    if (interests.includes(trimmed)) {
+      setNewInterest('');
+      return;
+    }
+
+    setInterests([...interests, trimmed]);
+    setNewInterest('');
+  };
+
+  const handleRemoveInterest = (indexToRemove: number) => {
+    setInterests(interests.filter((_, index) => index !== indexToRemove));
+  };
+
+  const handleInterestKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleAddInterest();
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError('');
+
+    if (interests.length === 0) {
+      setError('Please add at least one interest.');
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
@@ -94,7 +138,7 @@ const ProfileForm = () => {
         },
         body: JSON.stringify({
           description,
-          interests,
+          interests: interests.join(', '),
           profilePicture,
         }),
       });
@@ -134,8 +178,6 @@ const ProfileForm = () => {
               <Form onSubmit={handleSubmit}>
                 <Card.Body>
                   <Row>
-
-                    {/* LEFT */}
                     <Col md={6}>
                       <Form.Group className="mb-3">
                         <Form.Label>Description</Form.Label>
@@ -151,26 +193,71 @@ const ProfileForm = () => {
 
                       <Form.Group className="mb-3">
                         <Form.Label>Interests</Form.Label>
-                        <Form.Control
-                          value={interests}
-                          onChange={(e) => setInterests(e.target.value)}
-                          as="textarea"
-                          rows={3}
-                          placeholder="Favorite pastimes"
-                          required
-                        />
+
+                        <div className="d-flex flex-wrap gap-2 mb-3">
+                          {interests.map((interest, index) => (
+                            <div
+                              key={`${interest}-${index}`}
+                              className="px-3 py-1 rounded-pill d-flex align-items-center"
+                              style={{
+                                backgroundColor: '#0d6efd',
+                                color: 'white',
+                              }}
+                            >
+                              <span>{interest}</span>
+                              <button
+                                type="button"
+                                onClick={() => handleRemoveInterest(index)}
+                                style={{
+                                  marginLeft: '8px',
+                                  border: 'none',
+                                  background: 'transparent',
+                                  color: 'white',
+                                  fontWeight: 'bold',
+                                  cursor: 'pointer',
+                                  lineHeight: 1,
+                                }}
+                                aria-label={`Remove ${interest}`}
+                              >
+                                ×
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+
+                        <div className="d-flex gap-2">
+                          <Form.Control
+                            value={newInterest}
+                            onChange={(e) => setNewInterest(e.target.value)}
+                            onKeyDown={handleInterestKeyDown}
+                            type="text"
+                            placeholder="Add an interest"
+                          />
+                          <Button
+                            type="button"
+                            variant="secondary"
+                            onClick={handleAddInterest}
+                          >
+                            Add
+                          </Button>
+                        </div>
                       </Form.Group>
                     </Col>
 
-                    {/* RIGHT */}
-                    <Col md={6} className="d-flex flex-column justify-content-center align-items-center">
-
+                    <Col
+                      md={6}
+                      className="d-flex flex-column justify-content-center align-items-center"
+                    >
                       {preview ? (
                         <Image
                           src={preview}
                           roundedCircle
                           thumbnail
-                          style={{ width: '150px', height: '150px', objectFit: 'cover' }}
+                          style={{
+                            width: '150px',
+                            height: '150px',
+                            objectFit: 'cover',
+                          }}
                           alt="Profile Preview"
                         />
                       ) : (
@@ -186,7 +273,6 @@ const ProfileForm = () => {
                         />
                       </Form.Group>
                     </Col>
-
                   </Row>
 
                   {error && (
@@ -203,14 +289,16 @@ const ProfileForm = () => {
                     disabled={isSubmitting}
                   >
                     {isSubmitting
-                      ? (isEdit ? 'Saving...' : 'Creating...')
-                      : (isEdit ? 'Save Changes' : 'Create Profile')}
+                      ? isEdit
+                        ? 'Saving...'
+                        : 'Creating...'
+                      : isEdit
+                        ? 'Save Changes'
+                        : 'Create Profile'}
                   </Button>
                 </Card.Footer>
-
               </Form>
             </Card>
-
           </Col>
         </Row>
       </Container>
