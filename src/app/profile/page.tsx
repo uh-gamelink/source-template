@@ -142,7 +142,7 @@ export default function ProfilePage() {
                 {user.profile?.description || 'No description added yet.'}
               </p>
 
-              <Link href="/profile/edit">Edit</Link>
+              <Link href="/profile/edit">Edit Profile</Link>
             </Col>
 
             <Col md={4}>
