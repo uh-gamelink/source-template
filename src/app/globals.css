@@ -135,7 +135,7 @@ h1{
 
 .custom-card-body .form-control {
   background-color: transparent !important;  
-  /*border: 1px solid rgb(65, 132, 255, 0.526)!important;*/   
+  border: 1px solid rgb(65, 132, 255, 0.526)!important;   
   color:rgb(65, 132, 255) !important;                
 }
 
