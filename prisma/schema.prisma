@@ -45,3 +45,13 @@ model Player {
   game     String
   rank     String
 }
+
+model CommunityServer {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  description String
+  inviteUrl   String
+  tags        String[]
+  imageUrl    String?
+  featured    Boolean  @default(false)
+}

@@ -35,13 +35,19 @@ const NavBar: React.FC = () => {
               Home
             </Nav.Link>
 
-            <Nav.Link as={Link} href="/gamelibrary" active={pathName === "/gamelibrary"}>
+            <Nav.Link as={Link} href="/gamelibrary" active={pathName === '/gamelibrary'}>
               Game Library
             </Nav.Link>
 
             <Nav.Link as={Link} href="/community" active={pathName === '/community'} id="community-nav">
               Community
             </Nav.Link>
+
+            {session && (
+              <Nav.Link as={Link} href="/findplayers" active={pathName === '/findplayers'} id="findplayers-nav">
+                Find Players
+              </Nav.Link>
+            )}
 
             {session && (
               <Nav.Link as={Link} href="/profile" active={pathName === '/profile'} id="profile-nav">
