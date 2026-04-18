@@ -31,10 +31,6 @@ const NavBar: React.FC = () => {
 
         <Navbar.Collapse id="main-navbar-nav">
           <Nav className="me-auto">
-            <Nav.Link as={Link} href="/" active={pathName === '/'} id="home-nav">
-              Home
-            </Nav.Link>
-
             <Nav.Link as={Link} href="/gamelibrary" active={pathName === '/gamelibrary'}>
               Game Library
             </Nav.Link>
