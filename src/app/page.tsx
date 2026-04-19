@@ -32,7 +32,11 @@ const Home = () => (
       <div className="shortline pb-4">____________________________</div>
 
       <p>
-        UH GameLink helps University of Hawaiʻi students connect through video games.
+        UH GameLink is a web application designed to help University of Hawai&apos;i students
+        connect with other students through video games. Many students play games casually or
+        competitively, but it can be difficult to find other UH students with similar interests,
+        schedules, or favorite games. This project aims to make it easier for students to meet new
+        people, discover gaming communities, and build connections through shared games.
       </p>
 
       <p>
@@ -55,36 +59,51 @@ const Home = () => (
         </div>
       </div>
       <Container>
-        <Row className="g-5 my-4">
+        <Row className="mb-2 mt-4">
+          <Col className="text-center">
+            <h3>Directory</h3>
+            <div className="shortline pb-4">____________________________</div>
+          </Col>
+        </Row>
+        <Row className="g-5 pb-5 pt-1 mx-5">
           <Col md={4}>
-            <Card className="h-100 shadow-sm custom-card-body p-3">
+            <Card className="h-100 shadow-sm custom-card-body p-3 text-center">
               <p>
-                Visit our community page to explore Discord game servers on campus.
+                Visit our community page to see UH's Discord game servers.
               </p>
-              <a href="/community" className="btn custom-tag-btn border-0 w-100">
+              <a
+                href="/community"
+                className="btn custom-tag-btn border-0 w-50 mx-auto d-block"
+              >
                 Connect
               </a>
             </Card>
           </Col>
 
           <Col md={4}>
-            <Card className="h-100 shadow-sm custom-card-body p-3">
+            <Card className="h-100 shadow-sm custom-card-body p-3 text-center">
               <p>
                 Learn more about the developers behind UH GameLink.
               </p>
-              <a href="/about" className="btn custom-tag-btn border-0 w-100">
+              <a
+                href="/about"
+                className="btn custom-tag-btn border-0 w-50 mx-auto d-block"
+              >
                 Visit
               </a>
             </Card>
           </Col>
 
           <Col md={4}>
-            <Card className="h-100 shadow-sm custom-card-body p-3">
+            <Card className="h-100 shadow-sm custom-card-body p-3 text-center">
               <p>
                 Join the UH gaming community and connect with other players.
               </p>
-              <a href="/auth/signin" className="btn custom-tag-btn border-0 w-100">
-                Sign Up
+              <a
+                href="signin"
+                className="btn custom-tag-btn border-0 w-50 mx-auto d-block"
+              >
+                Join
               </a>
             </Card>
           </Col>
