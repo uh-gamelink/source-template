@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation';
 import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import Container from 'react-bootstrap/Container';
-import FindPlayersBrowser from '@/components/FindPlayerBrowser';
+import FindPlayersBrowser from '@/components/FindPlayersBrowser';
 
 const PAGE_SIZE = 20;
 
@@ -14,7 +14,7 @@ type FindPlayersPageProps = {
   }>;
 };
 
-const FindPlayerPage = async ({ searchParams }: FindPlayersPageProps) => {
+const FindPlayersPage = async ({ searchParams }: FindPlayersPageProps) => {
   const session = await auth();
 
   if (!session?.user) {
@@ -46,7 +46,6 @@ const FindPlayerPage = async ({ searchParams }: FindPlayersPageProps) => {
   };
 
   const totalPlayers = await prisma.player.count({ where });
-
   const totalPages = Math.max(1, Math.ceil(totalPlayers / PAGE_SIZE));
   const safePage = Math.min(currentPage, totalPages);
 
@@ -54,16 +53,11 @@ const FindPlayerPage = async ({ searchParams }: FindPlayersPageProps) => {
     where,
     skip: (safePage - 1) * PAGE_SIZE,
     take: PAGE_SIZE,
-    orderBy: {
-      username: 'asc',
-    },
+    orderBy: { username: 'asc' },
   });
 
   return (
     <Container className="py-4">
-      <h1 className="mb-3">Find Players</h1>
-      <p className="mb-4">Click on the plus icon to request other players.</p>
-
       <FindPlayersBrowser
         players={players}
         totalPlayers={totalPlayers}
@@ -76,4 +70,4 @@ const FindPlayerPage = async ({ searchParams }: FindPlayersPageProps) => {
   );
 };
 
-export default FindPlayerPage;
+export default FindPlayersPage;
