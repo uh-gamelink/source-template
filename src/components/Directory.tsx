@@ -1,61 +1,69 @@
-  import { Col, Container, Card, Button } from 'react-bootstrap';
-  
-  /** The Footer appears at the bottom of every page. Rendered by the App Layout component. */
-  const Directory = () => (
-      <Container className="mt-4">
-      <Col>
-        <Card>
-         <Card.Body>
-            <Card.Text>Visit our community page to exploring the dicord game servers on campus</Card.Text>
-              <div className="mt-auto">
-                <Button
-                  href="/src/community"
-                  target="Community"
-                  rel="_blank"
-                  className="custom-tag-btn border-0"
-                >
+import { Col, Container, Row, Card, Button } from 'react-bootstrap';
+import Link from 'next/link';
+
+const Directory = () => (
+  <Container className="mt-4">
+    <Row className="g-3">
+
+      {/* COMMUNITY */}
+      <Col md={4}>
+        <Card className="h-100 shadow-sm custom-card-body d-flex flex-column">
+          <Card.Body className="d-flex flex-column">
+            <Card.Text>
+              Visit our community page to explore the Discord game servers on campus.
+            </Card.Text>
+
+            <div className="mt-auto">
+              <Link href="/community" passHref>
+                <Button className="custom-tag-btn border-0 w-100">
                   Connect
                 </Button>
-              </div>
+              </Link>
+            </div>
           </Card.Body>
-         </Card>
+        </Card>
       </Col>
-      <Col>
-        <Card>
-         <Card.Body>
-            <Card.Text> See our about page to get to know the developers of UH GameLink</Card.Text>
-              <div className="mt-auto">
-                <Button
-                  href="/src/app/about"
-                  target="About"
-                  rel="_blank"
-                  className="custom-tag-btn border-0"
-                >
+
+      {/* ABOUT */}
+      <Col md={4}>
+        <Card className="h-100 shadow-sm custom-card-body d-flex flex-column">
+          <Card.Body className="d-flex flex-column">
+            <Card.Text>
+              See our About page to get to know the developers of UH GameLink.
+            </Card.Text>
+
+            <div className="mt-auto">
+              <Link href="/about" passHref>
+                <Button className="custom-tag-btn border-0 w-100">
                   Visit
                 </Button>
-              </div>
+              </Link>
+            </div>
           </Card.Body>
-         </Card>
+        </Card>
       </Col>
-      <Col>
-        <Card>
-         <Card.Body>
-            <Card.Text>Interested in joining the UH game community, go to our sign up page to connect with players on campus</Card.Text>
-              <div className="mt-auto">
-                <Button
-                  href="/auth/app/signin"
-                  target="Signup"
-                  rel="_blank"
-                  className="custom-tag-btn border-0"
-                >
-                  Sign up
+
+      {/* SIGN UP */}
+      <Col md={4}>
+        <Card className="h-100 shadow-sm custom-card-body d-flex flex-column">
+          <Card.Body className="d-flex flex-column">
+            <Card.Text>
+              Interested in joining the UH game community? Sign up to connect with players.
+            </Card.Text>
+
+            <div className="mt-auto">
+              <Link href="/auth/signin" passHref>
+                <Button className="custom-tag-btn border-0 w-100">
+                  Sign Up
                 </Button>
-              </div>  
+              </Link>
+            </div>
           </Card.Body>
-         </Card>
+        </Card>
       </Col>
-     </Container>
-  );
-  
-  export default Directory;
-  
+
+    </Row>
+  </Container>
+);
+
+export default Directory;
