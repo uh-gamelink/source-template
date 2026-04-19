@@ -99,7 +99,7 @@ const FindPlayersBrowser = ({
                     Filter
                   </Button>
 
-                  <Link href="/findplayers" className="btn btn-outline-secondary">
+                  <Link href="/findplayers" className="btn custom-reset-btn">
                     Reset
                   </Link>
                 </div>
@@ -108,10 +108,6 @@ const FindPlayersBrowser = ({
           )}
         </div>
       </div>
-
-      <p className="mb-3">
-        Showing {players.length} of {totalPlayers} player{totalPlayers === 1 ? '' : 's'}.
-      </p>
 
       <div
         style={{
@@ -125,7 +121,10 @@ const FindPlayersBrowser = ({
           <PlayerCard key={player.id} player={player} />
         ))}
       </div>
-
+      
+      <p className="mb-3 text-center pt-3">
+        Showing {players.length} of {totalPlayers} player{totalPlayers === 1 ? '' : 's'}
+      </p>
       <div className="d-flex justify-content-center align-items-center gap-3 mt-4">
         {safePage > 1 ? (
           <Link href={createPageLink(safePage - 1)} className="btn btn-outline-primary">
@@ -136,7 +135,7 @@ const FindPlayersBrowser = ({
             Previous
           </Button>
         )}
-
+        
         <span>
           Page {safePage} of {totalPages}
         </span>
