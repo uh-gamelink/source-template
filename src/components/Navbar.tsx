@@ -43,6 +43,10 @@ const NavBar: React.FC = () => {
               Community
             </Nav.Link>
 
+            <Nav.Link as={Link} href="/about" active={pathName === "/about"}>
+              About Us
+            </Nav.Link>
+
             {session && (
               <Nav.Link as={Link} href="/profile" active={pathName === '/profile'} id="profile-nav">
                 Profile
