@@ -1,6 +1,8 @@
 import Image from 'next/image';
-import { Container } from 'react-bootstrap';
-import Directory from '@/components/Directory';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Card from 'react-bootstrap/Card';
 
 const games = [
   '/games/apex-legends.jpg',
@@ -16,7 +18,6 @@ const games = [
   '/games/valorant.png',
 ];
 
-// duplicate the list so the scroll loops more smoothly
 const scrollingGames = [...games, ...games];
 
 const Home = () => (
@@ -27,19 +28,17 @@ const Home = () => (
         <br />
         UH GameLink
       </h1>
+
       <div className="shortline pb-4">____________________________</div>
+
       <p>
-        UH GameLink is a web application designed to help University of Hawai&apos;i students
-        connect with other students through video games. Many students play games casually or
-        competitively, but it can be difficult to find other UH students with similar interests,
-        schedules, or favorite games. This project aims to make it easier for students to meet new
-        people, discover gaming communities, and build connections through shared games.
+        UH GameLink helps University of Hawaiʻi students connect through video games.
       </p>
-      <br />
+
       <p>
-        Feel free to explore the site&apos;s library, find other players, and link up with
-        community!
+        Explore the site&apos;s library, find players, and connect with the community!
       </p>
+
       <div className="game-belt">
         <div className="game-track">
           {scrollingGames.map((src, index) => (
@@ -55,7 +54,42 @@ const Home = () => (
           ))}
         </div>
       </div>
-      <Directory />
+      <Container>
+        <Row className="g-5 my-4">
+          <Col md={4}>
+            <Card className="h-100 shadow-sm custom-card-body p-3">
+              <p>
+                Visit our community page to explore Discord game servers on campus.
+              </p>
+              <a href="/community" className="btn custom-tag-btn border-0 w-100">
+                Connect
+              </a>
+            </Card>
+          </Col>
+
+          <Col md={4}>
+            <Card className="h-100 shadow-sm custom-card-body p-3">
+              <p>
+                Learn more about the developers behind UH GameLink.
+              </p>
+              <a href="/about" className="btn custom-tag-btn border-0 w-100">
+                Visit
+              </a>
+            </Card>
+          </Col>
+
+          <Col md={4}>
+            <Card className="h-100 shadow-sm custom-card-body p-3">
+              <p>
+                Join the UH gaming community and connect with other players.
+              </p>
+              <a href="/auth/signin" className="btn custom-tag-btn border-0 w-100">
+                Sign Up
+              </a>
+            </Card>
+          </Col>
+        </Row>
+      </Container>
     </Container>
   </main>
 );
