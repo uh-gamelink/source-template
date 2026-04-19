@@ -100,7 +100,7 @@ const Home = () => (
                 Join the UH gaming community and connect with other players.
               </p>
               <a
-                href="signin"
+                href="/auth/signin"
                 className="btn custom-tag-btn border-0 w-50 mx-auto d-block"
               >
                 Join
