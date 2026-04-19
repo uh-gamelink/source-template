@@ -199,3 +199,13 @@ h1{
   color: #1e6bdebd;  
   opacity: 1;       
 }
+
+.custom-link {
+  color: rgb(65, 132, 255);
+  text-decoration: none;
+}
+
+.custom-link:hover {
+  text-decoration: none;
+  color: rgb(65, 132, 255); /* keeps same color on hover */
+}
