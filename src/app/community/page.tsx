@@ -5,7 +5,7 @@ import { auth } from '@/lib/auth';
 export default async function CommunityPage() {
   const session = await auth();
 
-  const servers = await prisma.CommunityServer.findMany({
+  const servers = await prisma.communityServer.findMany({
     orderBy: [{ featured: 'desc' }, { name: 'asc' }],
   });
 

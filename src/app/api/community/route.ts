@@ -20,7 +20,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const server = await prisma.CommunityServer.create({
+    const server = await prisma.communityServer.create({
       data: {
         name,
         description,
