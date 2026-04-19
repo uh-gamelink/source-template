@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import { Container } from 'react-bootstrap';
+import Directory from '@/components/Directory';
 
 const games = [
   '/games/apex-legends.jpg',
@@ -54,6 +55,7 @@ const Home = () => (
           ))}
         </div>
       </div>
+      <Directory />
     </Container>
   </main>
 );
