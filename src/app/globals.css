@@ -200,12 +200,32 @@ h1{
   opacity: 1;       
 }
 
-.custom-link {
-  color: rgb(65, 132, 255);
+.custom-link-button {
+  display: inline-flex;
+  gap: 6px;
+
+  padding: 5px 5px;
+
   text-decoration: none;
+  font-size: 18px;
+  font-weight: 500;
+
+  color: rgb(65, 132, 255);
+  background-color: transparent;
+
+  border: 1.5px solid rgb(65, 132, 255);
+  border-radius: 20px;
+
+  transition: all 0.2s ease;
 }
 
-.custom-link:hover {
+.custom-link-button:hover {
   text-decoration: none;
-  color: rgb(65, 132, 255); /* keeps same color on hover */
+  color: rgb(38, 91, 188); /* keeps same color on hover */
+  border-color: rgb(38, 91, 188) ;
+}
+
+.username-size{
+  font-size: 19px;
+  padding-left: 15%;
 }
