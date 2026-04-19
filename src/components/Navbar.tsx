@@ -31,11 +31,7 @@ const NavBar: React.FC = () => {
 
         <Navbar.Collapse id="main-navbar-nav">
           <Nav className="me-auto">
-            <Nav.Link as={Link} href="/" active={pathName === '/'} id="home-nav">
-              Home
-            </Nav.Link>
-
-            <Nav.Link as={Link} href="/gamelibrary" active={pathName === "/gamelibrary"}>
+            <Nav.Link as={Link} href="/gamelibrary" active={pathName === '/gamelibrary'}>
               Game Library
             </Nav.Link>
 
@@ -46,6 +42,12 @@ const NavBar: React.FC = () => {
             <Nav.Link as={Link} href="/about" active={pathName === "/about"}>
               About Us
             </Nav.Link>
+
+            {session && (
+              <Nav.Link as={Link} href="/findplayers" active={pathName === '/findplayers'} id="findplayers-nav">
+                Find Players
+              </Nav.Link>
+            )}
 
             {session && (
               <Nav.Link as={Link} href="/profile" active={pathName === '/profile'} id="profile-nav">

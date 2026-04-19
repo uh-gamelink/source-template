@@ -171,6 +171,98 @@ const playerList = [
   },
 ];
 
+const communityServers = [
+  {
+    name: 'UH Esports',
+    description: 'Official University of Hawaiʻi esports community server.',
+    inviteUrl: 'https://discord.gg/uhesports',
+    tags: ['UH', 'Esports', 'Campus', 'Official', 'Events'],
+    imageUrl: '/servers/uh-esports.webp',
+    featured: true,
+  },
+  {
+    name: 'Women of UH Esports',
+    description: 'Women of UH Esports community server.',
+    inviteUrl: 'https://discord.gg/jPRujZtnmz',
+    tags: ['UH', 'Esports', 'Community', 'Campus', 'Official'],
+    imageUrl: '/servers/wouhe.webp',
+    featured: true,
+  },
+  {
+    name: 'Manoa Academy of Gamers',
+    description: 'The goal of MAG is to provide a safe and comfortable space for people to play games, as well as make connections and acknowledge that gaming and college life can be mutually beneficial to students’ success in assimilating into college life at UHM.',
+    inviteUrl: 'https://discord.gg/jHrrdW4dnN',
+    tags: ['UH', 'Esports','Community', 'Campus', 'Student Organization'],
+    imageUrl: '/servers/manoa-academy-of-gamers.webp',
+    featured: true,
+  },
+  /* {
+    name: 'Apex Legends',
+    description: 'Official community-run, developer-supported Apex Legends server.',
+    inviteUrl: 'https://discord.gg/apexlegends',
+    tags: ['Apex Legends', 'Official'],
+    imageUrl: null,
+    featured: false,
+  },
+  {
+    name: 'Official Fortnite',
+    description: 'Official Fortnite Discord server for news, updates, and LFG.',
+    inviteUrl: 'https://discord.gg/fortnite',
+    tags: ['Fortnite', 'Official'],
+    imageUrl: null,
+    featured: false,
+  },
+  {
+    name: 'Genshin Impact Official',
+    description: 'Official Genshin Impact Discord server.',
+    inviteUrl: 'https://discord.gg/genshinimpact',
+    tags: ['Genshin Impact', 'Official'],
+    imageUrl: null,
+    featured: false,
+  },
+  {
+    name: 'League of Legends',
+    description: 'Official League of Legends Discord server run in collaboration with Riot Games.',
+    inviteUrl: 'https://discord.gg/leagueoflegends',
+    tags: ['League of Legends', 'Official'],
+    imageUrl: null,
+    featured: false,
+  },
+  {
+    name: 'MINECRAFT',
+    description: 'Official Minecraft Discord server.',
+    inviteUrl: 'https://discord.gg/minecraft',
+    tags: ['Minecraft', 'Official'],
+    imageUrl: null,
+    featured: false,
+  },
+  {
+    name: 'Rocket League',
+    description: 'Official, developer-run Rocket League Discord server.',
+    inviteUrl: 'https://discord.gg/rocketleague',
+    tags: ['Rocket League', 'Official'],
+    imageUrl: null,
+    featured: false,
+  },
+  {
+    name: 'Stardew Valley',
+    description: 'Main Stardew Valley community server.',
+    inviteUrl: 'https://discord.gg/stardewvalley',
+    tags: ['Stardew Valley', 'Community'],
+    imageUrl: null,
+    featured: false,
+  },
+  {
+    name: 'VALORANT',
+    description: 'Official VALORANT Discord server in collaboration with Riot Games.',
+    inviteUrl: 'https://discord.gg/valorant',
+    tags: ['Valorant', 'Official'],
+    imageUrl: null,
+    featured: false,
+  },
+  */
+];
+
 async function main() {
   console.log("Seeding the database");
 
@@ -254,6 +346,28 @@ async function main() {
         imageUrl: player.imageUrl,
         game: player.game,
         rank: player.rank,
+      },
+    });
+  }
+  for (const server of communityServers) {
+    console.log(`  Adding community server: ${server.name}`);
+
+    await prisma.communityServer.upsert({
+      where: { name: server.name },
+      update: {
+        description: server.description,
+        inviteUrl: server.inviteUrl,
+        tags: server.tags,
+        imageUrl: server.imageUrl,
+        featured: server.featured,
+      },
+      create: {
+        name: server.name,
+        description: server.description,
+        inviteUrl: server.inviteUrl,
+        tags: server.tags,
+        imageUrl: server.imageUrl,
+        featured: server.featured,
       },
     });
   }
