@@ -36,14 +36,14 @@ export default function GameLibraryClient({ games, initialLibraryIds }: Props) {
       .catch(console.error);
   }, []);
 
-  // Toggles a game in or out of the Favorites library depending on the game's current state
-  async function handleToggle(gameId: number) {
+  // Adds a game in of the Favorites library depending on the game's current state
+  async function handleAdd(gameId: number) {
     setLoadingId(gameId);
     const inLibrary = libraryIds.has(gameId);
 
     try {
       const res = await fetch("/api/library", {
-        method: inLibrary ? "DELETE" : "POST",
+        method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ gameId }),
       });
@@ -51,7 +51,7 @@ export default function GameLibraryClient({ games, initialLibraryIds }: Props) {
       if (res.ok) {
         setLibraryIds((prev) => {
           const next = new Set(prev);
-          inLibrary ? next.delete(gameId) : next.add(gameId);
+          if (!inLibrary) next.add(gameId);
           return next;
         });
       }
@@ -111,15 +111,17 @@ export default function GameLibraryClient({ games, initialLibraryIds }: Props) {
 
               </Card.Body>
               <Card.Footer>
-                {/* Visible only if logged in. */}
+                {/* Visible only if logged in. 
+                Button is disabled if game is already in library or if loading state for that game is active. 
+                */}
                 {session && (
-                  <Button 
-                    variant={inLibrary ? "danger" : "primary"} 
+                  <Button
+                    variant={inLibrary ? "secondary" : "primary"} 
                     className="w-100" 
-                    onClick={() => handleToggle(game.id)}
-                    disabled={isLoading}
+                    onClick={() => handleAdd(game.id)}
+                    disabled={isLoading || inLibrary}
                   >
-                    {isLoading ? "Updating..." : inLibrary ? "Remove from Favorites" : "Add to Favorites"}
+                    {isLoading ? "Updating..." : "Add to Favorites"}
                   </Button>
                 )}
               </Card.Footer>

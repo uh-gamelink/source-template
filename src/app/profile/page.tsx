@@ -167,9 +167,9 @@ export default function ProfilePage() {
               <Link href="/profile/edit">Edit Profile</Link>
             </Col>
 
-            {/* LIBRARY */}
+            {/* FAVORITES */}
             <Col md={4}>
-              <h5 style={{ marginBottom: '15px' }}>Library</h5>
+              <h5>Favorites</h5>
 
               {/* Displays the user's favorite games library or a message if no games have been added yet. */}
               {library.length > 0 ? (
@@ -178,7 +178,7 @@ export default function ProfilePage() {
                     key={index}
                     style={{
                       padding: '8px 0',
-                      borderBottom: '1px solid rgb(92, 148, 252)'
+                      borderBottom: '1px solid rgba(92, 148, 252, 0.45)',
                     }}
                   >
                     {game.title}
@@ -187,8 +187,6 @@ export default function ProfilePage() {
               ) : (
                 <div>No games added yet.</div>
               )}
-              <h5>Library</h5>
-              <div>No games added yet.</div>
             </Col>
 
             {/* INTERESTS */}

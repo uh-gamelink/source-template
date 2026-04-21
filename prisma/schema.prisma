@@ -12,20 +12,13 @@ enum Role {
 }
 
 model User {
-  id       Int       @id @default(autoincrement())
-  email    String    @unique
-  password String
-  role     Role
-  profile  Profile?
-  library  UserGame[]
   id        Int        @id @default(autoincrement())
   email     String     @unique
   password  String
   role      Role
   profile   Profile?
-
+  userGames UserGame[]
   requests  Request[]
-  userGames UserGame[]   
 }
 
 model Profile {
@@ -35,9 +28,7 @@ model Profile {
   profilePicture String?
   userId         Int     @unique
   user           User    @relation(fields: [userId], references: [id])
-  username       String?   @unique   
-  userId         Int      @unique
-  user           User     @relation(fields: [userId], references: [id])
+  username       String? @unique
 }
 
 model Game {
@@ -48,7 +39,7 @@ model Game {
   tags        String[]
   description String?
   imageUrl    String?
-  library     UserGame[]
+  userGames   UserGame[]
 }
 
 model UserGame {
@@ -58,14 +49,17 @@ model UserGame {
   addedAt DateTime @default(now())
   user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   game    Game     @relation(fields: [gameId], references: [id], onDelete: Cascade)
-  @@unique([userId, gameId])
 
-  userGames   UserGame[] 
+  /**
+   * userGames UserGame[]
+   */
+
+  @@unique([userId, gameId])
 }
 
 model Player {
-  id       Int    @id @default(autoincrement())
-  username String @unique
+  id       Int     @id @default(autoincrement())
+  username String  @unique
   imageUrl String?
   game     String
   rank     String
@@ -87,17 +81,6 @@ model Request {
   rank      String
   notes     String?
   createdAt DateTime @default(now())
-
   userId    Int
   user      User     @relation(fields: [userId], references: [id])
-}
-
-model UserGame {
-  id      Int      @id @default(autoincrement())
-  userId  Int
-  gameId  Int
-  addedAt DateTime @default(now())
-
-  user User @relation(fields: [userId], references: [id])
-  game Game @relation(fields: [gameId], references: [id])
 }
