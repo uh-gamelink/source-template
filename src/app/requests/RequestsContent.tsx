@@ -52,7 +52,24 @@ export default function RequestsContent() {
   };
 
   useEffect(() => {
-    fetchRequests();
+    const loadRequests = async () => {
+      try {
+        const res = await fetch('/api/requests');
+        const data = await res.json();
+
+        if (!res.ok) {
+          setError(data?.error || 'Failed to load requests.');
+          return;
+        }
+
+        setRequests(data);
+      } catch (err) {
+        console.error(err);
+        setError('Failed to load requests.');
+      }
+    };
+
+    loadRequests();
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {

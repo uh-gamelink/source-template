@@ -15,13 +15,12 @@ import {
 } from 'react-bootstrap';
 import { PersonCircle } from 'react-bootstrap-icons';
 
-const ProfileForm = () => {
+export default function ProfileForm() {
   const [preview, setPreview] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [isEdit, setIsEdit] = useState(false);
   const [description, setDescription] = useState('');
   const [username, setUsername] = useState('');
   const [interests, setInterests] = useState<string[]>([]);
@@ -34,36 +33,46 @@ const ProfileForm = () => {
     const fetchProfile = async () => {
       try {
         const res = await fetch('/api/profile/me');
+        const data = await res.json();
 
-        if (res.ok) {
-          const data = await res.json();
+        if (!res.ok) {
+          setError(data.error || 'Failed to load profile.');
+          return;
+        }
 
-          if (data?.profile) {
-            setIsEdit(true);
-            setDescription(data.profile.description || '');
-            setUsername(data.profile.username || '');
-            setInterests(
-              data.profile.interests
-                ? data.profile.interests
-                    .split(',')
-                    .map((item: string) => item.trim())
-                    .filter(Boolean)
-                : [],
-            );
-            setExistingImage(data.profile.profilePicture || null);
-            setPreview(data.profile.profilePicture || null);
-          }
+        if (data?.profile) {
+          setDescription(data.profile.description || '');
+          setUsername(data.profile.username || '');
+          setInterests(
+            data.profile.interests
+              ? data.profile.interests
+                  .split(',')
+                  .map((item: string) => item.trim())
+                  .filter(Boolean)
+              : [],
+          );
+          setExistingImage(data.profile.profilePicture || null);
+          setPreview(data.profile.profilePicture || null);
         }
       } catch (err) {
         console.error(err);
+        setError('Something went wrong while loading your profile.');
       }
     };
 
     fetchProfile();
   }, []);
 
+  useEffect(() => {
+    return () => {
+      if (preview && preview.startsWith('blob:')) {
+        URL.revokeObjectURL(preview);
+      }
+    };
+  }, [preview]);
+
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files ? e.target.files[0] : null;
+    const file = e.target.files?.[0] || null;
 
     if (preview && preview.startsWith('blob:')) {
       URL.revokeObjectURL(preview);
@@ -77,14 +86,6 @@ const ProfileForm = () => {
       setPreview(existingImage);
     }
   };
-
-  useEffect(() => {
-    return () => {
-      if (preview && preview.startsWith('blob:')) {
-        URL.revokeObjectURL(preview);
-      }
-    };
-  }, [preview]);
 
   const handleAddInterest = () => {
     const trimmed = newInterest.trim();
@@ -122,6 +123,7 @@ const ProfileForm = () => {
     setError('');
 
     const usernameRegex = /^[a-zA-Z0-9_]{3,20}$/;
+
     if (!usernameRegex.test(username)) {
       setError(
         'Username must be 3–20 characters, no spaces, only letters, numbers, or underscores.',
@@ -149,13 +151,13 @@ const ProfileForm = () => {
       }
 
       const res = await fetch('/api/profile', {
-        method: isEdit ? 'PUT' : 'POST',
+        method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          username,
           description,
           interests: interests.join(', '),
           profilePicture,
-          username,
         }),
       });
 
@@ -180,9 +182,7 @@ const ProfileForm = () => {
     <Container>
       <Row className="justify-content-center my-5">
         <Col md={8}>
-          <h1 className="text-center mb-3">
-            {isEdit ? 'Edit Profile' : 'Create Profile'}
-          </h1>
+          <h1 className="text-center mb-3">Edit Profile</h1>
 
           <Card className="custom-card-body">
             <Form onSubmit={handleSubmit}>
@@ -204,7 +204,7 @@ const ProfileForm = () => {
                     onChange={(e) => setDescription(e.target.value)}
                     as="textarea"
                     rows={3}
-                    required
+                    placeholder="Tell people a little about yourself"
                   />
                 </Form.Group>
 
@@ -282,13 +282,22 @@ const ProfileForm = () => {
                 {error && <Alert variant="danger">{error}</Alert>}
               </Card.Body>
 
-              <Card.Footer>
+              <Card.Footer className="d-flex gap-2">
                 <Button
                   type="submit"
                   className="custom-reg-btn"
                   disabled={isSubmitting}
                 >
                   {isSubmitting ? 'Saving...' : 'Save Profile'}
+                </Button>
+
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={() => router.push('/profile')}
+                  disabled={isSubmitting}
+                >
+                  Cancel
                 </Button>
               </Card.Footer>
             </Form>
@@ -297,6 +306,4 @@ const ProfileForm = () => {
       </Row>
     </Container>
   );
-};
-
-export default ProfileForm;
+}

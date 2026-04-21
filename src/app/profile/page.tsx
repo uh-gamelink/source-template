@@ -8,11 +8,16 @@ import Link from 'next/link';
 type ProfileData = {
   email: string;
   profile: {
-    username: string | null; // ✅ FIX
+    username: string | null;
     description: string;
     interests: string;
     profilePicture: string | null;
   } | null;
+  savedServers?: {
+    server: {
+      name: string;
+    };
+  }[];
 };
 
 export default function ProfilePage() {
@@ -77,13 +82,23 @@ export default function ProfilePage() {
       ? user.profile.profilePicture
       : '';
 
+  const savedServers = user.savedServers || [];
+
   return (
     <Container className="py-5">
-      <Card className="custom-card-body" style={{ borderRadius: '15px', padding: '10px' }}>
+      <Card
+        className="custom-card-body"
+        style={{ borderRadius: '15px', padding: '10px' }}
+      >
         <Card.Body>
-
-          {/* HEADER */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '20px', marginBottom: '25px' }}>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '20px',
+              marginBottom: '25px',
+            }}
+          >
             <div
               style={{
                 width: '80px',
@@ -123,29 +138,55 @@ export default function ProfilePage() {
           </div>
 
           <Row>
-            {/* LEFT */}
-            <Col md={4}>
+            <Col md={3}>
               <p>
                 <strong>Username:</strong>{' '}
                 {user.profile?.username || user.email.split('@')[0]}
               </p>
 
               <p>
-                <strong>Description:</strong><br />
+                <strong>Description:</strong>
+                <br />
                 {user.profile?.description || 'No description added yet.'}
               </p>
 
               <Link href="/profile/edit">Edit Profile</Link>
             </Col>
 
-            {/* LIBRARY */}
-            <Col md={4}>
-              <h5>Library</h5>
-              <div>No games added yet.</div>
+            <Col md={3}>
+              <h5>Communities</h5>
+
+              {savedServers.length > 0 ? (
+                savedServers.map((savedServer, index) => (
+                  <div
+                    key={index}
+                    style={{
+                      padding: '8px 0',
+                      borderBottom: '1px solid rgba(92, 148, 252, 0.45)',
+                    }}
+                  >
+                    {savedServer.server.name}
+                  </div>
+                ))
+              ) : (
+                <div>No communities added yet.</div>
+              )}
             </Col>
 
-            {/* INTERESTS */}
-            <Col md={4}>
+            <Col md={3}>
+              <h5>Library</h5>
+
+              <div
+                style={{
+                  padding: '8px 0',
+                  borderBottom: '1px solid rgba(92, 148, 252, 0.45)',
+                }}
+              >
+                No games added yet.
+              </div>
+            </Col>
+
+            <Col md={3}>
               <h5>Interests</h5>
 
               {interestsList.length > 0 ? (
@@ -165,7 +206,6 @@ export default function ProfilePage() {
               )}
             </Col>
           </Row>
-
         </Card.Body>
       </Card>
     </Container>

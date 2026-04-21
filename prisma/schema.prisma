@@ -21,6 +21,7 @@ model User {
 
   requests  Request[]
   userGames UserGame[]   
+  savedServers UserCommunityServer[]
 }
 
 model Profile {
@@ -61,6 +62,8 @@ model CommunityServer {
   tags        String[]
   imageUrl    String?
   featured    Boolean  @default(false)
+
+  savedByUsers UserCommunityServer[]
 }
 
 model Request {
@@ -82,4 +85,15 @@ model UserGame {
 
   user User @relation(fields: [userId], references: [id])
   game Game @relation(fields: [gameId], references: [id])
+}
+
+model UserCommunityServer {
+  id         Int             @id @default(autoincrement())
+  userId     Int
+  serverId   Int
+
+  user       User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  server     CommunityServer @relation(fields: [serverId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, serverId])
 }

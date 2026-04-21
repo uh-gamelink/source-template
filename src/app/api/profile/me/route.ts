@@ -14,6 +14,11 @@ export async function GET() {
       where: { email: session.user.email },
       include: {
         profile: true,
+        savedServers: {
+          include: {
+            server: true,
+          },
+        },
       },
     });
 
