@@ -43,7 +43,7 @@ const PlayerCard = ({ player }: { player: Player }) => (
           </Col>
           <Col className= "pl-0">
             <Link href={`/requests?game=${encodeURIComponent(player.game)}&rank=${encodeURIComponent(player.rank)}`} >
-              <Button size="sm">Connect</Button>
+              <Button className="custom-tag-btn" size="sm">Connect</Button>
             </Link>
           </Col>
         </Row>

@@ -58,7 +58,7 @@ const FindPlayersBrowser = ({
             <Col>
               <div>
                 <Link href="/requests">
-                  <Button>Create Request</Button>
+                  <Button className="custom-tag-btn">Create Request</Button>
                 </Link>
               </div>
             </Col>
