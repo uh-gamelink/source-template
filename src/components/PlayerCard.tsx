@@ -37,7 +37,7 @@ const PlayerCard = ({ player }: { player: Player }) => (
         <div className="mb-2">Rank: {player.rank}</div>
         <Row className="ps-0 py-2 align-items-center">
           <Col xs="auto">
-            <Link href="/findplayers/request" className="custom-link-button">
+            <Link href={`/requests?game=${encodeURIComponent(player.game)}&rank=${encodeURIComponent(player.rank)}`}  className="custom-link-button">
                 <PlusLg />
             </Link>
           </Col>
