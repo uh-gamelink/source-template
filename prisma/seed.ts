@@ -196,12 +196,20 @@ const communityServers = [
     imageUrl: '/servers/manoa-academy-of-gamers.webp',
     featured: true,
   },
-  /* {
+  {
     name: 'Apex Legends',
     description: 'Official community-run, developer-supported Apex Legends server.',
     inviteUrl: 'https://discord.gg/apexlegends',
     tags: ['Apex Legends', 'Official'],
-    imageUrl: null,
+    imageUrl: '/servers/apex-legends.webp',
+    featured: false,
+  },
+  {
+    name: 'Counter-Strike Discord | CSGO & CS2',
+    description: 'Official Counter-Strike Discord server for news, updates, and LFG.',
+    inviteUrl: 'https://discord.gg/counterstrike',
+    tags: ['Counter-Strike', 'Official'],
+    imageUrl: '/servers/cs2.webp',
     featured: false,
   },
   {
@@ -209,7 +217,7 @@ const communityServers = [
     description: 'Official Fortnite Discord server for news, updates, and LFG.',
     inviteUrl: 'https://discord.gg/fortnite',
     tags: ['Fortnite', 'Official'],
-    imageUrl: null,
+    imageUrl: '/servers/fortnite.webp',
     featured: false,
   },
   {
@@ -217,7 +225,7 @@ const communityServers = [
     description: 'Official Genshin Impact Discord server.',
     inviteUrl: 'https://discord.gg/genshinimpact',
     tags: ['Genshin Impact', 'Official'],
-    imageUrl: null,
+    imageUrl: '/servers/genshin-impact.webp',
     featured: false,
   },
   {
@@ -225,7 +233,7 @@ const communityServers = [
     description: 'Official League of Legends Discord server run in collaboration with Riot Games.',
     inviteUrl: 'https://discord.gg/leagueoflegends',
     tags: ['League of Legends', 'Official'],
-    imageUrl: null,
+    imageUrl: '/servers/league-of-legends.webp',
     featured: false,
   },
   {
@@ -233,7 +241,15 @@ const communityServers = [
     description: 'Official Minecraft Discord server.',
     inviteUrl: 'https://discord.gg/minecraft',
     tags: ['Minecraft', 'Official'],
-    imageUrl: null,
+    imageUrl: '/servers/minecraft.webp',
+    featured: false,
+  },
+  {
+    name: 'Overwatch',
+    description: 'Official, developer-run Overwatch Discord server.',
+    inviteUrl: 'https://discord.com/invite/overwatch',
+    tags: ['Overwatch', 'Official'],
+    imageUrl: '/servers/overwatch.webp',
     featured: false,
   },
   {
@@ -241,7 +257,7 @@ const communityServers = [
     description: 'Official, developer-run Rocket League Discord server.',
     inviteUrl: 'https://discord.gg/rocketleague',
     tags: ['Rocket League', 'Official'],
-    imageUrl: null,
+    imageUrl: '/servers/rocket-league.webp',
     featured: false,
   },
   {
@@ -249,7 +265,15 @@ const communityServers = [
     description: 'Main Stardew Valley community server.',
     inviteUrl: 'https://discord.gg/stardewvalley',
     tags: ['Stardew Valley', 'Community'],
-    imageUrl: null,
+    imageUrl: '/servers/stardew-valley.webp',
+    featured: false,
+  },
+  {
+    name: 'Super Smash Bros. Ultimate',
+    description: 'Main Super Smash Bros. Ultimate community server.',
+    inviteUrl: 'https://discord.com/invite/ssbu',
+    tags: ['Super Smash Bros.', 'Community'],
+    imageUrl: '/servers/super-smash-bros-ultimate.webp',
     featured: false,
   },
   {
@@ -257,10 +281,9 @@ const communityServers = [
     description: 'Official VALORANT Discord server in collaboration with Riot Games.',
     inviteUrl: 'https://discord.gg/valorant',
     tags: ['Valorant', 'Official'],
-    imageUrl: null,
+    imageUrl: '/servers/valorant.webp',
     featured: false,
   },
-  */
 ];
 
 async function main() {

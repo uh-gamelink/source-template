@@ -13,11 +13,14 @@ enum Role {
 }
 
 model User {
-  id       Int      @id @default(autoincrement())
-  email    String   @unique
-  password String
-  role     Role
-  profile  Profile?
+  id        Int        @id @default(autoincrement())
+  email     String     @unique
+  password  String
+  role      Role
+  profile   Profile?
+
+  requests  Request[]
+  userGames UserGame[]   
 }
 
 model Profile {
@@ -25,23 +28,26 @@ model Profile {
   description    String
   interests      String
   profilePicture String?
+  username       String?   @unique   
   userId         Int      @unique
   user           User     @relation(fields: [userId], references: [id])
 }
 
 model Game {
-  id          Int      @id @default(autoincrement())
-  title       String   @unique
+  id          Int        @id @default(autoincrement())
+  title       String     @unique
   developer   String
   platform    String?
   tags        String[]
   description String?
   imageUrl    String?
+
+  userGames   UserGame[] 
 }
 
 model Player {
-  id       Int     @id @default(autoincrement())
-  username String  @unique
+  id       Int    @id @default(autoincrement())
+  username String @unique
   imageUrl String?
   game     String
   rank     String
@@ -55,4 +61,25 @@ model CommunityServer {
   tags        String[]
   imageUrl    String?
   featured    Boolean  @default(false)
+}
+
+model Request {
+  id        Int      @id @default(autoincrement())
+  game      String
+  rank      String
+  notes     String?
+  createdAt DateTime @default(now())
+
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model UserGame {
+  id      Int      @id @default(autoincrement())
+  userId  Int
+  gameId  Int
+  addedAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+  game Game @relation(fields: [gameId], references: [id])
 }
