@@ -27,6 +27,8 @@ const Home = () => {
   const { data: session, status } = useSession();
   const communityHref = session ? '/findplayers' : '/auth/signin';
   const communityLabel = session ? 'Find' : 'Join';
+  const libraryHref = session ? '/gamelibrary' : '/auth/signin';
+  const LibraryLabel = session ? 'View' : 'Sign up';
 
   return (
     <main>
@@ -76,36 +78,47 @@ const Home = () => {
           </Row>
 
           <Row className="g-5 pb-5 pt-1 mx-5">
-            <Col md={4}>
+            <Col md={3}>
+              <Card className="h-100 shadow-sm custom-card-body p-3 text-center">
+                <p> See our game library to add to view our avaible games and add to your favorites.</p>
+                <a
+                  href={libraryHref}
+                  className="btn custom-home-btn border-0 w-50 mx-auto d-block"
+                >
+                  {status === 'loading' ? 'Loading...' : LibraryLabel}
+                </a>
+              </Card>
+            </Col>
+            <Col md={3}>
               <Card className="h-100 shadow-sm custom-card-body p-3 text-center">
                 <p>Visit our community page to see UH&apos;s Discord game servers.</p>
                 <a
                   href="/community"
-                  className="btn custom-tag-btn border-0 w-50 mx-auto d-block"
+                  className="btn custom-home-btn border-0 w-50 mx-auto d-block"
                 >
                   Connect
                 </a>
               </Card>
             </Col>
 
-            <Col md={4}>
+            <Col md={3}>
               <Card className="h-100 shadow-sm custom-card-body p-3 text-center">
                 <p>Learn more about the developers behind UH GameLink.</p>
                 <a
                   href="/about"
-                  className="btn custom-tag-btn border-0 w-50 mx-auto d-block"
+                  className="btn custom-home-btn border-0 w-40 mx-auto d-block"
                 >
                   Visit
                 </a>
               </Card>
             </Col>
 
-            <Col md={4}>
+            <Col md={3}>
               <Card className="h-100 shadow-sm custom-card-body p-3 text-center">
                 <p>Join the UH gaming community and connect with other players.</p>
                 <a
                   href={communityHref}
-                  className="btn custom-tag-btn border-0 w-50 mx-auto d-block"
+                  className="btn custom-home-btn border-0 w-50 mx-auto d-block"
                 >
                   {status === 'loading' ? 'Loading...' : communityLabel}
                 </a>

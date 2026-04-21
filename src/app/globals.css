@@ -180,6 +180,20 @@ h3{
   color: rgb(21, 9, 102) !important; 
 }
 
+.custom-home-btn {
+  background-color: rgb(65, 132, 255) !important; 
+  border: none !important;
+  color: rgb(21, 9, 102) !important; 
+  font-size: 17px;
+  font-weight: 600;
+  border-radius: 8px;
+}
+
+.custom-home-btn:hover{
+  background-color: rgb(65, 132, 255) !important; 
+  color: rgb(21, 9, 102) !important; 
+}
+
 .shortline {
   color:rgb(65, 132, 255, 0.385);
 }
