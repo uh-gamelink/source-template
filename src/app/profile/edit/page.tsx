@@ -23,6 +23,7 @@ const ProfileForm = () => {
 
   const [isEdit, setIsEdit] = useState(false);
   const [description, setDescription] = useState('');
+  const [username, setUsername] = useState('');
   const [interests, setInterests] = useState<string[]>([]);
   const [newInterest, setNewInterest] = useState('');
   const [existingImage, setExistingImage] = useState<string | null>(null);
@@ -40,6 +41,7 @@ const ProfileForm = () => {
           if (data?.profile) {
             setIsEdit(true);
             setDescription(data.profile.description || '');
+            setUsername(data.profile.username || '');
             setInterests(
               data.profile.interests
                 ? data.profile.interests
@@ -53,7 +55,7 @@ const ProfileForm = () => {
           }
         }
       } catch (err) {
-        console.error('Failed to load profile:', err);
+        console.error(err);
       }
     };
 
@@ -88,7 +90,12 @@ const ProfileForm = () => {
     const trimmed = newInterest.trim();
 
     if (!trimmed) return;
-    if (interests.includes(trimmed)) {
+
+    const alreadyExists = interests.some(
+      (interest) => interest.toLowerCase() === trimmed.toLowerCase(),
+    );
+
+    if (alreadyExists) {
       setNewInterest('');
       return;
     }
@@ -101,7 +108,9 @@ const ProfileForm = () => {
     setInterests(interests.filter((_, index) => index !== indexToRemove));
   };
 
-  const handleInterestKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleInterestKeyDown = (
+    e: React.KeyboardEvent<HTMLInputElement>,
+  ) => {
     if (e.key === 'Enter') {
       e.preventDefault();
       handleAddInterest();
@@ -111,6 +120,14 @@ const ProfileForm = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError('');
+
+    const usernameRegex = /^[a-zA-Z0-9_]{3,20}$/;
+    if (!usernameRegex.test(username)) {
+      setError(
+        'Username must be 3–20 characters, no spaces, only letters, numbers, or underscores.',
+      );
+      return;
+    }
 
     if (interests.length === 0) {
       setError('Please add at least one interest.');
@@ -133,23 +150,16 @@ const ProfileForm = () => {
 
       const res = await fetch('/api/profile', {
         method: isEdit ? 'PUT' : 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           description,
           interests: interests.join(', '),
           profilePicture,
+          username,
         }),
       });
 
-      let data: { error?: string } | null = null;
-
-      try {
-        data = await res.json();
-      } catch {
-        data = null;
-      }
+      const data = await res.json();
 
       if (!res.ok) {
         setError(data?.error || 'Failed to save profile.');
@@ -158,6 +168,7 @@ const ProfileForm = () => {
       }
 
       router.push('/profile');
+      router.refresh();
     } catch (err) {
       console.error(err);
       setError('Something went wrong.');
@@ -166,143 +177,125 @@ const ProfileForm = () => {
   };
 
   return (
-    <main>
-      <Container>
-        <Row className="justify-content-center my-5">
-          <Col xs={12} md={10} lg={8}>
-            <h1 className="text-center mb-3">
-              {isEdit ? 'Edit Profile' : 'Create a Profile'}
-            </h1>
+    <Container>
+      <Row className="justify-content-center my-5">
+        <Col md={8}>
+          <h1 className="text-center mb-3">
+            {isEdit ? 'Edit Profile' : 'Create Profile'}
+          </h1>
 
-            <Card className="custom-card-body">
-              <Form onSubmit={handleSubmit}>
-                <Card.Body>
-                  <Row>
-                    <Col md={6}>
-                      <Form.Group className="mb-3">
-                        <Form.Label>Description</Form.Label>
-                        <Form.Control
-                          value={description}
-                          onChange={(e) => setDescription(e.target.value)}
-                          as="textarea"
-                          rows={3}
-                          placeholder="Share about yourself"
-                          required
-                        />
-                      </Form.Group>
+          <Card className="custom-card-body">
+            <Form onSubmit={handleSubmit}>
+              <Card.Body>
+                <Form.Group className="mb-3">
+                  <Form.Label>Username</Form.Label>
+                  <Form.Control
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    placeholder="Choose username (no spaces)"
+                    required
+                  />
+                </Form.Group>
 
-                      <Form.Group className="mb-3">
-                        <Form.Label>Interests</Form.Label>
+                <Form.Group className="mb-3">
+                  <Form.Label>Description</Form.Label>
+                  <Form.Control
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    as="textarea"
+                    rows={3}
+                    required
+                  />
+                </Form.Group>
 
-                        <div className="d-flex flex-wrap gap-2 mb-3">
-                          {interests.map((interest, index) => (
-                            <div
-                              key={`${interest}-${index}`}
-                              className="px-3 py-1 rounded-pill d-flex align-items-center"
-                              style={{
-                                backgroundColor: '#0d6efd',
-                                color: 'white',
-                              }}
-                            >
-                              <span>{interest}</span>
-                              <button
-                                type="button"
-                                onClick={() => handleRemoveInterest(index)}
-                                style={{
-                                  marginLeft: '8px',
-                                  border: 'none',
-                                  background: 'transparent',
-                                  color: 'white',
-                                  fontWeight: 'bold',
-                                  cursor: 'pointer',
-                                  lineHeight: 1,
-                                }}
-                                aria-label={`Remove ${interest}`}
-                              >
-                                ×
-                              </button>
-                            </div>
-                          ))}
-                        </div>
+                <Form.Group className="mb-3">
+                  <Form.Label>Interests</Form.Label>
 
-                        <div className="d-flex gap-2">
-                          <Form.Control
-                            value={newInterest}
-                            onChange={(e) => setNewInterest(e.target.value)}
-                            onKeyDown={handleInterestKeyDown}
-                            type="text"
-                            placeholder="Add an interest"
-                          />
-                          <Button
-                            type="button"
-                            variant="secondary"
-                            onClick={handleAddInterest}
-                          >
-                            Add
-                          </Button>
-                        </div>
-                      </Form.Group>
-                    </Col>
+                  <div className="d-flex gap-2 mb-3">
+                    <Form.Control
+                      value={newInterest}
+                      onChange={(e) => setNewInterest(e.target.value)}
+                      onKeyDown={handleInterestKeyDown}
+                      placeholder="Add interest"
+                    />
+                    <Button type="button" onClick={handleAddInterest}>
+                      Add
+                    </Button>
+                  </div>
 
-                    <Col
-                      md={6}
-                      className="d-flex flex-column justify-content-center align-items-center"
-                    >
-                      {preview ? (
-                        <Image
-                          src={preview}
-                          roundedCircle
-                          thumbnail
+                  <div className="d-flex flex-wrap gap-2">
+                    {interests.map((interest, idx) => (
+                      <span
+                        key={`${interest}-${idx}`}
+                        className="px-3 py-2 rounded-pill d-inline-flex align-items-center"
+                        style={{
+                          backgroundColor: 'rgb(65, 132, 255)',
+                          color: 'rgb(21, 9, 102)',
+                          fontWeight: 700,
+                          cursor: 'pointer',
+                        }}
+                        onClick={() => handleRemoveInterest(idx)}
+                        title="Remove interest"
+                      >
+                        {interest}
+                        <span
                           style={{
-                            width: '150px',
-                            height: '150px',
-                            objectFit: 'cover',
+                            marginLeft: '8px',
+                            fontWeight: 900,
+                            lineHeight: 1,
                           }}
-                          alt="Profile Preview"
-                        />
-                      ) : (
-                        <PersonCircle size={150} />
-                      )}
+                        >
+                          ×
+                        </span>
+                      </span>
+                    ))}
+                  </div>
+                </Form.Group>
 
-                      <Form.Group className="mt-3 text-center">
-                        <Form.Label>Upload Profile Picture</Form.Label>
-                        <Form.Control
-                          type="file"
-                          accept="image/png,image/jpeg,image/webp"
-                          onChange={handleImageChange}
-                        />
-                      </Form.Group>
-                    </Col>
-                  </Row>
-
-                  {error && (
-                    <Alert variant="danger" className="mt-3 mb-0">
-                      {error}
-                    </Alert>
+                <Form.Group className="mb-3 text-center">
+                  {preview ? (
+                    <Image
+                      src={preview}
+                      roundedCircle
+                      thumbnail
+                      style={{
+                        width: '150px',
+                        height: '150px',
+                        objectFit: 'cover',
+                      }}
+                      alt="Profile Preview"
+                    />
+                  ) : (
+                    <PersonCircle size={150} />
                   )}
-                </Card.Body>
 
-                <Card.Footer>
-                  <Button
-                    type="submit"
-                    className="mx-auto d-block custom-reg-btn"
-                    disabled={isSubmitting}
-                  >
-                    {isSubmitting
-                      ? isEdit
-                        ? 'Saving...'
-                        : 'Creating...'
-                      : isEdit
-                        ? 'Save Changes'
-                        : 'Create Profile'}
-                  </Button>
-                </Card.Footer>
-              </Form>
-            </Card>
-          </Col>
-        </Row>
-      </Container>
-    </main>
+                  <Form.Label className="mt-3 d-block">
+                    Upload Profile Picture
+                  </Form.Label>
+                  <Form.Control
+                    type="file"
+                    accept="image/png,image/jpeg,image/webp"
+                    onChange={handleImageChange}
+                  />
+                </Form.Group>
+
+                {error && <Alert variant="danger">{error}</Alert>}
+              </Card.Body>
+
+              <Card.Footer>
+                <Button
+                  type="submit"
+                  className="custom-reg-btn"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? 'Saving...' : 'Save Profile'}
+                </Button>
+              </Card.Footer>
+            </Form>
+          </Card>
+        </Col>
+      </Row>
+    </Container>
   );
 };
 
