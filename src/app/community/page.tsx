@@ -1,6 +1,6 @@
 import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
-import CommunityServerCard from '@/components/community/CommunityServerCard';
+import CommunityClient from '@/components/community/CommunityClient';
 
 export default async function CommunityPage() {
   const session = await auth();
@@ -26,18 +26,10 @@ export default async function CommunityPage() {
   }
 
   return (
-    <div className="container py-4">
-      <div className="row g-4">
-        {servers.map((server) => (
-          <div key={server.id} className="col-md-4">
-            <CommunityServerCard
-              server={server}
-              isLoggedIn={!!session}
-              alreadyAdded={savedServerIds.includes(server.id)}
-            />
-          </div>
-        ))}
-      </div>
-    </div>
+    <CommunityClient
+      servers={servers}
+      session={session}
+      savedServerIds={savedServerIds}
+    />
   );
 }

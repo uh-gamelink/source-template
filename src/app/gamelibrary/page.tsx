@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma';
-import GameLibraryClient from './GameLibraryClient';
+import GameLibraryClient from '@/components/gamelibrary/GameLibraryClient';
 
 const GameLibraryPage = async () => {
   const games = await prisma.game.findMany();

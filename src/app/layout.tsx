@@ -32,7 +32,7 @@ export default function RootLayout({
 }>) {
   const classString = `${geistSans.variable} ${geistMono.variable} wrapper`;
   return (
-    <html lang="en">
+    <html lang="en" data-scroll-behavior="smooth">
       <body className={classString}>
        <Providers>
           <NavBar />
