@@ -62,7 +62,7 @@ const defaultGames = [
     platform: "Multi-platform",
     tags: ["Sandbox", "Survival", "Creative", "Adventure"],
     description: "A sandbox game built around exploration, crafting, building, and survival.",
-    imageUrl: "/gamesLib/minecraft.webp",
+    imageUrl: "/gamesLib/minecraft.jpg",
   },
   {
     title: "Overwatch 2",
