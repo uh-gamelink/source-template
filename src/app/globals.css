@@ -260,6 +260,7 @@ h1{
   color: rgb(65, 132, 255);
   font-weight: 500;
   border-radius: 8px;
+  padding-right: 5px;
 }
 
 /* Title */
