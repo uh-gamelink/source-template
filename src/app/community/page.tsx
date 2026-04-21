@@ -2,6 +2,8 @@ import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import CommunityClient from '@/components/community/CommunityClient';
 
+export const dynamic = 'force-dynamic';
+
 export default async function CommunityPage() {
   const session = await auth();
 
