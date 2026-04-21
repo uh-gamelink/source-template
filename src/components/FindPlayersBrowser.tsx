@@ -5,6 +5,8 @@ import Link from 'next/link';
 import Button from 'react-bootstrap/Button';
 import PlayerCard from '@/components/PlayerCard';
 import { Search } from 'react-bootstrap-icons';
+import { Row, Col} from 'react-bootstrap';
+
 
 type Player = {
   id: number;
@@ -45,13 +47,21 @@ const FindPlayersBrowser = ({
 
   return (
     <>
-      <div className="d-flex justify-content-between align-items-center mb-3 position-relative">
+      <div className="d-flex justify-content-between align-items-center mb-3">
         <div>
           <h1 className="mb-1">Find Players</h1>
           <p className="mb-0">Click on the plus icon to request other players.</p>
         </div>
 
         <div className="position-relative">
+          <Row>
+            <Col>
+              <div>
+                <Link href="/requests">
+                  <Button>Create Request</Button>
+                </Link>
+              </div>
+            </Col>
           <button
             type="button"
             className="filter-toggle-btn"
@@ -100,10 +110,13 @@ const FindPlayersBrowser = ({
                   <Link href="/findplayers" className="btn custom-reset-btn">
                     Reset
                   </Link>
+                  
                 </div>
               </form>
+
             </div>
           )}
+          </Row>
         </div>
       </div>
 
