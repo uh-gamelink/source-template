@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
+import Image from 'next/image';
 
 type Game = {
   id: number;
@@ -65,11 +66,17 @@ export default function GameLibraryClient({ games }: { games: Game[] }) {
             <Card className="h-100 custom-card-body request-card">
 
               {game.imageUrl && (
-                <Card.Img
-                  variant="top"
-                  src={game.imageUrl}
-                  className="game-card-img"
-                />
+                <div className="game-image-wrapper">
+                  <div className="game-image-frame">
+                    <Image
+                      src={game.imageUrl}
+                      alt={game.title}
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      className="game-card-img"
+                    />
+                  </div>
+                </div>
               )}
 
               <Card.Body>
