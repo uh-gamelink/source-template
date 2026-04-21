@@ -4,6 +4,7 @@ import { hash } from 'bcrypt';
 import { redirect } from 'next/navigation';
 import { prisma } from './prisma';
 import { Role } from '@prisma/client';
+import { auth } from '@/lib/auth';
 
 /**
  * Admin-only: adds a new game to the catalog.
@@ -99,6 +100,40 @@ export async function changePassword(credentials: { email: string; password: str
     where: { email: credentials.email },
     data: {
       password,
+    },
+  });
+}
+
+/**
+ * Adds a community server to the logged-in user's profile.
+ */
+export async function addServerToProfile(serverId: number) {
+  const session = await auth();
+
+  if (!session?.user?.email) {
+    throw new Error('You must be logged in to add a server to your profile.');
+  }
+
+  const user = await prisma.user.findUnique({
+    where: { email: session.user.email },
+    select: { id: true },
+  });
+
+  if (!user) {
+    throw new Error('User not found.');
+  }
+
+  await prisma.userCommunityServer.upsert({
+    where: {
+      userId_serverId: {
+        userId: user.id,
+        serverId,
+      },
+    },
+    update: {},
+    create: {
+      userId: user.id,
+      serverId,
     },
   });
 }
