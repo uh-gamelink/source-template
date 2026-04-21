@@ -31,16 +31,16 @@ const NavBar: React.FC = () => {
 
         <Navbar.Collapse id="main-navbar-nav">
           <Nav className="me-auto">
-            <Nav.Link as={Link} href="/" active={pathName === '/'} id="home-nav">
-              Home
-            </Nav.Link>
-
             <Nav.Link as={Link} href="/gamelibrary" active={pathName === '/gamelibrary'}>
               Game Library
             </Nav.Link>
 
             <Nav.Link as={Link} href="/community" active={pathName === '/community'} id="community-nav">
               Community
+            </Nav.Link>
+
+            <Nav.Link as={Link} href="/about" active={pathName === "/about"}>
+              About Us
             </Nav.Link>
 
             {session && (

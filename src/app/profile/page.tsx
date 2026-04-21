@@ -18,6 +18,7 @@ type Game = {
 type ProfileData = {
   email: string;
   profile: {
+    username: string | null; // ✅ FIX
     description: string;
     interests: string;
     profilePicture: string | null;
@@ -51,6 +52,8 @@ export default function ProfilePage() {
         }
 
         setUser(profileData);
+        const res = await fetch('/api/profile/me');
+        const data = await res.json();
 
         // Checks if library fetch was successful before setting state, otherwise sets error message.
         if (!libraryRes.ok) {
@@ -91,32 +94,25 @@ export default function ProfilePage() {
   }
 
   const interestsList = user.profile?.interests
-    ? user.profile.interests.split(',').map((item) => item.trim()).filter(Boolean)
+    ? user.profile.interests
+        .split(',')
+        .map((item) => item.trim())
+        .filter(Boolean)
     : [];
 
   const profileImage =
-    user.profile?.profilePicture && !user.profile.profilePicture.startsWith('blob:')
+    user.profile?.profilePicture &&
+    !user.profile.profilePicture.startsWith('blob:')
       ? user.profile.profilePicture
       : '';
 
   return (
     <Container className="py-5">
-      <Card className="custom-card-body"
-        style={{
-          borderRadius: '15px',
-          boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-          padding: '10px',
-        }}
-      >
+      <Card className="custom-card-body" style={{ borderRadius: '15px', padding: '10px' }}>
         <Card.Body>
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '20px',
-              marginBottom: '25px',
-            }}
-          >
+
+          {/* HEADER */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '20px', marginBottom: '25px' }}>
             <div
               style={{
                 width: '80px',
@@ -152,14 +148,16 @@ export default function ProfilePage() {
               )}
             </div>
 
-            <h1 style={{ margin: 0, fontWeight: '600' }}>
-              Your Profile
-            </h1>
+            <h1 style={{ margin: 0 }}>Your Profile</h1>
           </div>
 
           <Row>
+            {/* LEFT */}
             <Col md={4}>
-              <p><strong>Username:</strong> {user.email}</p>
+              <p>
+                <strong>Username:</strong>{' '}
+                {user.profile?.username || user.email.split('@')[0]}
+              </p>
 
               <p>
                 <strong>Description:</strong><br />
@@ -169,6 +167,7 @@ export default function ProfilePage() {
               <Link href="/profile/edit">Edit Profile</Link>
             </Col>
 
+            {/* LIBRARY */}
             <Col md={4}>
               <h5 style={{ marginBottom: '15px' }}>Library</h5>
 
@@ -188,10 +187,13 @@ export default function ProfilePage() {
               ) : (
                 <div>No games added yet.</div>
               )}
+              <h5>Library</h5>
+              <div>No games added yet.</div>
             </Col>
 
+            {/* INTERESTS */}
             <Col md={4}>
-              <h5 style={{ marginBottom: '15px' }}>Interests</h5>
+              <h5>Interests</h5>
 
               {interestsList.length > 0 ? (
                 interestsList.map((interest, index) => (
@@ -199,17 +201,18 @@ export default function ProfilePage() {
                     key={index}
                     style={{
                       padding: '8px 0',
-                      borderBottom: '1px solid rgba(92, 148, 252, 0.45)'
+                      borderBottom: '1px solid rgba(92, 148, 252, 0.45)',
                     }}
                   >
                     {interest}
-                  </div >
+                  </div>
                 ))
               ) : (
                 <div>No interests added yet.</div>
               )}
             </Col>
           </Row>
+
         </Card.Body>
       </Card>
     </Container>

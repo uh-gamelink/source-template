@@ -18,6 +18,14 @@ model User {
   role     Role
   profile  Profile?
   library  UserGame[]
+  id        Int        @id @default(autoincrement())
+  email     String     @unique
+  password  String
+  role      Role
+  profile   Profile?
+
+  requests  Request[]
+  userGames UserGame[]   
 }
 
 model Profile {
@@ -27,6 +35,9 @@ model Profile {
   profilePicture String?
   userId         Int     @unique
   user           User    @relation(fields: [userId], references: [id])
+  username       String?   @unique   
+  userId         Int      @unique
+  user           User     @relation(fields: [userId], references: [id])
 }
 
 model Game {
@@ -48,11 +59,13 @@ model UserGame {
   user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   game    Game     @relation(fields: [gameId], references: [id], onDelete: Cascade)
   @@unique([userId, gameId])
+
+  userGames   UserGame[] 
 }
 
 model Player {
-  id       Int     @id @default(autoincrement())
-  username String  @unique
+  id       Int    @id @default(autoincrement())
+  username String @unique
   imageUrl String?
   game     String
   rank     String
@@ -66,4 +79,25 @@ model CommunityServer {
   tags        String[]
   imageUrl    String?
   featured    Boolean  @default(false)
+}
+
+model Request {
+  id        Int      @id @default(autoincrement())
+  game      String
+  rank      String
+  notes     String?
+  createdAt DateTime @default(now())
+
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model UserGame {
+  id      Int      @id @default(autoincrement())
+  userId  Int
+  gameId  Int
+  addedAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+  game Game @relation(fields: [gameId], references: [id])
 }

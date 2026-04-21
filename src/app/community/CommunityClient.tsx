@@ -1,6 +1,8 @@
 'use client';
 
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
+import Link from 'next/link';
+import { Session } from 'next-auth';
 
 type CommunityServer = {
   id: number;
@@ -14,12 +16,23 @@ type CommunityServer = {
 
 export default function CommunityClient({
   servers,
+  session,
 }: {
   servers: CommunityServer[];
+  session: Session | null;
 }) {
   return (
     <Container className="py-4">
       <h1 className="text-center mb-4">Community</h1>
+
+      {/* 🔥 Admin-only button */}
+      {session?.user?.role === 'ADMIN' && (
+        <div className="text-end mb-3">
+          <Link href="/admin/add-server">
+            <Button>Add Server</Button>
+          </Link>
+        </div>
+      )}
 
       <Row className="g-4">
         {servers.map((server) => (

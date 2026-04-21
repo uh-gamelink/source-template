@@ -8,56 +8,59 @@ export async function PUT(request: Request) {
 
     if (!session?.user?.email) {
       return NextResponse.json(
-        { error: 'You must be signed in to update your profile.' },
-        { status: 401 },
+        { error: 'You must be signed in.' },
+        { status: 401 }
       );
     }
 
-    const body = await request.json();
-    const { description, interests, profilePicture } = body;
-
-    if (!description || !interests) {
-      return NextResponse.json(
-        { error: 'Description and interests are required.' },
-        { status: 400 },
-      );
-    }
+    const { description, interests, profilePicture, username } =
+      await request.json();
 
     const user = await prisma.user.findUnique({
       where: { email: session.user.email },
+      include: { profile: true },
     });
 
-    if (!user) {
+    if (!user || !user.profile) {
       return NextResponse.json(
-        { error: 'User not found.' },
-        { status: 404 },
+        { error: 'Profile not found.' },
+        { status: 404 }
       );
     }
 
-    const profile = await prisma.profile.upsert({
-      where: { userId: user.id },
-      update: {
-        description,
-        interests,
-        profilePicture,
+    // 🔥 CRITICAL FIX: update by PROFILE ID (not userId)
+    const updated = await prisma.profile.update({
+      where: {
+        id: user.profile.id, // ✅ THIS FIXES EVERYTHING
       },
-      create: {
+      data: {
         description,
         interests,
         profilePicture,
-        userId: user.id,
+        username,
       },
     });
 
-    return NextResponse.json(
-      { message: 'Profile updated successfully.', profile },
-      { status: 200 },
-    );
-  } catch (error) {
-    console.error('Error updating profile:', error);
+    return NextResponse.json(updated);
+
+  } catch (error: unknown) {
+    if (
+      typeof error === 'object' &&
+      error !== null &&
+      'code' in error &&
+      (error as { code: string }).code === 'P2002'
+    ) {
+      return NextResponse.json(
+        { error: 'Username already taken.' },
+        { status: 400 }
+      );
+    }
+
+    console.error(error);
+
     return NextResponse.json(
       { error: 'Failed to update profile.' },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }
