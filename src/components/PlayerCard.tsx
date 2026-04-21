@@ -14,16 +14,9 @@ const PlayerCard = ({ player }: { player: Player }) => (
     <Container className="ms-2">
       <Card.Body className="p-3">
         <Card.Title>
-          <Row className="ps-0 py-2 align-items-center">
-            <Col xs="auto">
-              <Link href="/findplayers/request" className="custom-link-button">
-                <PlusLg />
-              </Link>
-            </Col>
-            <Col className="username-size">
+          <Col className="py-3">
               {player.username}
             </Col>
-          </Row>
         </Card.Title>
 
         <Image
@@ -42,12 +35,18 @@ const PlayerCard = ({ player }: { player: Player }) => (
 
         <div>Game: {player.game}</div>
         <div className="mb-2">Rank: {player.rank}</div>
-
-        <Link
-          href={`/requests?game=${encodeURIComponent(player.game)}&rank=${encodeURIComponent(player.rank)}`}
-        >
-          <Button size="sm">Connect</Button>
-        </Link>
+        <Row className="ps-0 py-2 align-items-center">
+          <Col xs="auto">
+            <Link href="/findplayers/request" className="custom-link-button">
+                <PlusLg />
+            </Link>
+          </Col>
+          <Col className= "pl-0">
+            <Link href={`/requests?game=${encodeURIComponent(player.game)}&rank=${encodeURIComponent(player.rank)}`} >
+              <Button size="sm">Connect</Button>
+            </Link>
+          </Col>
+        </Row>
       </Card.Body>
     </Container>
   </Card>
