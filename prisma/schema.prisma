@@ -12,30 +12,42 @@ enum Role {
 }
 
 model User {
-  id       Int      @id @default(autoincrement())
-  email    String   @unique
+  id       Int       @id @default(autoincrement())
+  email    String    @unique
   password String
   role     Role
   profile  Profile?
+  library  UserGame[]
 }
 
 model Profile {
-  id             Int      @id @default(autoincrement())
+  id             Int     @id @default(autoincrement())
   description    String
   interests      String
   profilePicture String?
-  userId         Int      @unique
-  user           User     @relation(fields: [userId], references: [id])
+  userId         Int     @unique
+  user           User    @relation(fields: [userId], references: [id])
 }
 
 model Game {
-  id          Int      @id @default(autoincrement())
-  title       String   @unique
+  id          Int        @id @default(autoincrement())
+  title       String     @unique
   developer   String
   platform    String?
   tags        String[]
   description String?
   imageUrl    String?
+  library     UserGame[]
+}
+
+model UserGame {
+  id      Int      @id @default(autoincrement())
+  userId  Int
+  gameId  Int
+  addedAt DateTime @default(now())
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  game    Game     @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  @@unique([userId, gameId])
 }
 
 model Player {

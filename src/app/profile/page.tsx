@@ -5,6 +5,16 @@ import { Container, Row, Col, Card } from 'react-bootstrap';
 import Image from 'next/image';
 import Link from 'next/link';
 
+type Game = {
+  id: number;
+  title: string;
+  developer: string;
+  platform?: string | null;
+  description?: string | null;
+  imageUrl?: string | null;
+  tags: string[];
+}
+
 type ProfileData = {
   email: string;
   profile: {
@@ -15,24 +25,41 @@ type ProfileData = {
 };
 
 export default function ProfilePage() {
+  // States for user profile, loading status, error messages, and user's game library.
   const [user, setUser] = useState<ProfileData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [library, setLibrary] = useState<Game[]>([]);
 
+  // Fetches both the user's profile and library data.
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const res = await fetch('/api/profile/me');
+        const [profileRes, libraryRes] = await Promise.all([
+          fetch('/api/profile/me'),
+          fetch('/api/library'),
+        ]);
 
-        const data = await res.json();
+        const profileData = await profileRes.json();
+        const libraryData = await libraryRes.json();
 
-        if (!res.ok) {
-          setError(data.error || 'Failed to load profile.');
+        // Checks if profile fetch was successful before setting state, otherwise sets error message.
+        if (!profileRes.ok) {
+          setError(profileData.error || 'Failed to load profile.');
           setLoading(false);
           return;
         }
 
-        setUser(data);
+        setUser(profileData);
+
+        // Checks if library fetch was successful before setting state, otherwise sets error message.
+        if (!libraryRes.ok) {
+          setError(libraryData.error || 'Failed to load library.');
+          setLoading(false);
+          return;
+        }
+
+        setLibrary(libraryData);
       } catch (err) {
         console.error(err);
         setError('Something went wrong while loading your profile.');
@@ -40,7 +67,6 @@ export default function ProfilePage() {
         setLoading(false);
       }
     };
-
     fetchProfile();
   }, []);
 
@@ -67,8 +93,6 @@ export default function ProfilePage() {
   const interestsList = user.profile?.interests
     ? user.profile.interests.split(',').map((item) => item.trim()).filter(Boolean)
     : [];
-
-  const library: string[] = [];
 
   const profileImage =
     user.profile?.profilePicture && !user.profile.profilePicture.startsWith('blob:')
@@ -148,6 +172,7 @@ export default function ProfilePage() {
             <Col md={4}>
               <h5 style={{ marginBottom: '15px' }}>Library</h5>
 
+              {/* Displays the user's favorite games library or a message if no games have been added yet. */}
               {library.length > 0 ? (
                 library.map((game, index) => (
                   <div
@@ -157,7 +182,7 @@ export default function ProfilePage() {
                       borderBottom: '1px solid rgb(92, 148, 252)'
                     }}
                   >
-                    {game}
+                    {game.title}
                   </div>
                 ))
               ) : (
