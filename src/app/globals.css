@@ -160,6 +160,15 @@ h3{
   border: 1px solid rgb(65, 132, 255, 0.526)!important;   
   color:rgb(65, 132, 255) !important;                
 }
+ .custom-modal-card{
+  background: rgb(29, 18, 113);
+  border: 2px solid rgba(65, 132, 255, 0.505);
+  border-radius: 12px;
+  color:rgb(92, 148, 252);
+  font-weight: 400;
+}
+
+
 
 .custom-reg-btn {
   background-color: rgb(65, 132, 255) !important; 
@@ -247,7 +256,7 @@ h3{
   font-weight: 500;
 
   color: rgb(65, 132, 255);
-  background-color: transparent;
+  background-color: rgba(255, 255, 255, 0.08);
 
   border: 1.5px solid rgb(65, 132, 255);
   border-radius: 20px;

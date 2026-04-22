@@ -7,7 +7,7 @@ type Player = {
   imageUrl?: string | null;
 };
 
-const PlayerCard = ({ player }: { player: Player }) => (
+const PlayerRequestCard = ({ player }: { player: Player }) => (
 <Card className="h-100 custom-card-body" style={{ width: '235px' }}>
   <Container className="ms-2">
     <Card.Body className="p-3">
@@ -43,4 +43,4 @@ const PlayerCard = ({ player }: { player: Player }) => (
 </Card>
 );
 
-export default PlayerCard;
+export default PlayerRequestCard;

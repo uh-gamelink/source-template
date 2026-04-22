@@ -42,7 +42,7 @@ const PlayerCard = ({ player, onRequestClick }: PlayerCardProps) => (
         <Row className="ps-0 py-2 align-items-center">
           <Col xs="auto">
             <Button
-              className="custom-tag-btn d-flex align-items-center justify-content-center"
+              className="custom-tag-btn d-flex align-items-center justify-content-center custom-link-button"
               size="sm"
               onClick={() => onRequestClick(player)}
               style={{
@@ -56,13 +56,7 @@ const PlayerCard = ({ player, onRequestClick }: PlayerCardProps) => (
           </Col>
 
           <Col className="pl-0">
-            <Button
-              className="custom-reg-btn w-100"
-              size="sm"
-              onClick={() => onRequestClick(player)}
-            >
-              Connect
-            </Button>
+            Connect
           </Col>
         </Row>
       </Card.Body>

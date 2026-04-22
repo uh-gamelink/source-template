@@ -251,7 +251,12 @@ const FindPlayersBrowser = ({
         </Table>
       </div>
 
-      <Modal show={showModal} onHide={handleCloseModal} centered>
+      <Modal
+        show={showModal}
+        onHide={handleCloseModal}
+        centered
+        contentClassName="custom-modal-card"
+      >
         <Modal.Header closeButton>
           <Modal.Title>Send Request</Modal.Title>
         </Modal.Header>
