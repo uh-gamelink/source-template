@@ -2,7 +2,7 @@ import { Card, Container, Image, Row, Col, Button } from 'react-bootstrap';
 import { PlusLg } from 'react-bootstrap-icons';
 
 type Player = {
-  id?: number;
+  id: number;
   username: string;
   imageUrl?: string | null;
   game: string;
