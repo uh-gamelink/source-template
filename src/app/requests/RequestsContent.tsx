@@ -171,7 +171,7 @@ export default function RequestsContent() {
           <Card className="p-4 text-center h-100 custom-card-body pending-panel">
             <h4 className="mb-3">Pending Requests</h4>
             <div className="arrow-circle">
-              <ArrowRight size={28} />
+              <ArrowRight size={28} href="/status" />
             </div>
           </Card>
         </Col>

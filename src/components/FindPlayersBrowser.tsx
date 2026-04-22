@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import Table from 'react-bootstrap/Table';
 import Image from 'react-bootstrap/Image';
 import PlayerCard from '@/components/PlayerCard';
 import { Search } from 'react-bootstrap-icons';
@@ -16,13 +15,6 @@ type Player = {
   imageUrl?: string | null;
   game: string;
   rank: string;
-};
-
-type RequestRow = {
-  username: string;
-  game: string;
-  rank: string;
-  status: string;
 };
 
 type FindPlayersBrowserProps = {
@@ -45,7 +37,6 @@ const FindPlayersBrowser = ({
   const [showFilters, setShowFilters] = useState(false);
   const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null);
   const [showModal, setShowModal] = useState(false);
-  const [requestRows, setRequestRows] = useState<RequestRow[]>([]);
 
   const router = useRouter();
 
@@ -71,30 +62,6 @@ const FindPlayersBrowser = ({
 
   const handleRequest = () => {
     if (!selectedPlayer) return;
-
-    setRequestRows((prev) => {
-      const alreadyExists = prev.some(
-        (row) => row.username === selectedPlayer.username,
-      );
-
-      if (alreadyExists) {
-        return prev.map((row) =>
-          row.username === selectedPlayer.username
-            ? { ...row, status: 'Pending' }
-            : row,
-        );
-      }
-
-      return [
-        ...prev,
-        {
-          username: selectedPlayer.username,
-          game: selectedPlayer.game,
-          rank: selectedPlayer.rank,
-          status: 'Pending',
-        },
-      ];
-    });
 
     const username = encodeURIComponent(selectedPlayer.username);
     const gameValue = encodeURIComponent(selectedPlayer.game);
@@ -219,38 +186,6 @@ const FindPlayersBrowser = ({
         )}
       </div>
 
-      <div className="mt-5">
-        <h2 className="mb-3">Request Status</h2>
-        <Table striped bordered hover responsive>
-          <thead>
-            <tr>
-              <th>Username</th>
-              <th>Game</th>
-              <th>Rank</th>
-              <th>Request Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {requestRows.length > 0 ? (
-              requestRows.map((request) => (
-                <tr key={request.username}>
-                  <td>{request.username}</td>
-                  <td>{request.game}</td>
-                  <td>{request.rank}</td>
-                  <td>{request.status}</td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan={4} className="text-center">
-                  No requests yet.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </Table>
-      </div>
-
       <Modal
         show={showModal}
         onHide={handleCloseModal}
@@ -282,11 +217,15 @@ const FindPlayersBrowser = ({
         </Modal.Body>
 
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseModal}>
-            Cancel
-          </Button>
           <Button className="custom-tag-btn border-0" onClick={handleRequest}>
             Request
+          </Button>
+          <Button
+            variant="secondary"
+            className="custom-reset-btn"
+            onClick={handleCloseModal}
+          >
+            Cancel
           </Button>
         </Modal.Footer>
       </Modal>

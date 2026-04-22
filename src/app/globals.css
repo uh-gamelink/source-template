@@ -168,7 +168,14 @@ h3{
   font-weight: 400;
 }
 
+.custom-modal-card .modal-header {
+  border-bottom: 2px solid rgb(65, 132, 255);
+}
 
+/* FOOTER LINE */
+.custom-modal-card .modal-footer {
+  border-top: 2px solid #44a1f7; 
+}
 
 .custom-reg-btn {
   background-color: rgb(65, 132, 255) !important; 
