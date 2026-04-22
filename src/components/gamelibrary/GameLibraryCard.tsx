@@ -1,6 +1,6 @@
 'use client';
 
-import { Card } from 'react-bootstrap';
+import { Button, Card } from 'react-bootstrap';
 import Image from 'next/image';
 
 export type Game = {
@@ -13,7 +13,15 @@ export type Game = {
   tags: string[];
 };
 
-export default function GameLibraryCard({ game }: { game: Game }) {
+interface GameLibraryCardProps {
+  game: Game;
+  inLibrary: boolean;
+  isLoading: boolean;
+  onToggleLibrary: (gameId: number) => void;
+  isLoggedIn: boolean;
+}
+
+export default function GameLibraryCard({ game, inLibrary, isLoading, onToggleLibrary, isLoggedIn }: GameLibraryCardProps) {
   return (
     <Card className="h-100 custom-card-body request-card">
       {game.imageUrl && (
@@ -53,6 +61,18 @@ export default function GameLibraryCard({ game }: { game: Game }) {
           ))}
         </div>
       </Card.Body>
+      <Card.Footer>
+        {isLoggedIn && (
+          <Button
+            variant={inLibrary ? "secondary" : "primary"} 
+            className="w-100" 
+            onClick={() => onToggleLibrary(game.id)}
+            disabled={isLoading || inLibrary}
+          >
+            {isLoading ? "Updating..." : "Add to Favorites"}
+          </Button>
+        )}
+      </Card.Footer>
     </Card>
   );
 }

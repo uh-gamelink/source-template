@@ -22,24 +22,52 @@ type ProfileData = {
   }[];
 };
 
+type Game = {
+  id: number;
+  title: string;
+  developer: string;
+  platform?: string | null;
+  description?: string | null;
+  imageUrl?: string | null;
+  tags: string[];
+}
+
 export default function ProfilePage() {
   const [user, setUser] = useState<ProfileData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [library, setLibrary] = useState<Game[]>([]);
 
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const res = await fetch('/api/profile/me');
-        const data = await res.json();
+        const [profileRes, libraryRes] = await Promise.all([
+          fetch('/api/profile/me'),
+          fetch('/api/library'),
+        ]);
 
-        if (!res.ok) {
-          setError(data.error || 'Failed to load profile.');
+        const profileData = await profileRes.json();
+        const libraryData = await libraryRes.json();
+
+        // Checks if profile fetch was successful before setting state, otherwise sets error message.
+        if (!profileRes.ok) {
+          setError(profileData.error || 'Failed to load profile.');
           setLoading(false);
           return;
         }
 
-        setUser(data);
+        setUser(profileData);
+        const res = await fetch('/api/profile/me');
+        const data = await res.json();
+
+        // Checks if library fetch was successful before setting state, otherwise sets error message.
+        if (!libraryRes.ok) {
+          setError(libraryData.error || 'Failed to load library.');
+          setLoading(false);
+          return;
+        }
+
+        setLibrary(libraryData);
       } catch (err) {
         console.error(err);
         setError('Something went wrong while loading your profile.');
@@ -47,7 +75,6 @@ export default function ProfilePage() {
         setLoading(false);
       }
     };
-
     fetchProfile();
   }, []);
 
@@ -176,16 +203,24 @@ export default function ProfilePage() {
             </Col>
 
             <Col md={3}>
-              <h5>Library</h5>
+              <h5>Favorites</h5>
 
-              <div
-                style={{
-                  padding: '8px 0',
-                  borderBottom: '1px solid rgba(92, 148, 252, 0.45)',
-                }}
-              >
-                No games added yet.
-              </div>
+              {/* Displays the user's favorite games library or a message if no games have been added yet. */}
+              {library.length > 0 ? (
+                library.map((game, index) => (
+                  <div
+                    key={index}
+                    style={{
+                      padding: '8px 0',
+                      borderBottom: '1px solid rgba(92, 148, 252, 0.45)',
+                    }}
+                  >
+                    {game.title}
+                  </div>
+                ))
+              ) : (
+                <div>No games added yet.</div>
+              )}
             </Col>
 
             <Col md={3}>

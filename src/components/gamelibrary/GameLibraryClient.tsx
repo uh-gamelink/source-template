@@ -1,14 +1,53 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import GameLibraryCard, { type Game } from '@/components/gamelibrary/GameLibraryCard';
+import { useSession } from 'next-auth/react';
 
 const PAGE_SIZE = 6;
 
-export default function GameLibraryClient({ games }: { games: Game[] }) {
+export default function GameLibraryClient( {games} : {games: Game[]}) {
   const [page, setPage] = useState(1);
   const [selectedTag, setSelectedTag] = useState<string>('All');
+  const [libraryIds, setLibraryIds] = useState<Set<number>>(new Set());
+  const [loadingId, setLoadingId] = useState<number | null>(null);
+  const { status } = useSession();
+  const isLoggedIn = status === 'authenticated';
+
+  useEffect(() => {
+    if (!isLoggedIn) return;
+    fetch('/api/library')
+      .then((res) => {return res.json();})
+      .then((data: Game[]) => {
+        if (Array.isArray(data)) {
+          setLibraryIds(new Set(data.map((g) => g.id)));
+        }
+      })
+      .catch(console.error);
+  }, [isLoggedIn, status]);
+
+  // Adds a game in of the Favorites library depending on the game's current state
+  async function handleAdd(gameId: number) {
+    setLoadingId(gameId);
+
+    try {
+      const res = await fetch("/api/library", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ gameId }),
+      });
+
+      if (res.ok) {
+        setLibraryIds((prev) => {
+          const next = new Set(prev);
+          next.add(gameId);
+          return next;});
+      }
+    } finally {
+      setLoadingId(null);
+    }
+  }
 
   const allTags = useMemo(() => {
     const tagSet = new Set<string>();
@@ -48,7 +87,13 @@ export default function GameLibraryClient({ games }: { games: Game[] }) {
       <Row className="g-4">
         {currentGames.map((game) => (
           <Col md={4} key={game.id}>
-            <GameLibraryCard game={game} />
+            <GameLibraryCard
+              game={game}
+              inLibrary={libraryIds.has(game.id)}
+              isLoading={loadingId === game.id}
+              onToggleLibrary={handleAdd}
+              isLoggedIn={isLoggedIn}
+            />
           </Col>
         ))}
       </Row>
