@@ -4,6 +4,8 @@ import { prisma } from '@/lib/prisma';
 import Container from 'react-bootstrap/Container';
 import FindPlayersBrowser from '@/components/FindPlayersBrowser';
 
+export const dynamic = 'force-dynamic';
+
 const PAGE_SIZE = 20;
 
 type FindPlayersPageProps = {
