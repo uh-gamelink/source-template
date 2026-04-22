@@ -42,17 +42,22 @@ const PlayerCard = ({ player, onRequestClick }: PlayerCardProps) => (
         <Row className="ps-0 py-2 align-items-center">
           <Col xs="auto">
             <Button
-              variant="link"
-              className="custom-link-button p-0 border-0"
+              className="custom-tag-btn d-flex align-items-center justify-content-center"
+              size="sm"
               onClick={() => onRequestClick(player)}
+              style={{
+                width: '32px',
+                height: '32px',
+                padding: 0,
+              }}
             >
-              <PlusLg />
+              <PlusLg size={16} />
             </Button>
           </Col>
 
           <Col className="pl-0">
             <Button
-              className="custom-tag-btn"
+              className="custom-reg-btn w-100"
               size="sm"
               onClick={() => onRequestClick(player)}
             >
