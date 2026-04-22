@@ -6,6 +6,7 @@ import Link from 'next/link';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Image from 'react-bootstrap/Image';
+import Alert from 'react-bootstrap/Alert';
 import PlayerCard from '@/components/PlayerCard';
 import { Search } from 'react-bootstrap-icons';
 
@@ -37,6 +38,7 @@ const FindPlayersBrowser = ({
   const [showFilters, setShowFilters] = useState(false);
   const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null);
   const [showModal, setShowModal] = useState(false);
+  const [requestError, setRequestError] = useState('');
 
   const router = useRouter();
 
@@ -52,23 +54,47 @@ const FindPlayersBrowser = ({
 
   const handleOpenModal = (player: Player) => {
     setSelectedPlayer(player);
+    setRequestError('');
     setShowModal(true);
   };
 
   const handleCloseModal = () => {
     setShowModal(false);
     setSelectedPlayer(null);
+    setRequestError('');
   };
 
-  const handleRequest = () => {
+  const handleRequest = async () => {
     if (!selectedPlayer) return;
 
-    const username = encodeURIComponent(selectedPlayer.username);
-    const gameValue = encodeURIComponent(selectedPlayer.game);
-    const rankValue = encodeURIComponent(selectedPlayer.rank);
+    setRequestError('');
 
-    handleCloseModal();
-    router.push(`/requests?username=${username}&game=${gameValue}&rank=${rankValue}`);
+    try {
+      const res = await fetch('/api/requests', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          game: selectedPlayer.game,
+          rank: selectedPlayer.rank,
+          notes: '', // ✅ FIX: ALWAYS SEND NOTES
+          receiverUsername: selectedPlayer.username,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setRequestError(data?.error || 'Failed to create request');
+        return;
+      }
+
+      handleCloseModal();
+      router.push('/requests');
+      router.refresh();
+    } catch (err) {
+      console.error(err);
+      setRequestError('Failed to create request');
+    }
   };
 
   return (
@@ -88,54 +114,9 @@ const FindPlayersBrowser = ({
             type="button"
             className="filter-toggle-btn position-absolute ms-4"
             onClick={() => setShowFilters(!showFilters)}
-            aria-label="Toggle filters"
           >
             <Search size={20} />
           </button>
-
-          {showFilters && (
-            <div className="filter-dropdown shadow-sm p-3">
-              <form method="GET" className="d-flex flex-column gap-3">
-                <div>
-                  <label htmlFor="game" className="form-label mb-1">
-                    Game Title
-                  </label>
-                  <input
-                    id="game"
-                    name="game"
-                    type="text"
-                    defaultValue={game}
-                    placeholder="Search by game"
-                    className="form-control custom-card-body"
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="rank" className="form-label mb-1">
-                    Rank
-                  </label>
-                  <input
-                    id="rank"
-                    name="rank"
-                    type="text"
-                    defaultValue={rank}
-                    placeholder="Search by rank"
-                    className="form-control custom-card-body"
-                  />
-                </div>
-
-                <div className="d-flex gap-2">
-                  <Button type="submit" className="custom-tag-btn border-0">
-                    Filter
-                  </Button>
-
-                  <Link href="/findplayers" className="btn custom-reset-btn">
-                    Reset
-                  </Link>
-                </div>
-              </form>
-            </div>
-          )}
         </div>
       </div>
 
@@ -156,42 +137,7 @@ const FindPlayersBrowser = ({
         ))}
       </div>
 
-      <p className="mb-3 text-center pt-3">
-        Showing {players.length} of {totalPlayers} player{totalPlayers === 1 ? '' : 's'}
-      </p>
-
-      <div className="d-flex justify-content-center align-items-center gap-3 mt-4">
-        {safePage > 1 ? (
-          <Link href={createPageLink(safePage - 1)} className="btn btn-outline-primary">
-            Previous
-          </Link>
-        ) : (
-          <Button disabled variant="outline-primary">
-            Previous
-          </Button>
-        )}
-
-        <span>
-          Page {safePage} of {totalPages}
-        </span>
-
-        {safePage < totalPages ? (
-          <Link href={createPageLink(safePage + 1)} className="btn btn-outline-primary">
-            Next
-          </Link>
-        ) : (
-          <Button disabled variant="outline-primary">
-            Next
-          </Button>
-        )}
-      </div>
-
-      <Modal
-        show={showModal}
-        onHide={handleCloseModal}
-        centered
-        contentClassName="custom-modal-card"
-      >
+      <Modal show={showModal} onHide={handleCloseModal} centered>
         <Modal.Header closeButton>
           <Modal.Title>Send Request</Modal.Title>
         </Modal.Header>
@@ -206,7 +152,6 @@ const FindPlayersBrowser = ({
                 roundedCircle
                 alt={selectedPlayer.username}
                 className="mb-3"
-                style={{ objectFit: 'cover' }}
               />
               <p>
                 Do you want to request connecting with{' '}
@@ -214,17 +159,17 @@ const FindPlayersBrowser = ({
               </p>
             </>
           )}
+
+          {requestError && (
+            <Alert variant="danger">{requestError}</Alert>
+          )}
         </Modal.Body>
 
         <Modal.Footer>
-          <Button className="custom-tag-btn border-0" onClick={handleRequest}>
+          <Button className="custom-tag-btn" onClick={handleRequest}>
             Request
           </Button>
-          <Button
-            variant="secondary"
-            className="custom-reset-btn"
-            onClick={handleCloseModal}
-          >
+          <Button variant="secondary" onClick={handleCloseModal}>
             Cancel
           </Button>
         </Modal.Footer>

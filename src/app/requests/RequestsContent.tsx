@@ -18,12 +18,21 @@ type Request = {
   game: string;
   rank: string;
   notes?: string;
+  receiverUsername?: string | null;
+
   user: {
     email: string;
     profile?: {
       username?: string | null;
     } | null;
   };
+
+  receiver?: {
+    email: string;
+    profile?: {
+      username?: string | null;
+    } | null;
+  } | null;
 };
 
 export default function RequestsContent() {
@@ -53,24 +62,8 @@ export default function RequestsContent() {
   };
 
   useEffect(() => {
-    const loadRequests = async () => {
-      try {
-        const res = await fetch('/api/requests');
-        const data = await res.json();
-
-        if (!res.ok) {
-          setError(data?.error || 'Failed to load requests.');
-          return;
-        }
-
-        setRequests(data);
-      } catch (err) {
-        console.error(err);
-        setError('Failed to load requests.');
-      }
-    };
-
-    loadRequests();
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    fetchRequests();
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -185,19 +178,29 @@ export default function RequestsContent() {
               <p>No requests yet.</p>
             ) : (
               requests.map((req) => {
-                const username =
+                const sender =
                   req.user.profile?.username ||
                   req.user.email.split('@')[0];
+
+                const target =
+                  req.receiver?.profile?.username ||
+                  req.receiverUsername ||
+                  'Open Request';
 
                 return (
                   <Col md={4} key={req.id}>
                     <Card className="p-3 h-100 custom-card-body request-card">
                       <div className="request-label">Request</div>
 
-                      <Card.Title>{username}</Card.Title>
+                      <Card.Title>{sender}</Card.Title>
 
                       <Card.Text>
-                        <small>@{username}</small>
+                        <small>@{sender}</small>
+                      </Card.Text>
+
+                      {/* 🔥 THIS IS WHAT YOU WERE MISSING */}
+                      <Card.Text>
+                        <strong>To:</strong> {target}
                       </Card.Text>
 
                       <Card.Text>
