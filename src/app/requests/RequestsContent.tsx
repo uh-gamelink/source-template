@@ -11,6 +11,7 @@ import {
   Form,
 } from 'react-bootstrap';
 import { useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 
 type Request = {
   id: number;
@@ -171,7 +172,9 @@ export default function RequestsContent() {
           <Card className="p-4 text-center h-100 custom-card-body pending-panel">
             <h4 className="mb-3">Pending Requests</h4>
             <div className="arrow-circle">
-              <ArrowRight size={28} href="/status" />
+              <Link href="/requests/status">
+                <ArrowRight size={28} />
+              </Link>
             </div>
           </Card>
         </Col>

@@ -9,7 +9,11 @@ type RequestRow = {
   status: string;
 };
 
-const StatusContents = ({ requestRows }: { requestRows: RequestRow[] }) => (
+type StatusContentsProps = {
+  requestRows?: RequestRow[];
+};
+
+const StatusContents = ({ requestRows = [] }: StatusContentsProps) => (
   <div className="mt-5">
     <h2 className="mb-3">Request Status</h2>
 

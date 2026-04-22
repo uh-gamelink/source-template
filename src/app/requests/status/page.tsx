@@ -1,5 +1,5 @@
 import Container from 'react-bootstrap/Container';
-import StatusContents from '@/components/StatusContent';
+import StatusContents from './StatusContent';
 
 type RequestRow = {
   username: string;
