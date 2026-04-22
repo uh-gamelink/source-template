@@ -398,3 +398,33 @@ h3{
   stroke-width: 2;
 }
 
+
+.status-table {
+  border: none !important;
+  background: transparent;
+}
+
+.status-table th,
+.status-table td {
+  border: none !important;
+    background: transparent;
+}
+
+/* underline each row */
+.status-table tbody tr {
+  border-bottom: 1px solid rgba(65, 132, 255, 0.4);
+}
+
+/* header underline */
+.status-table thead tr {
+  border-bottom: 2px solid rgb(65, 132, 255);
+}
+
+/* text color (match your theme) */
+.status-table th {
+  color: rgb(65, 132, 255);
+}
+
+.status-table td {
+  color: rgb(92, 148, 252);
+}

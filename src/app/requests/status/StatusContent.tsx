@@ -17,7 +17,7 @@ const StatusContents = ({ requestRows = [] }: StatusContentsProps) => (
   <div className="mt-5">
     <h2 className="mb-3">Request Status</h2>
 
-    <Table striped bordered hover responsive className="custom-card-body">
+    <Table striped bordered hover responsive className="status-table">
       <thead>
         <tr>
           <th>Username</th>
