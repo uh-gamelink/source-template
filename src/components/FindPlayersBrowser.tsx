@@ -107,7 +107,7 @@ const FindPlayersBrowser = ({
 
         <div className="position-relative">
           <Link href="/requests">
-            <Button className="custom-tag-btn">Create Request</Button>
+            <Button className="custom-tag-btn">View Requests</Button>
           </Link>
 
           <button

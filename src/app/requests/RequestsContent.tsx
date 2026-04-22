@@ -8,9 +8,7 @@ import {
   Col,
   Card,
   Button,
-  Form,
 } from 'react-bootstrap';
-import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 
 type Request = {
@@ -19,6 +17,7 @@ type Request = {
   rank: string;
   notes?: string;
   receiverUsername?: string | null;
+  status?: string;
 
   user: {
     email: string;
@@ -36,11 +35,6 @@ type Request = {
 };
 
 export default function RequestsContent() {
-  const params = useSearchParams();
-
-  const [game, setGame] = useState(params.get('game') || '');
-  const [rank, setRank] = useState(params.get('rank') || '');
-  const [notes, setNotes] = useState('');
   const [requests, setRequests] = useState<Request[]>([]);
   const [error, setError] = useState('');
 
@@ -65,34 +59,6 @@ export default function RequestsContent() {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchRequests();
   }, []);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError('');
-
-    try {
-      const res = await fetch('/api/requests', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ game, rank, notes }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        setError(data?.error || 'Failed to create request.');
-        return;
-      }
-
-      setGame('');
-      setRank('');
-      setNotes('');
-      fetchRequests();
-    } catch (err) {
-      console.error(err);
-      setError('Failed to create request.');
-    }
-  };
 
   const handleDelete = async (id: number) => {
     setError('');
@@ -120,50 +86,17 @@ export default function RequestsContent() {
     <Container className="py-4">
       <h1 className="mb-4 custom-title">Requests</h1>
 
-      <Form onSubmit={handleSubmit} className="mb-5 requests-form">
-        <Row className="g-3">
-          <Col md={4}>
-            <Form.Control
-              placeholder="Game"
-              value={game}
-              onChange={(e) => setGame(e.target.value)}
-              required
-            />
-          </Col>
-
-          <Col md={3}>
-            <Form.Control
-              placeholder="Rank"
-              value={rank}
-              onChange={(e) => setRank(e.target.value)}
-              required
-            />
-          </Col>
-
-          <Col md={4}>
-            <Form.Control
-              placeholder="Notes"
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-            />
-          </Col>
-
-          <Col md={1}>
-            <Button type="submit" className="w-100">
-              Create
-            </Button>
-          </Col>
-        </Row>
-      </Form>
-
       {error && (
-        <div className="alert alert-danger mb-4">{error}</div>
+        <div className="alert alert-danger mb-4">
+          {error}
+        </div>
       )}
 
       <Row>
         <Col md={3}>
           <Card className="p-4 text-center h-100 custom-card-body pending-panel">
             <h4 className="mb-3">Pending Requests</h4>
+
             <div className="arrow-circle">
               <Link href="/requests/status">
                 <ArrowRight size={28} />
@@ -190,15 +123,18 @@ export default function RequestsContent() {
                 return (
                   <Col md={4} key={req.id}>
                     <Card className="p-3 h-100 custom-card-body request-card">
-                      <div className="request-label">Request</div>
+                      <div className="request-label">
+                        Request
+                      </div>
 
-                      <Card.Title>{sender}</Card.Title>
+                      <Card.Title>
+                        {sender}
+                      </Card.Title>
 
                       <Card.Text>
                         <small>@{sender}</small>
                       </Card.Text>
 
-                      {/* 🔥 THIS IS WHAT YOU WERE MISSING */}
                       <Card.Text>
                         <strong>To:</strong> {target}
                       </Card.Text>
@@ -211,12 +147,23 @@ export default function RequestsContent() {
                         <strong>Game:</strong> {req.game}
                       </Card.Text>
 
-                      {req.notes && <Card.Text>{req.notes}</Card.Text>}
+                      <Card.Text>
+                        <strong>Status:</strong>{' '}
+                        {req.status || 'PENDING'}
+                      </Card.Text>
+
+                      {req.notes && (
+                        <Card.Text>
+                          {req.notes}
+                        </Card.Text>
+                      )}
 
                       <Button
                         variant="danger"
                         size="sm"
-                        onClick={() => handleDelete(req.id)}
+                        onClick={() =>
+                          handleDelete(req.id)
+                        }
                       >
                         Delete
                       </Button>
