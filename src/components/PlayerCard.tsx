@@ -2,25 +2,24 @@ import { Card, Container, Image, Row, Col, Button } from 'react-bootstrap';
 import { PlusLg } from 'react-bootstrap-icons';
 
 type Player = {
+  id?: number;
   username: string;
   imageUrl?: string | null;
   game: string;
   rank: string;
 };
 
-type Props = {
+type PlayerCardProps = {
   player: Player;
   onRequestClick: (player: Player) => void;
 };
 
-const PlayerCard = ({ player, onRequestClick }: Props) => (
+const PlayerCard = ({ player, onRequestClick }: PlayerCardProps) => (
   <Card className="h-100 custom-card-body" style={{ width: '235px' }}>
     <Container className="ms-2">
       <Card.Body className="p-3">
         <Card.Title>
-          <Col className="py-3">
-            {player.username}
-          </Col>
+          <Col className="py-3">{player.username}</Col>
         </Card.Title>
 
         <Image
@@ -44,7 +43,7 @@ const PlayerCard = ({ player, onRequestClick }: Props) => (
           <Col xs="auto">
             <Button
               variant="link"
-              className="custom-link-button p-0"
+              className="custom-link-button p-0 border-0"
               onClick={() => onRequestClick(player)}
             >
               <PlusLg />
