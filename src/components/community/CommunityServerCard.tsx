@@ -28,7 +28,6 @@ export default function CommunityServerCard({
 }: CommunityServerCardProps) {
   const [isPending, startTransition] = useTransition();
   const [isAdded, setIsAdded] = useState(alreadyAdded);
-
   const handleAdd = () => {
     startTransition(async () => {
       try {
@@ -55,6 +54,7 @@ export default function CommunityServerCard({
           <Image
             src={server.imageUrl}
             alt={`${server.name} server image`}
+            unoptimized
             width={160}
             height={160}
             style={{
