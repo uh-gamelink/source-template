@@ -6,17 +6,18 @@ import FindPlayersBrowser from '@/components/FindPlayersBrowser';
 
 export const dynamic = 'force-dynamic';
 
-const PAGE_SIZE = 20;
+const PAGE_SIZE = 15;
 
 type FindPlayersPageProps = {
   searchParams?: Promise<{
-    game?: string;
-    rank?: string;
     page?: string;
+    search?: string;
   }>;
 };
 
-const FindPlayersPage = async ({ searchParams }: FindPlayersPageProps) => {
+const FindPlayersPage = async ({
+  searchParams,
+}: FindPlayersPageProps) => {
   const session = await auth();
 
   if (!session?.user) {
@@ -24,43 +25,78 @@ const FindPlayersPage = async ({ searchParams }: FindPlayersPageProps) => {
   }
 
   const params = (await searchParams) ?? {};
-  const game = params.game?.trim() ?? '';
-  const rank = params.rank?.trim() ?? '';
-  const currentPage = Math.max(Number(params.page) || 1, 1);
 
-  const where = {
-    ...(game
-      ? {
-          game: {
-            contains: game,
-            mode: 'insensitive' as const,
-          },
-        }
-      : {}),
-    ...(rank
-      ? {
-          rank: {
-            contains: rank,
-            mode: 'insensitive' as const,
-          },
-        }
-      : {}),
-  };
+  const currentPage = Math.max(
+    Number(params.page) || 1,
+    1,
+  );
 
-  const totalPlayers = await prisma.player.count({ where });
-  const totalPages = Math.max(1, Math.ceil(totalPlayers / PAGE_SIZE));
-  const safePage = Math.min(currentPage, totalPages);
+  const search =
+    params.search?.trim() || '';
 
-  const players = await prisma.player.findMany({
-    where,
-    skip: (safePage - 1) * PAGE_SIZE,
-    take: PAGE_SIZE,
-    orderBy: { username: 'asc' },
-  });
+  const where = search
+    ? {
+        username: {
+          contains: search,
+          mode: 'insensitive' as const,
+        },
+      }
+    : {};
+
+  const totalPlayers =
+    await prisma.player.count({
+      where,
+    });
+
+  const totalPages = Math.max(
+    1,
+    Math.ceil(
+      totalPlayers / PAGE_SIZE,
+    ),
+  );
+
+  const safePage = Math.min(
+    currentPage,
+    totalPages,
+  );
+
+  const players =
+    await prisma.player.findMany({
+      where,
+      skip:
+        (safePage - 1) *
+        PAGE_SIZE,
+      take: PAGE_SIZE,
+      orderBy: {
+        username: 'asc',
+      },
+    });
+
+  const startItem =
+    totalPlayers === 0
+      ? 0
+      : (safePage - 1) *
+          PAGE_SIZE +
+        1;
+
+  const endItem = Math.min(
+    safePage * PAGE_SIZE,
+    totalPlayers,
+  );
 
   return (
     <Container className="py-4">
-      <FindPlayersBrowser players={players} />
+      <FindPlayersBrowser
+        players={players}
+        currentPage={safePage}
+        totalPages={totalPages}
+        totalPlayers={
+          totalPlayers
+        }
+        startItem={startItem}
+        endItem={endItem}
+        search={search}
+      />
     </Container>
   );
 };

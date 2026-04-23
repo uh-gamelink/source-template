@@ -1,6 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import {
+  useState,
+  useEffect,
+} from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Button from 'react-bootstrap/Button';
@@ -19,13 +22,25 @@ type Player = {
 
 type FindPlayersBrowserProps = {
   players: Player[];
+  currentPage: number;
+  totalPages: number;
+  totalPlayers: number;
+  startItem: number;
+  endItem: number;
+  search: string;
 };
 
 const FindPlayersBrowser = ({
   players,
+  currentPage,
+  totalPages,
+  totalPlayers,
+  startItem,
+  endItem,
+  search,
 }: FindPlayersBrowserProps) => {
   const [searchTerm, setSearchTerm] =
-    useState('');
+    useState(search);
 
   const [selectedPlayer, setSelectedPlayer] =
     useState<Player | null>(null);
@@ -38,18 +53,39 @@ const FindPlayersBrowser = ({
 
   const router = useRouter();
 
-  const filteredPlayers =
-    searchTerm.trim() === ''
-      ? players
-      : players.filter((player) =>
-          player.username
-            .toLowerCase()
-            .includes(
-              searchTerm.toLowerCase(),
-            ),
-        );
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const trimmed =
+        searchTerm.trim();
 
-  const handleOpenModal = (player: Player) => {
+      const current =
+        search.trim();
+
+      if (trimmed === current) {
+        return;
+      }
+
+      const query =
+        trimmed === ''
+          ? '/findplayers'
+          : `/findplayers?search=${encodeURIComponent(
+              trimmed,
+            )}`;
+
+      router.push(query);
+    }, 400);
+
+    return () =>
+      clearTimeout(timer);
+  }, [
+    searchTerm,
+    search,
+    router,
+  ]);
+
+  const handleOpenModal = (
+    player: Player,
+  ) => {
     setSelectedPlayer(player);
     setRequestError('');
     setShowModal(true);
@@ -64,21 +100,26 @@ const FindPlayersBrowser = ({
   const handleRequest = async () => {
     if (!selectedPlayer) return;
 
-    const res = await fetch('/api/requests', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
+    const res = await fetch(
+      '/api/requests',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type':
+            'application/json',
+        },
+        body: JSON.stringify({
+          game: selectedPlayer.game,
+          rank: selectedPlayer.rank,
+          notes: '',
+          receiverUsername:
+            selectedPlayer.username,
+        }),
       },
-      body: JSON.stringify({
-        game: selectedPlayer.game,
-        rank: selectedPlayer.rank,
-        notes: '',
-        receiverUsername:
-          selectedPlayer.username,
-      }),
-    });
+    );
 
-    const data = await res.json();
+    const data =
+      await res.json();
 
     if (!res.ok) {
       setRequestError(
@@ -92,6 +133,27 @@ const FindPlayersBrowser = ({
     router.push('/requests');
     router.refresh();
   };
+
+  const goToPage = (
+    page: number,
+  ) => {
+    const query =
+      search.trim() === ''
+        ? `/findplayers?page=${page}`
+        : `/findplayers?page=${page}&search=${encodeURIComponent(
+            search,
+          )}`;
+
+    router.push(query);
+  };
+
+  const pageNumbers =
+    Array.from(
+      {
+        length: totalPages,
+      },
+      (_, i) => i + 1,
+    );
 
   return (
     <>
@@ -114,45 +176,176 @@ const FindPlayersBrowser = ({
             </Button>
           </Link>
 
-          <input
-            type="text"
-            placeholder="Search player..."
-            value={searchTerm}
-            onChange={(e) =>
-              setSearchTerm(e.target.value)
-            }
+          <div
             style={{
-              width: '220px',
-              padding: '8px',
-              borderRadius: '8px',
-              border:
-                '1px solid #ccc',
+              position:
+                'relative',
             }}
-          />
+          >
+            <input
+              type="text"
+              placeholder="Search player..."
+              value={
+                searchTerm
+              }
+              onChange={(
+                e,
+              ) =>
+                setSearchTerm(
+                  e.target
+                    .value,
+                )
+              }
+              style={{
+                width:
+                  '220px',
+                padding:
+                  '8px 32px 8px 8px',
+                borderRadius:
+                  '8px',
+                border:
+                  '1px solid #ccc',
+              }}
+            />
+
+            {searchTerm && (
+              <button
+                type="button"
+                onClick={() =>
+                  setSearchTerm(
+                    '',
+                  )
+                }
+                style={{
+                  position:
+                    'absolute',
+                  right:
+                    '8px',
+                  top: '50%',
+                  transform:
+                    'translateY(-50%)',
+                  border:
+                    'none',
+                  background:
+                    'transparent',
+                  fontSize:
+                    '18px',
+                  cursor:
+                    'pointer',
+                }}
+              >
+                ×
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns:
-            'repeat(auto-fit, minmax(220px, 1fr))',
-          gap: '0.4rem',
-          justifyItems: 'center',
-        }}
-      >
-        {filteredPlayers.map((player) => (
-          <PlayerCard
-            key={player.id}
-            player={player}
-            onRequestClick={handleOpenModal}
-          />
-        ))}
+      <div className="mb-3">
+        Showing {startItem}–
+        {endItem} of{' '}
+        {totalPlayers}{' '}
+        players
+      </div>
+
+      {players.length === 0 ? (
+        <div className="text-center mt-5">
+          No players found.
+        </div>
+      ) : (
+        <div
+          style={{
+            display:
+              'grid',
+            gridTemplateColumns:
+              'repeat(auto-fit, minmax(220px, 1fr))',
+            gap: '0.4rem',
+            justifyItems:
+              'center',
+          }}
+        >
+          {players.map(
+            (
+              player,
+            ) => (
+              <PlayerCard
+                key={
+                  player.id
+                }
+                player={
+                  player
+                }
+                onRequestClick={
+                  handleOpenModal
+                }
+              />
+            ),
+          )}
+        </div>
+      )}
+
+      <div className="d-flex justify-content-center align-items-center gap-2 mt-4 flex-wrap">
+        <Button
+          variant="secondary"
+          disabled={
+            currentPage ===
+            1
+          }
+          onClick={() =>
+            goToPage(
+              currentPage -
+                1,
+            )
+          }
+        >
+          Previous
+        </Button>
+
+        {pageNumbers.map(
+          (page) => (
+            <Button
+              key={page}
+              variant={
+                page ===
+                currentPage
+                  ? 'dark'
+                  : 'light'
+              }
+              onClick={() =>
+                goToPage(
+                  page,
+                )
+              }
+            >
+              {page}
+            </Button>
+          ),
+        )}
+
+        <Button
+          variant="secondary"
+          disabled={
+            currentPage ===
+            totalPages
+          }
+          onClick={() =>
+            goToPage(
+              currentPage +
+                1,
+            )
+          }
+        >
+          Next
+        </Button>
       </div>
 
       <Modal
-        show={showModal}
-        onHide={handleCloseModal}
+        show={
+          showModal
+        }
+        onHide={
+          handleCloseModal
+        }
         centered
       >
         <Modal.Header closeButton>
@@ -167,10 +360,14 @@ const FindPlayersBrowser = ({
               <Image
                 src={
                   selectedPlayer.imageUrl ||
-                  '/default-player.png'
+                  '/default-player.svg'
                 }
-                width={120}
-                height={120}
+                width={
+                  120
+                }
+                height={
+                  120
+                }
                 roundedCircle
                 className="mb-3"
                 alt={
@@ -179,7 +376,9 @@ const FindPlayersBrowser = ({
               />
 
               <p>
-                Request connecting with{' '}
+                Request
+                connecting
+                with{' '}
                 <strong>
                   {
                     selectedPlayer.username
@@ -192,7 +391,9 @@ const FindPlayersBrowser = ({
 
           {requestError && (
             <Alert variant="danger">
-              {requestError}
+              {
+                requestError
+              }
             </Alert>
           )}
         </Modal.Body>
@@ -200,14 +401,18 @@ const FindPlayersBrowser = ({
         <Modal.Footer>
           <Button
             className="custom-tag-btn"
-            onClick={handleRequest}
+            onClick={
+              handleRequest
+            }
           >
             Request
           </Button>
 
           <Button
             variant="secondary"
-            onClick={handleCloseModal}
+            onClick={
+              handleCloseModal
+            }
           >
             Cancel
           </Button>
