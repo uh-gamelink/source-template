@@ -110,7 +110,7 @@ const prisma = new PrismaClient({ adapter });
   platform: "PC / PlayStation / Xbox",
   tags: ["Battle Royale", "FPS", "Shooter"],
   description: "A fast-paced battle royale experience set in the Call of Duty universe.",
-  imageUrl: "/gamesLib/warzone.png",
+  imageUrl: "/gamesLib/warzone.webp",
 },
 {
   title: "PUBG: Battlegrounds",
@@ -118,7 +118,7 @@ const prisma = new PrismaClient({ adapter });
   platform: "PC / PlayStation / Xbox",
   tags: ["Battle Royale", "Shooter", "Survival"],
   description: "A realistic battle royale shooter focused on tactical survival gameplay.",
-  imageUrl: "/gamesLib/pubg.png",
+  imageUrl: "/gamesLib/pubg.jpg",
 },
 {
   title: "Rainbow Six Siege",
@@ -126,7 +126,7 @@ const prisma = new PrismaClient({ adapter });
   platform: "PC / PlayStation / Xbox",
   tags: ["FPS", "Tactical Shooter", "Competitive"],
   description: "A tactical shooter focused on strategy, destruction, and team coordination.",
-  imageUrl: "/gamesLib/r6.png",
+  imageUrl: "/gamesLib/r6.jpg",
 },
 {
   title: "Team Fortress 2",
@@ -134,7 +134,7 @@ const prisma = new PrismaClient({ adapter });
   platform: "PC",
   tags: ["FPS", "Hero Shooter", "Team-Based"],
   description: "A class-based team shooter with unique characters and game modes.",
-  imageUrl: "/gamesLib/tf2.png",
+  imageUrl: "/gamesLib/tf2.jpg",
 },
 {
   title: "Dota 2",
@@ -142,7 +142,7 @@ const prisma = new PrismaClient({ adapter });
   platform: "PC",
   tags: ["MOBA", "Strategy", "Competitive"],
   description: "A highly competitive MOBA with deep mechanics and team-based strategy.",
-  imageUrl: "/gamesLib/dota2.png",
+  imageUrl: "/gamesLib/dota2.jpg",
 },
 {
   title: "Terraria",
@@ -150,7 +150,7 @@ const prisma = new PrismaClient({ adapter });
   platform: "PC / Console / Mobile",
   tags: ["Sandbox", "Survival", "Adventure"],
   description: "A 2D sandbox adventure game focused on exploration, crafting, and combat.",
-  imageUrl: "/gamesLib/terraria.png",
+  imageUrl: "/gamesLib/terraria.webp",
 },
 {
   title: "Among Us",
@@ -169,28 +169,20 @@ const prisma = new PrismaClient({ adapter });
   imageUrl: "/gamesLib/fallguys.png",
 },
 {
-  title: "The Sims 4",
-  developer: "Maxis",
-  platform: "PC / PlayStation / Xbox",
-  tags: ["Life Sim"],
-  description: "A life simulation game where players control characters and build virtual lives.",
-  imageUrl: "/gamesLib/sims4.png",
-},
-{
   title: "Forza Horizon 5",
   developer: "Playground Games",
   platform: "PC / Xbox",
   tags: ["Racing", "Competitive"],
   description: "An open-world racing game set in Mexico with dynamic seasons and events.",
-  imageUrl: "/gamesLib/forza5.png",
+  imageUrl: "/gamesLib/forza.png",
 },
 {
-  title: "EA Sports FC 24",
+  title: "EA Sports FC 26",
   developer: "EA Sports",
   platform: "PC / PlayStation / Xbox / Switch",
   tags: ["Sports", "Competitive"],
   description: "A football simulation game featuring real teams, players, and leagues.",
-  imageUrl: "/gamesLib/fc24.png",
+  imageUrl: "/gamesLib/fc26.webp",
 },
 {
   title: "Elden Ring",
@@ -198,23 +190,7 @@ const prisma = new PrismaClient({ adapter });
   platform: "PC / PlayStation / Xbox",
   tags: ["Action RPG", "Adventure"],
   description: "An open-world action RPG known for its challenging combat and deep lore.",
-  imageUrl: "/gamesLib/eldenring.png",
-},
-{
-  title: "The Legend of Zelda: Breath of the Wild",
-  developer: "Nintendo",
-  platform: "Nintendo Switch",
-  tags: ["Open World", "Adventure"],
-  description: "An expansive open-world adventure game set in the kingdom of Hyrule.",
-  imageUrl: "/gamesLib/botw.png",
-},
-{
-  title: "Hades",
-  developer: "Supergiant Games",
-  platform: "PC / Switch / PlayStation / Xbox",
-  tags: ["Action RPG", "Indie"],
-  description: "A fast-paced rogue-like action RPG set in the underworld of Greek mythology.",
-  imageUrl: "/gamesLib/hades.png",
+  imageUrl: "/gamesLib/eldenring.webp",
 }
   ];
 
