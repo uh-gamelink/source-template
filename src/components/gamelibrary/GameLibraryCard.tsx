@@ -21,7 +21,13 @@ interface GameLibraryCardProps {
   isLoggedIn: boolean;
 }
 
-export default function GameLibraryCard({ game, inLibrary, isLoading, onToggleLibrary, isLoggedIn }: GameLibraryCardProps) {
+export default function GameLibraryCard({
+  game,
+  inLibrary,
+  isLoading,
+  onToggleLibrary,
+  isLoggedIn,
+}: GameLibraryCardProps) {
   return (
     <Card className="h-100 custom-card-body request-card">
       {game.imageUrl && (
@@ -61,15 +67,20 @@ export default function GameLibraryCard({ game, inLibrary, isLoading, onToggleLi
           ))}
         </div>
       </Card.Body>
+
       <Card.Footer>
         {isLoggedIn && (
           <Button
-            variant={inLibrary ? "secondary" : "primary"} 
-            className="w-100" 
+            variant={inLibrary ? 'success' : 'primary'}
+            className="w-100"
             onClick={() => onToggleLibrary(game.id)}
             disabled={isLoading || inLibrary}
           >
-            {isLoading ? "Updating..." : "Add to Favorites"}
+            {isLoading
+              ? 'Updating...'
+              : inLibrary
+                ? 'Added to Library ✓'
+                : 'Add to Library'}
           </Button>
         )}
       </Card.Footer>
