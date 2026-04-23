@@ -407,7 +407,7 @@ h3{
 .status-table th,
 .status-table td {
   border: none !important;
-    background: transparent;
+  background: transparent;
 }
 
 /* underline each row */
@@ -428,3 +428,4 @@ h3{
 .status-table td {
   color: rgb(92, 148, 252);
 }
+
