@@ -206,7 +206,7 @@ const prisma = new PrismaClient({ adapter });
   platform: "PC",
   tags: ["FPS", "Shooter", "Survival"],
   description: "A hardcore and realistic online shooter with survival and looting elements.",
-  imageUrl: "/gamesLib/escape-from-tarkov.png",
+  imageUrl: "/gamesLib/escape-from-tarkov.jpg",
 },
 {
   title: "Paladins",
@@ -214,7 +214,7 @@ const prisma = new PrismaClient({ adapter });
   platform: "PC / PlayStation / Xbox / Switch",
   tags: ["Hero Shooter", "FPS", "Team-Based"],
   description: "A team-based hero shooter with unique champions and abilities.",
-  imageUrl: "/gamesLib/paladins.jpg",
+  imageUrl: "/gamesLib/paladins.png",
 },
 {
   title: "Smite",
@@ -238,7 +238,7 @@ const prisma = new PrismaClient({ adapter });
   platform: "PC",
   tags: ["Survival", "Party"],
   description: "A cooperative horror game where players investigate haunted locations.",
-  imageUrl: "/gamesLib/phasmophobia.png",
+  imageUrl: "/gamesLib/phasmophobia.jpg",
 },
 {
   title: "Sea of Thieves",
@@ -246,7 +246,7 @@ const prisma = new PrismaClient({ adapter });
   platform: "PC / Xbox",
   tags: ["Adventure", "Sandbox"],
   description: "A pirate adventure game where players explore, loot, and sail together.",
-  imageUrl: "/gamesLib/sea-of-thieves.png",
+  imageUrl: "/gamesLib/sea-of-thieves.jpg",
 },
 {
   title: "Rust",
@@ -262,7 +262,7 @@ const prisma = new PrismaClient({ adapter });
   platform: "PC / PlayStation / Xbox / Switch",
   tags: ["Survival", "Adventure", "Sandbox"],
   description: "A survival game where players tame dinosaurs and build bases.",
-  imageUrl: "/gamesLib/ark.png",
+  imageUrl: "/gamesLib/ark.avif",
 },
 {
   title: "Brawlhalla",
@@ -278,15 +278,15 @@ const prisma = new PrismaClient({ adapter });
   platform: "PC / PlayStation / Xbox",
   tags: ["Fighting", "Party"],
   description: "A crossover fighting game featuring characters from various franchises.",
-  imageUrl: "/gamesLib/multiversus.png",
+  imageUrl: "/gamesLib/multiversus.avif",
 },
 {
-  title: "Battlefield 2042",
+  title: "Battlefield 6",
   developer: "DICE",
   platform: "PC / PlayStation / Xbox",
   tags: ["FPS", "Shooter"],
   description: "A large-scale multiplayer shooter featuring massive battles and vehicles.",
-  imageUrl: "/gamesLib/battlefield2042.png",
+  imageUrl: "/gamesLib/battlefield.jpeg",
 },
 {
   title: "Baldur's Gate 3",
@@ -294,7 +294,7 @@ const prisma = new PrismaClient({ adapter });
   platform: "PC / PlayStation / Xbox",
   tags: ["RPG", "Strategy", "Adventure"],
   description: "A story-rich RPG where up to four players can explore, fight, and make choices together.",
-  imageUrl: "/gamesLib/baldursgate3.png",
+  imageUrl: "/gamesLib/baldursgate.avif",
 },
 {
   title: "Divinity: Original Sin 2",
@@ -302,7 +302,7 @@ const prisma = new PrismaClient({ adapter });
   platform: "PC / PlayStation / Xbox / Switch",
   tags: ["RPG", "Strategy", "Adventure"],
   description: "A deep co-op RPG where players can work together or make their own choices in a shared world.",
-  imageUrl: "/gamesLib/divinity2.png",
+  imageUrl: "/gamesLib/div2.webp",
 },
 {
   title: "Monster Hunter: World",
@@ -310,7 +310,7 @@ const prisma = new PrismaClient({ adapter });
   platform: "PC / PlayStation / Xbox",
   tags: ["RPG", "Adventure"],
   description: "Hunt massive monsters with friends and craft powerful gear together.",
-  imageUrl: "/gamesLib/mhw.png",
+  imageUrl: "/gamesLib/monsterhunter.png",
 },
 {
   title: "World of Warcraft",
@@ -318,7 +318,7 @@ const prisma = new PrismaClient({ adapter });
   platform: "PC",
   tags: ["RPG", "Adventure"],
   description: "A massive online RPG where players explore, raid, and level up together.",
-  imageUrl: "/gamesLib/wow.png",
+  imageUrl: "/gamesLib/wow.jpg",
 },
 {
   title: "Final Fantasy XIV",
@@ -326,15 +326,7 @@ const prisma = new PrismaClient({ adapter });
   platform: "PC / PlayStation",
   tags: ["RPG", "Adventure"],
   description: "A story-driven MMORPG with a huge world and cooperative dungeons.",
-  imageUrl: "/gamesLib/ffxiv.png",
-},
-{
-  title: "Black Desert Online",
-  developer: "Pearl Abyss",
-  platform: "PC / Console",
-  tags: ["RPG", "Adventure"],
-  description: "An MMORPG known for its combat system and detailed character customization.",
-  imageUrl: "/gamesLib/bdo.png",
+  imageUrl: "/gamesLib/finalfantasy.png",
 },
 {
   title: "The Binding of Isaac: Rebirth",
@@ -342,7 +334,7 @@ const prisma = new PrismaClient({ adapter });
   platform: "PC / PlayStation / Xbox / Switch",
   tags: ["RPG", "Adventure", "Indie"],
   description: "A roguelike dungeon crawler where players fight through randomly generated rooms with powerful item combinations.",
-  imageUrl: "/gamesLib/binding-of-isaac.jpg",
+  imageUrl: "/gamesLib/bindingofisaac.avif",
 },
 {
   title: "Risk of Rain 2",
@@ -350,7 +342,7 @@ const prisma = new PrismaClient({ adapter });
   platform: "PC / PlayStation / Xbox / Switch",
   tags: ["RPG", "Shooter", "Adventure"],
   description: "A 3D roguelike action game where players fight increasing waves of enemies while collecting powerful items.",
-  imageUrl: "/gamesLib/risk-of-rain-2.jpg",
+  imageUrl: "/gamesLib/ror2.png",
 },
   ];
 
