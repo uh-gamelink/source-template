@@ -60,14 +60,7 @@ const FindPlayersPage = async ({ searchParams }: FindPlayersPageProps) => {
 
   return (
     <Container className="py-4">
-      <FindPlayersBrowser
-        players={players}
-        totalPlayers={totalPlayers}
-        game={game}
-        rank={rank}
-        safePage={safePage}
-        totalPages={totalPages}
-      />
+      <FindPlayersBrowser players={players} />
     </Container>
   );
 };
