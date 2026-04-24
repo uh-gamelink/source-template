@@ -347,8 +347,9 @@ const FindPlayersBrowser = ({
           handleCloseModal
         }
         centered
+        contentClassName="custom-modal-card"
       >
-        <Modal.Header closeButton>
+        <Modal.Header closeButton >
           <Modal.Title>
             Send Request
           </Modal.Title>
@@ -409,6 +410,7 @@ const FindPlayersBrowser = ({
           </Button>
 
           <Button
+            className="custom-reset-btn"
             variant="secondary"
             onClick={
               handleCloseModal

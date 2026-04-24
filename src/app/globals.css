@@ -429,3 +429,10 @@ h3{
   color: rgb(92, 148, 252);
 }
 
+ .custom-modal-card{
+  background: rgb(29, 18, 113);
+  border: 2px solid rgba(65, 132, 255, 0.505);
+  border-radius: 12px;
+  color:rgb(92, 148, 252);
+  font-weight: 400;
+}
