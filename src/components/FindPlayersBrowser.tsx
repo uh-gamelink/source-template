@@ -185,6 +185,7 @@ const FindPlayersBrowser = ({
             <input
               type="text"
               placeholder="Search player..."
+              className="custom-card-body"
               value={
                 searchTerm
               }
@@ -203,8 +204,10 @@ const FindPlayersBrowser = ({
                   '8px 32px 8px 8px',
                 borderRadius:
                   '8px',
-                border:
-                  '1px solid #ccc',
+                borderColor:
+                  'rgb(92, 148, 252)',
+                color:
+                  'rgb(92, 148, 252)',
               }}
             />
 
@@ -286,7 +289,7 @@ const FindPlayersBrowser = ({
 
       <div className="d-flex justify-content-center align-items-center gap-2 mt-4 flex-wrap">
         <Button
-          variant="secondary"
+          className='custom-reset-btn'
           disabled={
             currentPage ===
             1
@@ -324,6 +327,7 @@ const FindPlayersBrowser = ({
 
         <Button
           variant="secondary"
+          className='custom-reset-btn'
           disabled={
             currentPage ===
             totalPages
@@ -347,8 +351,9 @@ const FindPlayersBrowser = ({
           handleCloseModal
         }
         centered
+        contentClassName="custom-modal-card"
       >
-        <Modal.Header closeButton>
+        <Modal.Header closeButton >
           <Modal.Title>
             Send Request
           </Modal.Title>
@@ -409,6 +414,7 @@ const FindPlayersBrowser = ({
           </Button>
 
           <Button
+            className="custom-reset-btn"
             variant="secondary"
             onClick={
               handleCloseModal
