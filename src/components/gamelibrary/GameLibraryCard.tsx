@@ -19,9 +19,19 @@ interface GameLibraryCardProps {
   isLoading: boolean;
   onToggleLibrary: (gameId: number) => void;
   isLoggedIn: boolean;
+  isFavoritesPage?: boolean;
+  onRemove?: (gameId: number) => void;
 }
 
-export default function GameLibraryCard({ game, inLibrary, isLoading, onToggleLibrary, isLoggedIn }: GameLibraryCardProps) {
+export default function GameLibraryCard({
+  game,
+  inLibrary,
+  isLoading,
+  onToggleLibrary,
+  isLoggedIn,
+  isFavoritesPage = false,
+  onRemove,
+}: GameLibraryCardProps) {
   return (
     <Card className="h-100 custom-card-body request-card">
       {game.imageUrl && (
@@ -61,24 +71,39 @@ export default function GameLibraryCard({ game, inLibrary, isLoading, onToggleLi
           ))}
         </div>
       </Card.Body>
-      <Card.Footer>
-        {isLoggedIn && (
-          <Button
-            className={
-              inLibrary
-                ? 'custom-tag-btn w-100 added-btn'
-                : 'custom-tag-btn w-100'
-            }
-            disabled={isLoading || !isLoggedIn} // ❗ removed inLibrary here
-            onClick={() => {
-              if (!inLibrary) {
-                onToggleLibrary(game.id);
+
+      <Card.Footer className="bg-transparent border-0">
+        <div className="mt-3">
+          {isFavoritesPage ? (
+            <Button
+              className="custom-reset-btn w-100"
+              disabled={isLoading}
+              onClick={() => onRemove?.(game.id)}
+            >
+              {isLoading ? 'Removing...' : 'Remove from Favorites'}
+            </Button>
+          ) : (
+            <Button
+              className={
+                inLibrary
+                  ? 'custom-tag-btn w-100 added-btn'
+                  : 'custom-tag-btn w-100'
               }
-            }}
-          >
-            {inLibrary ? 'Added to Favorites' : 'Add to Favorites'}
-          </Button>
-        )}
+              disabled={isLoading || !isLoggedIn}
+              onClick={() => {
+                if (!inLibrary) {
+                  onToggleLibrary(game.id);
+                }
+              }}
+            >
+              {isLoading
+                ? 'Adding...'
+                : inLibrary
+                  ? 'Added to Favorites'
+                  : 'Add to Favorites'}
+            </Button>
+          )}
+        </div>
       </Card.Footer>
     </Card>
   );

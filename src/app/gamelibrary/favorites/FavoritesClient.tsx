@@ -50,12 +50,14 @@ export default function FavoritesClient() {
           {favorites.map((game) => (
             <Col md={4} key={game.id}>
               <GameLibraryCard
-                game={game}
-                inLibrary
-                isLoading={false}
-                onToggleLibrary={() => {}}
-                isLoggedIn
-              />
+              game={game}
+              inLibrary
+              isLoading={loadingId === game.id}
+              onToggleLibrary={() => {}}
+              isLoggedIn
+              isFavoritesPage
+              onRemove={handleRemove}
+            />
 
               <Button
                 className="custom-reg-btn mt-2 w-100"
