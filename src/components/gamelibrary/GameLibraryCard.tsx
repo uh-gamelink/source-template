@@ -64,12 +64,19 @@ export default function GameLibraryCard({ game, inLibrary, isLoading, onToggleLi
       <Card.Footer>
         {isLoggedIn && (
           <Button
-            variant={inLibrary ? "secondary" : "primary"} 
-            className="w-100" 
-            onClick={() => onToggleLibrary(game.id)}
-            disabled={isLoading || inLibrary}
+            className={
+              inLibrary
+                ? 'custom-tag-btn w-100 added-btn'
+                : 'custom-tag-btn w-100'
+            }
+            disabled={isLoading || !isLoggedIn} // ❗ removed inLibrary here
+            onClick={() => {
+              if (!inLibrary) {
+                onToggleLibrary(game.id);
+              }
+            }}
           >
-            {isLoading ? "Updating..." : "Add to Favorites"}
+            {inLibrary ? 'Added to Favorites' : 'Add to Favorites'}
           </Button>
         )}
       </Card.Footer>
