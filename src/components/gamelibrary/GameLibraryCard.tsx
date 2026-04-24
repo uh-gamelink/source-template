@@ -29,8 +29,16 @@ export default function GameLibraryCard({
   isLoading,
   onToggleLibrary,
   isLoggedIn,
+<<<<<<< HEAD
   isFavoritesPage = false,
   onRemove,
+=======
+<<<<<<< HEAD
+  isFavoritesPage = false,
+  onRemove,
+=======
+>>>>>>> f662fba304d5f4403e9ab160742d8050a1c781a7
+>>>>>>> main
 }: GameLibraryCardProps) {
   return (
     <Card className="h-100 custom-card-body request-card">
@@ -72,6 +80,10 @@ export default function GameLibraryCard({
         </div>
       </Card.Body>
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> main
       <Card.Footer className="bg-transparent border-0">
         <div className="mt-3">
           {isFavoritesPage ? (
@@ -106,6 +118,26 @@ export default function GameLibraryCard({
             )
           )}
         </div>
+<<<<<<< HEAD
+=======
+=======
+      <Card.Footer>
+        {isLoggedIn && (
+          <Button
+            variant={inLibrary ? 'success' : 'primary'}
+            className="w-100"
+            onClick={() => onToggleLibrary(game.id)}
+            disabled={isLoading || inLibrary}
+          >
+            {isLoading
+              ? 'Updating...'
+              : inLibrary
+                ? 'Added to Library ✓'
+                : 'Add to Library'}
+          </Button>
+        )}
+>>>>>>> f662fba304d5f4403e9ab160742d8050a1c781a7
+>>>>>>> main
       </Card.Footer>
     </Card>
   );
