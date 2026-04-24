@@ -2,22 +2,34 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { Container, Row, Col, Button } from 'react-bootstrap';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 import GameLibraryCard, { type Game } from '@/components/gamelibrary/GameLibraryCard';
 
 export default function FavoritesClient() {
   const [favorites, setFavorites] = useState<Game[]>([]);
   const [loadingId, setLoadingId] = useState<number | null>(null);
+  const { status } = useSession();
+  const router = useRouter();
 
   useEffect(() => {
-    fetch('/api/library')
-      .then((res) => res.json())
-      .then((data: Game[]) => {
-        if (Array.isArray(data)) {
-          setFavorites(data);
-        }
-      })
-      .catch(console.error);
-  }, []);
+    if (status === 'unauthenticated') {
+      router.push('/auth/signin');
+    }
+  }, [status, router]);
+
+useEffect(() => {
+  if (status !== 'authenticated') return;
+
+  fetch('/api/library')
+    .then((res) => res.json())
+    .then((data: Game[]) => {
+      if (Array.isArray(data)) {
+        setFavorites(data);
+      }
+    })
+    .catch(console.error);
+}, [status]);
 
   async function handleRemove(gameId: number) {
     setLoadingId(gameId);
