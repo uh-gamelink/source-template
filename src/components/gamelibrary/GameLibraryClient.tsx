@@ -10,6 +10,7 @@ const PAGE_SIZE = 6;
 export default function GameLibraryClient({ games }: { games: Game[] }) {
   const [page, setPage] = useState(1);
   const [selectedTag, setSelectedTag] = useState<string>('All');
+  const [searchTerm, setSearchTerm] = useState(''); // ✅ ADDED
   const [libraryIds, setLibraryIds] = useState<Set<number>>(new Set());
   const [loadingId, setLoadingId] = useState<number | null>(null);
   const { status } = useSession();
@@ -64,11 +65,19 @@ export default function GameLibraryClient({ games }: { games: Game[] }) {
     return ['All', ...Array.from(tagSet).sort((a, b) => a.localeCompare(b))];
   }, [sortedGames]);
 
+  // Search + Tag Filter
   const filteredGames = useMemo(() => {
-    if (selectedTag === 'All') return sortedGames;
+    return sortedGames.filter((g) => {
+      const matchesTag =
+        selectedTag === 'All' || g.tags.includes(selectedTag);
 
-    return sortedGames.filter((g) => g.tags.includes(selectedTag));
-  }, [sortedGames, selectedTag]);
+      const matchesSearch =
+        g.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        g.developer.toLowerCase().includes(searchTerm.toLowerCase());
+
+      return matchesTag && matchesSearch;
+    });
+  }, [sortedGames, selectedTag, searchTerm]);
 
   const totalPages = Math.ceil(filteredGames.length / PAGE_SIZE);
   const startIndex = (page - 1) * PAGE_SIZE;
@@ -77,6 +86,20 @@ export default function GameLibraryClient({ games }: { games: Game[] }) {
   return (
     <Container className="py-4">
       <h1 className="text-center mb-4">Game Library</h1>
+
+      {/* Search Bar */}
+      <div className="d-flex justify-content-center mb-3">
+        <input
+          type="text"
+          placeholder="Search games..."
+          value={searchTerm}
+          onChange={(e) => {
+            setSearchTerm(e.target.value);
+            setPage(1);
+          }}
+          className="form-control w-50"
+        />
+      </div>
 
       <div className="d-flex flex-wrap justify-content-center gap-2 mb-4">
         {allTags.map((tag) => (
@@ -131,4 +154,4 @@ export default function GameLibraryClient({ games }: { games: Game[] }) {
       </div>
     </Container>
   );
-}
+} 
