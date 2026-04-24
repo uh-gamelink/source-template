@@ -66,7 +66,17 @@ export default function GameLibraryClient( {games} : {games: Game[]}) {
 
   return (
     <Container className="py-4">
-      <h1 className="text-center mb-4">Game Library</h1>
+      <div className="d-flex justify-content-between align-items-center mx-5 mb-4">
+        <h1 className="mb-0">Game Library</h1>
+
+        <div className="d-flex align-items-center gap-2 flex-wrap">
+        <a href="/favorites">
+          <button className="custom-tag-btn">
+            View Favorites
+          </button>
+        </a>
+        </div>
+      </div>
 
       <div className="d-flex flex-wrap justify-content-center gap-2 mb-4">
         {allTags.map((tag) => (

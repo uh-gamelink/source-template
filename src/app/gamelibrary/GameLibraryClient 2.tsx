@@ -15,8 +15,15 @@ type Game = {
 export default function GameLibraryClient({ games }: { games: Game[] }) {
   return (
     <Container className="py-4">
-      <h1 className="text-center mb-4">Game Library</h1>
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <h1 className="mb-0">Game Library</h1>
 
+        <a href="/favorites">
+          <button className="custom-tag-btn">
+            View Favorites
+          </button>
+        </a>
+      </div>
       <Row className="g-4">
         {games.map((game) => (
           <Col md={4} key={game.id}>
