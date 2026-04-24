@@ -1,5 +1,5 @@
 'use client';
-
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import GameLibraryCard, { type Game } from '@/components/gamelibrary/GameLibraryCard';
@@ -62,6 +62,17 @@ export default function FavoritesClient() {
           ))}
         </Row>
       )}
+      <Row className='mt-4'>
+        <p>
+          Return to 
+          <Link href="/gamelibrary">
+            <Button className="custom-reset-btn ms-2">
+              Game Library
+            </Button>
+          </Link>
+        </p>
+
+      </Row>
     </Container>
   );
 }
