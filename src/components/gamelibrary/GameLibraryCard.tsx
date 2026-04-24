@@ -72,39 +72,41 @@ export default function GameLibraryCard({
         </div>
       </Card.Body>
 
-    <Card.Footer className="bg-transparent border-0">
-      <div className="mt-3">
-        {isFavoritesPage ? (
-          <Button
-            className="custom-reg-btn w-100"
-            disabled={isLoading}
-            onClick={() => onRemove?.(game.id)}
-          >
-            {isLoading ? 'Removing...' : 'Remove from Favorites'}
-          </Button>
-        ) : (
-          <Button
-            className={
-              inLibrary
-                ? 'custom-tag-btn w-100 added-btn'
-                : 'custom-tag-btn w-100'
-            }
-            disabled={isLoading || !isLoggedIn}
-            onClick={() => {
-              if (!inLibrary) {
-                onToggleLibrary(game.id);
-              }
-            }}
-          >
-            {isLoading
-              ? 'Adding...'
-              : inLibrary
-                ? 'Added to Favorites'
-                : 'Add to Favorites'}
-          </Button>
-        )}
-      </div>
-    </Card.Footer>
+      <Card.Footer className="bg-transparent border-0">
+        <div className="mt-3">
+          {isFavoritesPage ? (
+            <Button
+              className="custom-reg-btn w-100"
+              disabled={isLoading}
+              onClick={() => onRemove?.(game.id)}
+            >
+              {isLoading ? 'Removing...' : 'Remove from Favorites'}
+            </Button>
+          ) : (
+            isLoggedIn && (
+              <Button
+                className={
+                  inLibrary
+                    ? 'custom-tag-btn w-100 added-btn'
+                    : 'custom-tag-btn w-100'
+                }
+                disabled={isLoading}
+                onClick={() => {
+                  if (!inLibrary) {
+                    onToggleLibrary(game.id);
+                  }
+                }}
+              >
+                {isLoading
+                  ? 'Adding...'
+                  : inLibrary
+                    ? 'Added to Favorites'
+                    : 'Add to Favorites'}
+              </Button>
+            )
+          )}
+        </div>
+      </Card.Footer>
     </Card>
   );
 }
