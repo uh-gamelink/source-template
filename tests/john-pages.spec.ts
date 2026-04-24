@@ -2,30 +2,71 @@ import { test, expect } from './auth-utils';
 
 test.slow();
 
-test('can authenticate a specific user', async ({ getUserPage }) => {
-  const customUserPage = await getUserPage('john@foo.com', 'changeme');
+test('john can access the main UH GameLink pages', async ({ getUserPage }) => {
+  const johnPage = await getUserPage('john@foo.com', 'changeme');
 
-  await customUserPage.goto('http://localhost:3000/');
+  await johnPage.goto('http://localhost:3000/');
 
   await expect(
-    customUserPage.getByRole('button', { name: 'john@foo.com' })
+    johnPage.getByRole('link', { name: /UH GameLink/i }),
   ).toBeVisible({ timeout: 10000 });
 
   await expect(
-    customUserPage.getByRole('link', { name: 'UH GameLink' })
-  ).toBeVisible({ timeout: 5000 });
+    johnPage.getByRole('link', { name: 'Game Library' }),
+  ).toBeVisible();
 
   await expect(
-    customUserPage.getByRole('link', { name: 'Community' })
-  ).toBeVisible({ timeout: 5000 });
+    johnPage.getByRole('link', { name: 'Community' }),
+  ).toBeVisible();
 
   await expect(
-    customUserPage.getByRole('link', { name: 'Game Library' })  // Changed from 'Library' to 'GameLibrary'
-  ).toBeVisible({ timeout: 5000 });
+    johnPage.getByRole('link', { name: 'About Us' }),
+  ).toBeVisible();
 
-  await customUserPage.getByRole('link', { name: 'Community' }).click();
-  await expect(customUserPage).toHaveURL(/\/community$/);
+  await expect(
+    johnPage.getByRole('link', { name: 'Find Players' }),
+  ).toBeVisible();
 
-  await customUserPage.getByRole('link', { name: 'Game Library' }).click();  // Changed from 'Library' to 'GameLibrary'
-  await expect(customUserPage).toHaveURL(/\/gamelibrary$/);  // Changed from '/library' to '/gamelibrary'
+  await expect(
+    johnPage.getByRole('link', { name: 'Profile' }),
+  ).toBeVisible();
+
+  await expect(
+    johnPage.getByRole('button', { name: /john@foo\.com/i }),
+  ).toBeVisible({ timeout: 10000 });
+
+  await johnPage.getByRole('link', { name: 'Game Library' }).click();
+  await expect(johnPage).toHaveURL(/\/gamelibrary$/);
+  await expect(
+    johnPage.getByRole('heading', { name: 'Game Library' }),
+  ).toBeVisible();
+  await expect(johnPage.getByText('League of Legends')).toBeVisible();
+
+  await johnPage.getByRole('link', { name: 'Community' }).click();
+  await expect(johnPage).toHaveURL(/\/community$/);
+  await expect(
+    johnPage.getByRole('heading', { name: 'Community Players' }),
+  ).toBeVisible();
+  await expect(johnPage.getByText('Mathedealer1')).toBeVisible();
+
+  await johnPage.getByRole('link', { name: 'Find Players' }).click();
+  await expect(johnPage).toHaveURL(/\/findplayers$/);
+  await expect(
+    johnPage.getByRole('heading', { name: 'Find Players' }),
+  ).toBeVisible();
+  await expect(johnPage.getByText(/Click the plus icon/i)).toBeVisible();
+
+  await johnPage.getByRole('link', { name: 'Profile' }).click();
+  await expect(johnPage).toHaveURL(/\/profile$/);
+  await expect(
+    johnPage.getByRole('heading', { name: 'Your Profile' }),
+  ).toBeVisible();
+  await expect(johnPage.getByText(/Username: john@foo\.com/i)).toBeVisible();
+
+  await johnPage.getByRole('link', { name: 'About Us' }).click();
+  await expect(johnPage).toHaveURL(/\/about$/);
+  await expect(
+    johnPage.getByRole('heading', { name: 'About' }),
+  ).toBeVisible();
+  await expect(johnPage.getByText('Meet the Team')).toBeVisible();
 });
