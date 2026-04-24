@@ -70,7 +70,7 @@ export default function GameLibraryClient( {games} : {games: Game[]}) {
         <h1 className="mb-0">Game Library</h1>
 
         <div className="d-flex align-items-center gap-2 flex-wrap">
-        <a href="/favorites">
+        <a  href="/gamelibrary/favorites">
           <button className="custom-tag-btn">
             View Favorites
           </button>
