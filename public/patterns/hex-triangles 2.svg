@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 104 90" width="104" height="90">
+  <defs>
+    <!-- subtle gradients for each triangle color -->
+    <linearGradient id="grad-top" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#9eddff" stop-opacity=".12" />
+      <stop offset="100%" stop-color="#4e9fd8" stop-opacity=".07" />
+    </linearGradient>
+
+    <linearGradient id="grad-upper-right" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2a1a73" stop-opacity=".14" />
+      <stop offset="100%" stop-color="#0c0830" stop-opacity=".08" />
+    </linearGradient>
+
+    <linearGradient id="grad-lower-right" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#53e3df" stop-opacity=".11" />
+      <stop offset="100%" stop-color="#1c8f97" stop-opacity=".06" />
+    </linearGradient>
+
+    <linearGradient id="grad-bottom" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4d37c2" stop-opacity=".12" />
+      <stop offset="100%" stop-color="#1d1368" stop-opacity=".07" />
+    </linearGradient>
+
+    <linearGradient id="grad-lower-left" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7eb7ff" stop-opacity=".11" />
+      <stop offset="100%" stop-color="#2d6de0" stop-opacity=".06" />
+    </linearGradient>
+
+    <linearGradient id="grad-upper-left" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#5d56c9" stop-opacity=".12" />
+      <stop offset="100%" stop-color="#2a257c" stop-opacity=".07" />
+    </linearGradient>
+
+    <!-- one pointy-top hexagon split into 6 triangles -->
+    <g id="hex">
+      <!-- top -->
+      <polygon points="0,0 0,-30 26,-15" fill="url(#grad-top)" />
+
+      <!-- upper-right -->
+      <polygon points="0,0 26,-15 26,15" fill="url(#grad-upper-right)" />
+
+      <!-- lower-right -->
+      <polygon points="0,0 26,15 0,30" fill="url(#grad-lower-right)" />
+
+      <!-- bottom -->
+      <polygon points="0,0 0,30 -26,15" fill="url(#grad-bottom)" />
+
+      <!-- lower-left -->
+      <polygon points="0,0 -26,15 -26,-15" fill="url(#grad-lower-left)" />
+
+      <!-- upper-left -->
+      <polygon points="0,0 -26,-15 0,-30" fill="url(#grad-upper-left)" />
+    </g>
+  </defs>
+
+  <!-- main row -->
+  <use href="#hex" transform="translate(26 30)" />
+  <use href="#hex" transform="translate(78 30)" />
+
+  <!-- staggered row, top wrap -->
+  <use href="#hex" transform="translate(0 -15)" />
+  <use href="#hex" transform="translate(52 -15)" />
+  <use href="#hex" transform="translate(104 -15)" />
+
+  <!-- staggered row, bottom wrap -->
+  <use href="#hex" transform="translate(0 75)" />
+  <use href="#hex" transform="translate(52 75)" />
+  <use href="#hex" transform="translate(104 75)" />
+</svg>
