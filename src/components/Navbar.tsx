@@ -1,19 +1,59 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
+import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { usePathname } from 'next/navigation';
 import { Container, Nav, Navbar, NavDropdown } from 'react-bootstrap';
-import { BoxArrowRight, Lock, PersonFill, PersonPlusFill } from 'react-bootstrap-icons';
+import {
+  BoxArrowRight,
+  Lock,
+  PersonFill,
+  PersonPlusFill,
+} from 'react-bootstrap-icons';
 import { GiGamepad } from 'react-icons/gi';
+
+type ProfileData = {
+  email: string;
+  profile: {
+    username: string | null;
+    profilePicture: string | null;
+  } | null;
+};
 
 const NavBar: React.FC = () => {
   const { data: session, status } = useSession();
   const pathName = usePathname();
 
+  const [profileData, setProfileData] = useState<ProfileData | null>(null);
+
+  useEffect(() => {
+    if (status !== 'authenticated') return;
+
+    fetch('/api/profile/me')
+      .then((res) => res.json())
+      .then((data: ProfileData) => {
+        setProfileData(data);
+      })
+      .catch(console.error);
+  }, [status]);
+
   if (status === 'loading') return null;
 
-  const currentUser = session?.user?.email;
+  const currentUser =
+    profileData?.profile?.username ||
+    session?.user?.email ||
+    'User';
+
+  const profileImage =
+    profileData?.profile?.profilePicture &&
+    !profileData.profile.profilePicture.startsWith('blob:')
+      ? profileData.profile.profilePicture
+      : '';
+
+  const getNavLinkClass = (href: string) =>
+    pathName === href ? 'custom-nav-link active-nav-link' : 'custom-nav-link';
 
   return (
     <Navbar expand="lg" className="custom-navbar">
@@ -24,33 +64,66 @@ const NavBar: React.FC = () => {
           className="d-flex align-items-center gap-2 custom-brand"
         >
           <GiGamepad size={32} />
-          <span><strong> UH GameLink</strong> </span>
+          <span>
+            <strong> UH GameLink</strong>
+          </span>
         </Navbar.Brand>
 
-        <Navbar.Toggle aria-controls="main-navbar-nav" className="custom-navbar-toggle" />
+        <Navbar.Toggle
+          aria-controls="main-navbar-nav"
+          className="custom-navbar-toggle"
+        />
 
         <Navbar.Collapse id="main-navbar-nav">
-          <Nav className="me-auto">
-            <Nav.Link as={Link} href="/gamelibrary" active={pathName === '/gamelibrary'}>
+          <Nav className="me-auto gap-3">
+            <Nav.Link
+              as={Link}
+              href="/gamelibrary"
+              active={pathName === '/gamelibrary'}
+              className={getNavLinkClass('/gamelibrary')}
+            >
               Game Library
             </Nav.Link>
 
-            <Nav.Link as={Link} href="/community" active={pathName === '/community'} id="community-nav">
+            <Nav.Link
+              as={Link}
+              href="/community"
+              active={pathName === '/community'}
+              id="community-nav"
+              className={getNavLinkClass('/community')}
+            >
               Community
             </Nav.Link>
 
-            <Nav.Link as={Link} href="/about" active={pathName === "/about"}>
+            <Nav.Link
+              as={Link}
+              href="/about"
+              active={pathName === '/about'}
+              className={getNavLinkClass('/about')}
+            >
               About Us
             </Nav.Link>
 
             {session && (
-              <Nav.Link as={Link} href="/findplayers" active={pathName === '/findplayers'} id="findplayers-nav">
+              <Nav.Link
+                as={Link}
+                href="/findplayers"
+                active={pathName === '/findplayers'}
+                id="findplayers-nav"
+                className={getNavLinkClass('/findplayers')}
+              >
                 Find Players
               </Nav.Link>
             )}
 
             {session && (
-              <Nav.Link as={Link} href="/profile" active={pathName === '/profile'} id="profile-nav">
+              <Nav.Link
+                as={Link}
+                href="/profile"
+                active={pathName === '/profile'}
+                id="profile-nav"
+                className={getNavLinkClass('/profile')}
+              >
                 Profile
               </Nav.Link>
             )}
@@ -60,30 +133,57 @@ const NavBar: React.FC = () => {
             {session ? (
               <NavDropdown
                 id="login-dropdown"
-                title={currentUser}
+                className="profile-dropdown"
                 menuVariant="dark"
+                title={
+                  <span className="d-inline-flex align-items-center gap-2">
+                    {profileImage ? (
+                      <Image
+                        src={profileImage}
+                        alt="Profile picture"
+                        width={32}
+                        height={32}
+                        className="rounded-circle navbar-profile-img"
+                        unoptimized
+                      />
+                    ) : (
+                      <PersonFill size={28} />
+                    )}
+
+                    <span>{currentUser}</span>
+                  </span>
+                }
               >
-                <NavDropdown.Item id="login-dropdown-sign-out" href="/auth/signout">
+                <NavDropdown.Item
+                  id="login-dropdown-sign-out"
+                  href="/auth/signout"
+                >
                   <BoxArrowRight className="me-2" />
                   Sign Out
                 </NavDropdown.Item>
 
-                <NavDropdown.Item id="login-dropdown-change-password" href="/auth/change-password">
+                <NavDropdown.Item
+                  id="login-dropdown-change-password"
+                  href="/auth/change-password"
+                >
                   <Lock className="me-2" />
                   Change Password
                 </NavDropdown.Item>
               </NavDropdown>
             ) : (
-              <NavDropdown
-                id="login-dropdown"
-                title="Login"
-              >
-                <NavDropdown.Item id="login-dropdown-sign-in" href="/auth/signin">
+              <NavDropdown id="login-dropdown" title="Login">
+                <NavDropdown.Item
+                  id="login-dropdown-sign-in"
+                  href="/auth/signin"
+                >
                   <PersonFill className="me-2" />
                   Sign In
                 </NavDropdown.Item>
 
-                <NavDropdown.Item id="login-dropdown-sign-up" href="/auth/signup">
+                <NavDropdown.Item
+                  id="login-dropdown-sign-up"
+                  href="/auth/signup"
+                >
                   <PersonPlusFill className="me-2" />
                   Sign Up
                 </NavDropdown.Item>

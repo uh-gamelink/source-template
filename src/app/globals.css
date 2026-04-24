@@ -1,13 +1,64 @@
-html,
+/* html, hexagon triangles
 body {
   --bs-light-rgb: 236, 236, 236;
   box-sizing: border-box;
-  height: 100%;
+  min-height: 100%;
   padding: 0;
   margin: 0;
   font-size: 18px;
   color: rgb(65, 132, 255);
-  background-color: rgb(21, 9, 102);
+
+  background:
+    url('/patterns/hex-triangles.svg'),
+    radial-gradient(circle at top center, rgba(65, 132, 255, 0.24), transparent 34%),
+    linear-gradient(180deg, rgb(13, 7, 58), rgb(25, 12, 112), rgb(10, 6, 45));
+
+  background-size:
+    360px 312px,
+    auto,
+    auto;
+
+  background-repeat:
+    repeat,
+    no-repeat,
+    no-repeat;
+
+  background-attachment:
+    fixed,
+    fixed,
+    fixed;
+}
+*/
+
+html,
+body {
+  --bs-light-rgb: 236, 236, 236;
+  box-sizing: border-box;
+  min-height: 100%;
+  padding: 0;
+  margin: 0;
+  font-size: 18px;
+  color: rgb(65, 132, 255);
+
+  background:
+    url('/patterns/diagonal-gap-grid.svg'),
+    radial-gradient(circle at top center, rgba(65, 132, 255, 0.24), transparent 34%),
+    linear-gradient(180deg, rgb(13, 7, 58), rgb(25, 12, 112), rgb(10, 6, 45));
+
+  background-size:
+    80px 80px,
+    auto,
+    auto;
+
+  background-repeat:
+    repeat,
+    no-repeat,
+    no-repeat;
+
+  background-attachment:
+    fixed,
+    fixed,
+    fixed;
 }
 
 h1{
@@ -37,6 +88,7 @@ h3{
   margin-top: 2rem;
   padding: 1rem 0;
 }
+
 
 .game-track {
   display: flex;
