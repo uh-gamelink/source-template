@@ -436,3 +436,56 @@ h3{
   color:rgb(92, 148, 252);
   font-weight: 400;
 }
+
+.custom-card-body::placeholder {
+  color: #3b60e5;        
+  opacity: 1;            
+}
+
+/* ============================= */
+/* Pagination Button Overrides   */
+/* ============================= */
+
+.d-flex.justify-content-center .btn {
+  background-color: transparent !important;
+  border: 1.5px solid rgb(65, 132, 255) !important;
+  color: rgb(65, 132, 255) !important;
+  border-radius: 8px;
+}
+
+/* Hover */
+.d-flex.justify-content-center .btn:hover {
+  background-color: rgb(65, 132, 255) !important;
+  color: rgb(21, 9, 102) !important;
+}
+
+/* Active page */
+.d-flex.justify-content-center .btn-dark {
+  background-color: rgb(65, 132, 255) !important;
+  color: rgb(21, 9, 102) !important;
+  border: none !important;
+}
+
+/* Inactive page */
+.d-flex.justify-content-center .btn-light {
+  background-color: transparent !important;
+  border: 1.5px solid rgb(65, 132, 255) !important;
+  color: rgb(65, 132, 255) !important;
+}
+
+/* Disabled */
+.d-flex.justify-content-center .btn:disabled {
+  opacity: 1 !important; /* remove dull fade */
+  background-color: rgba(65, 132, 255, 0.2) !important;
+  color: rgba(65, 132, 255, 0.8) !important;
+  border-color: rgba(65, 132, 255, 0.6) !important;
+}
+
+/* Brighter Prev/Next */
+.page-buttons {
+  background-color: rgba(65, 132, 255, 0.15) !important;
+  border: 2px solid rgb(65, 132, 255);
+  color: rgb(65, 132, 255);
+  font-weight: 600;
+  border-radius: 8px;
+}
