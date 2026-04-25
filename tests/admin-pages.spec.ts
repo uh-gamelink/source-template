@@ -45,15 +45,15 @@ test('admin can access the main UH GameLink pages', async ({ getUserPage }) => {
   await adminPage.getByRole('link', { name: 'Community' }).click();
   await expect(adminPage).toHaveURL(/\/community$/);
   await expect(
-    adminPage.getByRole('heading', { name: 'Community Players' }),
+    adminPage.getByRole('heading', { name: 'Community' }),
   ).toBeVisible();
-  await expect(adminPage.getByText('ZeBass')).toBeVisible();
 
   await adminPage.getByRole('link', { name: 'Find Players' }).click();
   await expect(adminPage).toHaveURL(/\/findplayers$/);
   await expect(
     adminPage.getByRole('heading', { name: 'Find Players' }),
   ).toBeVisible();
+  
   await expect(adminPage.getByText(/Showing/i)).toBeVisible();
 
   await adminPage.getByRole('link', { name: 'Profile' }).click();

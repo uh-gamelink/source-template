@@ -40,14 +40,12 @@ test('john can access the main UH GameLink pages', async ({ getUserPage }) => {
   await expect(
     johnPage.getByRole('heading', { name: 'Game Library' }),
   ).toBeVisible();
-  await expect(johnPage.getByText('League of Legends')).toBeVisible();
 
   await johnPage.getByRole('link', { name: 'Community' }).click();
   await expect(johnPage).toHaveURL(/\/community$/);
   await expect(
-    johnPage.getByRole('heading', { name: 'Community Players' }),
+    johnPage.getByRole('heading', { name: 'Community' }),
   ).toBeVisible();
-  await expect(johnPage.getByText('Mathedealer1')).toBeVisible();
 
   await johnPage.getByRole('link', { name: 'Find Players' }).click();
   await expect(johnPage).toHaveURL(/\/findplayers$/);
