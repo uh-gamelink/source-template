@@ -358,17 +358,17 @@ const defaultProfiles: Record<
   "admin@foo.com": {
     description: "UH GameLink admin account.",
     interests: "Gaming communities, moderation, site testing",
-    profilePicture: "/default-profile.png",
+    profilePicture: null,
   },
   "john@foo.com": {
     description: "Casual and competitive gamer looking for people to queue with.",
     interests: "Valorant, Apex Legends, League of Legends",
-    profilePicture: "/default-profile.png",
+    profilePicture: null,
   },
   "jane@foo.com": {
     description: "Enjoys co-op games and meeting new players around campus.",
     interests: "Minecraft, Stardew Valley, Overwatch 2",
-    profilePicture: "/default-profile.png",
+    profilePicture: null,
   },
 };
 

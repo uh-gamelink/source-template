@@ -13,7 +13,7 @@ const PlayerRequestCard = ({ player }: { player: Player }) => (
     <Card.Body className="p-3">
       <Card.Title className="pb-2">{player.username}</Card.Title>
       <Image
-        src={player.imageUrl || '/default-player.png'}
+        src={player.imageUrl || '/default-player.svg'}
         width={155}
         height={160}
         rounded

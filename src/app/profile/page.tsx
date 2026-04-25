@@ -30,7 +30,7 @@ type Game = {
   description?: string | null;
   imageUrl?: string | null;
   tags: string[];
-}
+};
 
 export default function ProfilePage() {
   const [user, setUser] = useState<ProfileData | null>(null);
@@ -49,24 +49,19 @@ export default function ProfilePage() {
         const profileData = await profileRes.json();
         const libraryData = await libraryRes.json();
 
-        // Checks if profile fetch was successful before setting state, otherwise sets error message.
         if (!profileRes.ok) {
           setError(profileData.error || 'Failed to load profile.');
           setLoading(false);
           return;
         }
 
-        setUser(profileData);
-        const res = await fetch('/api/profile/me');
-        const data = await res.json();
-
-        // Checks if library fetch was successful before setting state, otherwise sets error message.
         if (!libraryRes.ok) {
           setError(libraryData.error || 'Failed to load library.');
           setLoading(false);
           return;
         }
 
+        setUser(profileData);
         setLibrary(libraryData);
       } catch (err) {
         console.error(err);
@@ -75,6 +70,7 @@ export default function ProfilePage() {
         setLoading(false);
       }
     };
+
     fetchProfile();
   }, []);
 
@@ -105,13 +101,27 @@ export default function ProfilePage() {
         .filter(Boolean)
     : [];
 
-  const profileImage =
-    user.profile?.profilePicture &&
-    !user.profile.profilePicture.startsWith('blob:')
-      ? user.profile.profilePicture
-      : '';
-
   const savedServers = user.savedServers || [];
+
+  const username = user.profile?.username || user.email.split('@')[0];
+
+  const avatarSeed = user.email || user.profile?.username || 'guest';
+
+  const rawProfilePicture = user.profile?.profilePicture;
+
+  const hasUploadedProfilePicture =
+    rawProfilePicture &&
+    rawProfilePicture !== 'null' &&
+    rawProfilePicture !== 'undefined' &&
+    !rawProfilePicture.startsWith('blob:') &&
+    !rawProfilePicture.startsWith('/api/avatar') &&
+    !rawProfilePicture.includes('dicebear') &&
+    rawProfilePicture !== '/default-player.svg' &&
+    rawProfilePicture !== '/default-profile.png';
+
+  const profileImage = hasUploadedProfilePicture
+    ? rawProfilePicture
+    : `/api/avatar?seed=${encodeURIComponent(avatarSeed)}&style=pixel-v3`;
 
   return (
     <Container className="py-5">
@@ -134,33 +144,28 @@ export default function ProfilePage() {
                 height: '80px',
                 borderRadius: '50%',
                 overflow: 'hidden',
-                border: '2px solid rgba(92, 148, 252, 0.79)',
+                border: '2px solid rgba(127, 153, 255, 0.85)',
+                boxShadow: '0 0 8px rgba(127, 153, 255, 0.35)',
+                backgroundColor: 'rgba(92, 148, 252, 0.12)',
               }}
             >
-              {profileImage ? (
-                <Image
-                  src={profileImage}
-                  alt="profile"
-                  width={80}
-                  height={80}
-                  style={{ objectFit: 'cover' }}
-                  unoptimized
-                />
-              ) : (
-                <div
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    backgroundColor: '#e9ecef',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: '32px',
-                  }}
-                >
-                  👤
-                </div>
-              )}
+              <Image
+                key={profileImage}
+                src={profileImage}
+                alt="Profile picture"
+                width={84}
+                height={84}
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                }}
+                unoptimized={
+                        profileImage.startsWith('blob:') ||
+                        profileImage.startsWith('/api/avatar') ||
+                        profileImage.includes('public.blob.vercel-storage.com')
+                }
+              />
             </div>
 
             <h1 style={{ margin: 0 }}>Your Profile</h1>
@@ -169,8 +174,7 @@ export default function ProfilePage() {
           <Row>
             <Col md={3}>
               <p>
-                <strong>Username:</strong>{' '}
-                {user.profile?.username || user.email.split('@')[0]}
+                <strong>Username:</strong> {username}
               </p>
 
               <p>
@@ -188,7 +192,7 @@ export default function ProfilePage() {
               {savedServers.length > 0 ? (
                 savedServers.map((savedServer, index) => (
                   <div
-                    key={index}
+                    key={`${savedServer.server.name}-${index}`}
                     style={{
                       padding: '8px 0',
                       borderBottom: '1px solid rgba(92, 148, 252, 0.45)',
@@ -205,11 +209,10 @@ export default function ProfilePage() {
             <Col md={3}>
               <h5>Favorites</h5>
 
-              {/* Displays the user's favorite games library or a message if no games have been added yet. */}
               {library.length > 0 ? (
-                library.map((game, index) => (
+                library.map((game) => (
                   <div
-                    key={index}
+                    key={game.id}
                     style={{
                       padding: '8px 0',
                       borderBottom: '1px solid rgba(92, 148, 252, 0.45)',
@@ -229,7 +232,7 @@ export default function ProfilePage() {
               {interestsList.length > 0 ? (
                 interestsList.map((interest, index) => (
                   <div
-                    key={index}
+                    key={`${interest}-${index}`}
                     style={{
                       padding: '8px 0',
                       borderBottom: '1px solid rgba(92, 148, 252, 0.45)',

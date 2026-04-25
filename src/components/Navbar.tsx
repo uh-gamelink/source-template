@@ -27,16 +27,44 @@ const NavBar: React.FC = () => {
   const pathName = usePathname();
 
   const [profileData, setProfileData] = useState<ProfileData | null>(null);
+  const [isLoadingProfile, setIsLoadingProfile] = useState(false);
 
   useEffect(() => {
-    if (status !== 'authenticated') return;
+    if (status !== 'authenticated') {
+      return;
+    }
 
-    fetch('/api/profile/me')
-      .then((res) => res.json())
-      .then((data: ProfileData) => {
-        setProfileData(data);
-      })
-      .catch(console.error);
+    let ignore = false;
+
+    const fetchProfile = async () => {
+      setIsLoadingProfile(true);
+
+      try {
+        const res = await fetch('/api/profile/me');
+
+        if (!res.ok) {
+          return;
+        }
+
+        const data: ProfileData = await res.json();
+
+        if (!ignore) {
+          setProfileData(data);
+        }
+      } catch (err) {
+        console.error(err);
+      } finally {
+        if (!ignore) {
+          setIsLoadingProfile(false);
+        }
+      }
+    };
+
+    fetchProfile();
+
+    return () => {
+      ignore = true;
+    };
   }, [status]);
 
   if (status === 'loading') return null;
@@ -46,11 +74,34 @@ const NavBar: React.FC = () => {
     session?.user?.email ||
     'User';
 
-  const profileImage =
-    profileData?.profile?.profilePicture &&
-    !profileData.profile.profilePicture.startsWith('blob:')
-      ? profileData.profile.profilePicture
-      : '';
+  const avatarSeed =
+    session?.user?.email ||
+    profileData?.profile?.username ||
+    'guest';
+
+  const rawProfilePicture = profileData?.profile?.profilePicture;
+
+  const hasUploadedProfilePicture =
+    rawProfilePicture &&
+    rawProfilePicture !== 'null' &&
+    rawProfilePicture !== 'undefined' &&
+    !rawProfilePicture.startsWith('blob:') &&
+    !rawProfilePicture.startsWith('/api/avatar') &&
+    !rawProfilePicture.includes('dicebear') &&
+    rawProfilePicture !== '/default-player.svg' &&
+    rawProfilePicture !== '/default-profile.png';
+
+  const generatedAvatar =
+    `/api/avatar?seed=${encodeURIComponent(avatarSeed)}&style=pixel-v3`;
+
+  const isCheckingProfile =
+    status === 'authenticated' && isLoadingProfile;
+
+  const profileImage = isCheckingProfile
+    ? ''
+    : hasUploadedProfilePicture
+      ? rawProfilePicture
+      : generatedAvatar;
 
   const getNavLinkClass = (href: string) =>
     pathName === href ? 'custom-nav-link active-nav-link' : 'custom-nav-link';
@@ -139,15 +190,36 @@ const NavBar: React.FC = () => {
                   <span className="d-inline-flex align-items-center gap-2">
                     {profileImage ? (
                       <Image
+                        key={profileImage}
                         src={profileImage}
                         alt="Profile picture"
-                        width={32}
-                        height={32}
+                        width={49}
+                        height={49}
                         className="rounded-circle navbar-profile-img"
-                        unoptimized
+                        style={{
+                          objectFit: 'cover',
+                          border: '2px solid rgba(127, 153, 255, 0.85)',
+                          boxShadow: '0 0 8px rgba(127, 153, 255, 0.45)',
+                        }}
+                        unoptimized={
+                          profileImage.startsWith('blob:') ||
+                          profileImage.startsWith('/api/avatar') ||
+                          profileImage.includes(
+                            'public.blob.vercel-storage.com',
+                          )
+                        }
                       />
                     ) : (
-                      <PersonFill size={28} />
+                      <div
+                        className="rounded-circle navbar-profile-img"
+                        style={{
+                          width: 49,
+                          height: 49,
+                          backgroundColor: '#101c37',
+                          border: '2px solid rgba(127, 153, 255, 0.85)',
+                          boxShadow: '0 0 8px rgba(127, 153, 255, 0.45)',
+                        }}
+                      />
                     )}
 
                     <span>{currentUser}</span>

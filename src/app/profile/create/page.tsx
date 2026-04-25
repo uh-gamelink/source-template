@@ -15,8 +15,7 @@ import {
 } from 'react-bootstrap';
 import Image from 'next/image';
 
-export default function ProfileForm() {
-  const [isLoadingProfile, setIsLoadingProfile] = useState(true);
+export default function CreateProfilePage() {
   const [preview, setPreview] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [error, setError] = useState('');
@@ -26,65 +25,26 @@ export default function ProfileForm() {
   const [username, setUsername] = useState('');
   const [interests, setInterests] = useState<string[]>([]);
   const [newInterest, setNewInterest] = useState('');
-  const [existingImage, setExistingImage] = useState<string | null>(null);
 
   const router = useRouter();
 
   useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const res = await fetch('/api/profile/me');
-        const data = await res.json();
-
-        if (!res.ok) {
-          setError(data.error || 'Failed to load profile.');
-          return;
-        }
-
-        if (data?.profile) {
-          setDescription(data.profile.description || '');
-          setUsername(data.profile.username || '');
-          setInterests(
-            data.profile.interests
-              ? data.profile.interests
-                  .split(',')
-                  .map((item: string) => item.trim())
-                  .filter(Boolean)
-              : [],
-          );
-
-          const profilePicture = data.profile.profilePicture || null;
-
-          setExistingImage(profilePicture);
-          setPreview(profilePicture);
-        }
-      } catch (err) {
-        console.error(err);
-        setError('Something went wrong while loading your profile.');
-      } finally {
-        setIsLoadingProfile(false);
+    return () => {
+      if (preview && preview.startsWith('blob:')) {
+        URL.revokeObjectURL(preview);
       }
     };
+  }, [preview]);
 
-    fetchProfile();
-  }, []);
+    const { data: session, status } = useSession();
 
-    useEffect(() => {
-      return () => {
-        if (preview && preview.startsWith('blob:')) {
-          URL.revokeObjectURL(preview);
-        }
-      };
-    }, [preview]);
+    const avatarSeed = session?.user?.email || 'guest';
 
-  const { data: session } = useSession();
-  
-  const avatarSeed = session?.user?.email || 'guest';
-
-  const generatedAvatar =
+    const generatedAvatar =
     `/api/avatar?seed=${encodeURIComponent(avatarSeed)}&style=pixel-v3`;
 
-  const previewImage = preview || (!isLoadingProfile ? generatedAvatar : '');
+    const previewImage =
+    preview || (status === 'authenticated' ? generatedAvatar : '');
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null;
@@ -98,7 +58,7 @@ export default function ProfileForm() {
       setPreview(URL.createObjectURL(file));
     } else {
       setSelectedFile(null);
-      setPreview(existingImage);
+      setPreview(null);
     }
   };
 
@@ -154,7 +114,7 @@ export default function ProfileForm() {
     setIsSubmitting(true);
 
     try {
-      let profilePicture: string | null = existingImage || null;
+      let profilePicture: string | null = null;
 
       if (selectedFile) {
         const blob = await upload(selectedFile.name, selectedFile, {
@@ -166,7 +126,7 @@ export default function ProfileForm() {
       }
 
       const res = await fetch('/api/profile', {
-        method: 'PUT',
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           username,
@@ -179,7 +139,7 @@ export default function ProfileForm() {
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data?.error || 'Failed to save profile.');
+        setError(data?.error || 'Failed to create profile.');
         setIsSubmitting(false);
         return;
       }
@@ -188,7 +148,7 @@ export default function ProfileForm() {
       router.refresh();
     } catch (err) {
       console.error(err);
-      setError('Something went wrong.');
+      setError('Something went wrong while creating your profile.');
       setIsSubmitting(false);
     }
   };
@@ -197,7 +157,10 @@ export default function ProfileForm() {
     <Container>
       <Row className="justify-content-center my-5">
         <Col md={8}>
-          <h1 className="text-center mb-3">Edit Profile</h1>
+          <h1 className="text-center mb-2">Create Profile</h1>
+          <p className="text-center mb-3">
+            Set up your UH GameLink profile so other players can find you.
+          </p>
 
           <Card className="custom-card-body">
             <Form onSubmit={handleSubmit}>
@@ -207,7 +170,7 @@ export default function ProfileForm() {
                   <Form.Control
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
-                    placeholder="Choose username (no spaces)"
+                    placeholder="Choose a username"
                     required
                   />
                 </Form.Group>
@@ -270,33 +233,33 @@ export default function ProfileForm() {
                 <Form.Group className="mb-3 text-center">
                   {previewImage ? (
                     <Image
-                      src={previewImage}
-                      width={150}
-                      height={150}
-                      className="rounded-circle img-thumbnail"
-                      style={{
+                        src={previewImage}
+                        width={150}
+                        height={150}
+                        className="rounded-circle img-thumbnail"
+                        style={{
                         objectFit: 'cover',
-                      }}
-                      alt="Profile preview"
-                      unoptimized={
+                        }}
+                        alt="Profile preview"
+                        unoptimized={
                         previewImage.startsWith('blob:') ||
                         previewImage.startsWith('/api/avatar') ||
                         previewImage.includes('public.blob.vercel-storage.com')
-                      }
+                        }
                     />
-                  ) : (
+                    ) : (
                     <div
-                      className="rounded-circle img-thumbnail mx-auto"
-                      style={{
+                        className="rounded-circle img-thumbnail mx-auto"
+                        style={{
                         width: 150,
                         height: 150,
                         backgroundColor: '#101c37',
-                      }}
+                        }}
                     />
-                  )}
+                   )}
 
                   <Form.Label className="mt-3 d-block">
-                    Upload Profile Picture
+                    Upload Profile Picture Optional
                   </Form.Label>
                   <Form.Control
                     type="file"
@@ -314,13 +277,13 @@ export default function ProfileForm() {
                   className="custom-reg-btn"
                   disabled={isSubmitting}
                 >
-                  {isSubmitting ? 'Saving...' : 'Save Profile'}
+                  {isSubmitting ? 'Creating...' : 'Create Profile'}
                 </Button>
 
                 <Button
                   type="button"
                   variant="secondary"
-                  onClick={() => router.push('/profile')}
+                  onClick={() => router.push('/')}
                   disabled={isSubmitting}
                 >
                   Cancel
