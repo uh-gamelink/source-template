@@ -207,23 +207,41 @@ export default function ProfilePage() {
             </Col>
 
             <Col md={3}>
-              <h5>Favorites</h5>
+              <h5><Link href="/gamelibrary/favorites" className='custom-link'>Favorites</Link></h5>
 
-              {library.length > 0 ? (
-                library.map((game) => (
-                  <div
-                    key={game.id}
-                    style={{
-                      padding: '8px 0',
-                      borderBottom: '1px solid rgba(92, 148, 252, 0.45)',
-                    }}
-                  >
-                    {game.title}
-                  </div>
-                ))
-              ) : (
-                <div>No games added yet.</div>
-              )}
+              <div className="favorites-list">
+                {/* Show first 4 favorites with a count of remaining if more than 4 */}
+                {library.length > 0 ? (
+                  <>
+                    {library.slice(0, 4).map((game) => (
+                      <div
+                        key={game.id}
+                        style={{
+                          padding: '8px 0',
+                          borderBottom: '1px solid rgba(92, 148, 252, 0.45)',
+                        }}
+                      >
+                        {game.title}
+                      </div>
+                    ))}
+                    
+                    {library.length > 4 && (
+                      <div 
+                        style={{
+                          padding: '6px 0',
+                          borderBottom: '1px solid rgba(92, 148, 252, 0.45)',
+                          fontStyle: 'italic',
+                          fontSize: '0.9em',
+                        }}
+                      >
+                        + {library.length - 4} more in favorites
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <div className="text-muted mt-2">No games added yet.</div>
+                )}
+              </div>
             </Col>
 
             <Col md={3}>

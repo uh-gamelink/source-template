@@ -552,3 +552,27 @@ h3{
   background-color: rgb(65, 132, 255) !important;
   color: rgb(21, 9, 102) !important;
 }
+
+.custom-link {
+  color: inherit; 
+  text-decoration: none; 
+}
+
+.custom-link:hover {
+  text-decoration: underline; /* Add underline back on hover */
+}
+
+/* Hide scrollbar for WebKit browsers */
+::-webkit-scrollbar, ::-webkit-scrollbar-thumb {
+  width: 0px;
+}
+
+/* Hide scrollbar for Firefox */
+* {
+  scrollbar-width: none;
+}
+
+/* Hide scrollbar for IE and Edge */
+* {
+  -ms-overflow-style: none;
+}
