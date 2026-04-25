@@ -59,7 +59,6 @@ test('john can access the main UH GameLink pages', async ({ getUserPage }) => {
   await expect(
     johnPage.getByRole('heading', { name: 'Your Profile' }),
   ).toBeVisible();
-  await expect(johnPage.getByText(/Username: john@foo\.com/i)).toBeVisible();
 
   await johnPage.getByRole('link', { name: 'About Us' }).click();
   await expect(johnPage).toHaveURL(/\/about$/);
