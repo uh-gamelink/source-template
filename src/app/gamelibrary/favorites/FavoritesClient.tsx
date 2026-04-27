@@ -6,6 +6,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import GameLibraryCard, { type Game } from '@/components/gamelibrary/GameLibraryCard';
 import PopUpFavoritesClient from './PopUpFavoritesClient';
+import { useRemoveFromLibrary } from './RemoveFromLibrary';
 
 export default function FavoritesClient() {
   const [favorites, setFavorites] = useState<Game[]>([]);
@@ -13,6 +14,9 @@ export default function FavoritesClient() {
   const [loading, setLoading] = useState(true);
   const { status } = useSession();
   const router = useRouter();
+  const { removeSingle } = useRemoveFromLibrary((gameIds) => {
+    setFavorites((prev) => prev.filter((g) => !gameIds.includes(g.id)));
+});
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -38,17 +42,7 @@ export default function FavoritesClient() {
     setLoadingId(gameId);
 
     try {
-      const res = await fetch('/api/library', {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ gameId }),
-      });
-
-      if (res.ok) {
-        setFavorites((prev) => prev.filter((game) => game.id !== gameId));
-      }
+      await removeSingle(gameId);
     } finally {
       setLoadingId(null);
     }
@@ -70,7 +64,9 @@ return (
             <h1>Favorites</h1>
           </Col>
           <Col className="text-end">
-            <PopUpFavoritesClient onRemove={handleRemove} />
+            <PopUpFavoritesClient 
+              onRemove={(gameId) => setFavorites((prev) => prev.filter((g) => g.id !== gameId))} 
+              onRemoveAll={() => setFavorites([])} />
           </Col>
         </Row>
 

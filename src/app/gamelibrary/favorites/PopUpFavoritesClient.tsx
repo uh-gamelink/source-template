@@ -1,17 +1,23 @@
 import { Button, Modal, Form, Spinner } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
 import { type Game } from '@/components/gamelibrary/GameLibraryCard';
+import { useRemoveFromLibrary } from './RemoveFromLibrary';
 
 interface Props {
     show: boolean;
     onHide: () => void;
     onRemove: (gameId: number) => void;
+    onRemoveAll: () => void;
 }
 
-function PopUpFavoritesClientForm({ show, onHide, onRemove }: Props) {
+function PopUpFavoritesClientForm({ show, onHide, onRemove, onRemoveAll }: Props) {
     const [favorites, setFavorites] = useState<Game[]>([]);
     const [loading, setLoading] = useState(false);
     const [removingId, setRemovingId] = useState<number | null>(null);
+    const { removeFromLibrary, removeSingle } = useRemoveFromLibrary((gameIds) => {
+        setFavorites((prev) => prev.filter((g) => !gameIds.includes(g.id)));
+    });
+
 
     // Fetch favorites when the modal is shown
     useEffect(() => {
@@ -29,97 +35,104 @@ function PopUpFavoritesClientForm({ show, onHide, onRemove }: Props) {
 
     // Removes a game from the library and updates local + parent state
     async function handleRemove(gameId: number) {
-        setRemovingId(gameId);
-        try {
-            const res = await fetch('/api/library', {
-                method: 'DELETE',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ gameId }),
-            });
+      setRemovingId(gameId);
+      try {
+          await removeSingle(gameId);
+          onRemove(gameId);
+      } finally {
+          setRemovingId(null);
+      }
+    }
 
-            if (res.ok) {
-                // Remove from modal list
-                setFavorites((prev) => prev.filter((g) => g.id !== gameId));
-                onRemove(gameId);
-            }
-        } finally {
-            setRemovingId(null);
-        }
+    // Removes all games from the library with one click.
+    async function handleClearAll() {
+      if (!confirm('Are you sure you want to clear all favorites?')) return;
+
+      const allIds = favorites.map((g) => g.id);
+      setLoading(true);
+      try {
+          await removeFromLibrary(allIds);
+          onRemoveAll();
+      } finally {
+          setLoading(false);
+      }
     }
 
     return (
-    <Modal
-      show={show}
-      onHide={onHide}
-      size="lg"
-      aria-labelledby="contained-modal-title-vhcenter"
-      centered
-    >
-      <Modal.Header closeButton className="edit-favorites-title" style={{backgroundColor: 'lightgray'}}>
-        <Modal.Title id="contained-modal-title-vhcenter">
-          Edit Favorites
-        </Modal.Title>
-      </Modal.Header>
+      <Modal
+        show={show}
+        onHide={onHide}
+        size="lg"
+        aria-labelledby="contained-modal-title-vhcenter"
+        centered
+      >
+        <Modal.Header closeButton className="edit-favorites-popup border-0">
+          <Modal.Title id="contained-modal-title-vhcenter">
+            Edit Favorites
+          </Modal.Title>
+        </Modal.Header>
 
-      <Modal.Body style={{backgroundColor: 'lightgray', overflowY: 'auto', maxHeight: '57.5vh'}}>
-        {loading ? (
-          <div className="d-flex justify-content-center py-4">
-            <Spinner animation="border" />
-          </div>
-        ) : favorites.length === 0 ? (
-          <p className="text-center text-muted py-3">No favorite games yet.</p>
-        ) : (
-            <Form>
-            {favorites.map((game) => (
-                <div
-                    key={game.id}
-                    className="d-flex align-items-center py-2 px-1"
-                >
-                    <div style={{ flex: 1 }}>
-                        <div style={{ fontWeight: 600 }}>{game.title}</div>
-                    </div>
+        <Modal.Body style={{overflowY: 'auto', maxHeight: '55vh', padding: '0.35rem 1rem', minHeight: '185px'}}
+                    className='edit-favorites-popup'>
+          {loading ? (
+            <div className="d-flex justify-content-center py-5">
+              <Spinner animation="border" />
+            </div>
+          ) : favorites.length === 0 ? (
+            <p className="text-center py-5"
+               style={{ color: 'rgb(119, 166, 255) !important' }}>
+              No favorite games yet.
+            </p>
+          ) : (
+              <Form>
+              {favorites.map((game) => (
+                  <div
+                      key={game.id}
+                      className="d-flex align-items-center py-2 px-1 border-bottom border-primary"
+                  >
+                      <div style={{ flex: 1 }}>
+                          <div>{game.title}</div>
+                      </div>
 
-                    <Button
-                        variant="outline-danger"
-                        size="sm"
-                        disabled={removingId === game.id}
-                        onClick={() => handleRemove(game.id)}
-                    >
-                        {removingId === game.id ? (
-                        "Removing..."
-                        ) : (
-                        "Remove"
-                        )}
-                    </Button>
-                </div>
-            ))}
-            </Form>
-        )}
-      </Modal.Body>
+                      <Button
+                          variant="outline-danger"
+                          size="sm"
+                          disabled={removingId === game.id}
+                          onClick={() => handleRemove(game.id)}
+                      >
+                          {removingId === game.id ? (
+                          "Removing..."
+                          ) : (
+                          "Remove"
+                          )}
+                      </Button>
+                  </div>
+              ))}
+              </Form>
+          )}
+        </Modal.Body>
 
-      <Modal.Footer style={{backgroundColor: 'lightgray'}}>
-        {(loading === false) && (favorites.length > 0) ? (
-          <Button variant="danger" className="me-auto" onClick={() => { 
-            if (confirm('Are you sure you want to clear all favorites?')) { 
-                {/* Slow but works */}
-                favorites.forEach((game) => handleRemove(game.id)); 
-                } 
-            }}>
-            Clear All Favorites
-          </Button>
-        ) : null}
-        <Button variant="secondary" onClick={onHide}>Close</Button>
-      </Modal.Footer>
+        <Modal.Footer className="edit-favorites-popup border-0">
+          {(loading === false) && (favorites.length > 0) ? (
+            <Button variant="danger" className="me-auto" onClick={handleClearAll}>
+              Clear All Favorites
+            </Button>
+          ) : null}
+          <Button variant="secondary" onClick={onHide}>Close</Button>
+        </Modal.Footer>
     </Modal>
   );
 }
 
-export default function PopUpFavoritesClient({ onRemove }: { onRemove: (gameId: number) => void }) {
+export default function PopUpFavoritesClient({ onRemove, onRemoveAll }: 
+  { onRemove: (gameId: number) => void; 
+    onRemoveAll: () => void 
+  }) {
   const [modalShow, setModalShow] = useState(false);
 
   return (
     <>
-      <Button variant="primary" onClick={() => setModalShow(true)}>
+      <Button variant="primary" className="edit-favorites-button" onClick={() => setModalShow(true)}>
         Edit Favorites
       </Button>
 
@@ -127,6 +140,7 @@ export default function PopUpFavoritesClient({ onRemove }: { onRemove: (gameId: 
         show={modalShow}
         onHide={() => setModalShow(false)}
         onRemove={onRemove}
+        onRemoveAll={onRemoveAll}
       />
     </>
   );

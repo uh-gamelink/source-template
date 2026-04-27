@@ -210,10 +210,10 @@ export default function ProfilePage() {
               <h5><Link href="/gamelibrary/favorites" className='custom-link'>Favorites</Link></h5>
 
               <div className="favorites-list">
-                {/* Show first 4 favorites with a count of remaining if more than 4 */}
+                {/* Show first 5 favorites with a count of remaining if more than 5 */}
                 {library.length > 0 ? (
                   <>
-                    {library.slice(0, 4).map((game) => (
+                    {library.slice(0, 5).map((game) => (
                       <div
                         key={game.id}
                         style={{
@@ -225,7 +225,7 @@ export default function ProfilePage() {
                       </div>
                     ))}
                     
-                    {library.length > 4 && (
+                    {library.length > 5 && (
                       <div 
                         style={{
                           padding: '6px 0',
@@ -234,7 +234,7 @@ export default function ProfilePage() {
                           fontSize: '0.9em',
                         }}
                       >
-                        + {library.length - 4} more in favorites
+                        + {library.length - 5} more in favorites
                       </div>
                     )}
                   </>
