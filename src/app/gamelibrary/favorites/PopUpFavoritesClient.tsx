@@ -21,16 +21,37 @@ function PopUpFavoritesClientForm({ show, onHide, onRemove, onRemoveAll }: Props
 
     // Fetch favorites when the modal is shown
     useEffect(() => {
-        if (!show) return;
+    if (!show) return;
 
+    const controller = new AbortController();
+    let isMounted = true;
+
+    const fetchFavorites = async () => {
+      try {
         setLoading(true);
-        fetch('/api/library')
-            .then((res) => res.json())
-            .then((data: Game[]) => {
-                if (Array.isArray(data)) setFavorites(data);
-            })
-            .catch(console.error)
-            .finally(() => setLoading(false));
+        const res = await fetch('/api/library', { signal: controller.signal });
+        const data: Game[] = await res.json();
+        
+        if (isMounted && Array.isArray(data)) {
+            setFavorites(data);
+        }
+      } catch (error) {
+          if (isMounted) {
+              console.error(error);
+          }
+      } finally {
+          if (isMounted) {
+              setLoading(false);
+          }
+      }
+    };
+
+      fetchFavorites();
+
+      return () => {
+          isMounted = false;
+          controller.abort();
+      };
     }, [show]);
 
     // Removes a game from the library and updates local + parent state
