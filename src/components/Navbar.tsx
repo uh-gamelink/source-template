@@ -155,6 +155,15 @@ const NavBar: React.FC = () => {
               About Us
             </Nav.Link>
 
+            <Nav.Link
+              as={Link}
+              href="/reviews"
+              active={pathName === '/reviews'}
+              className={getNavLinkClass('/reviews')}
+            >
+              Reviews
+            </Nav.Link>
+
             {session && (
               <Nav.Link
                 as={Link}
@@ -177,6 +186,8 @@ const NavBar: React.FC = () => {
               >
                 Profile
               </Nav.Link>
+              
+              
             )}
           </Nav>
 
