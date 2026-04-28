@@ -8,6 +8,7 @@ import {
   Row,
   Col,
   Button,
+  Badge,
 } from 'react-bootstrap';
 import { PlusLg } from 'react-bootstrap-icons';
 
@@ -17,6 +18,7 @@ type Player = {
   imageUrl?: string | null;
   game: string;
   rank: string;
+  moderationStatus?: string;
 };
 
 type PlayerCardProps = {
@@ -24,20 +26,11 @@ type PlayerCardProps = {
   onRequestClick: (player: Player) => void;
 };
 
-const PlayerCard = ({
-  player,
-  onRequestClick,
-}: PlayerCardProps) => {
-  const [imgSrc, setImgSrc] = useState(
-    player.imageUrl ||
-      '/default-player.svg',
-  );
+const PlayerCard = ({ player, onRequestClick }: PlayerCardProps) => {
+  const [imgSrc, setImgSrc] = useState(player.imageUrl || '/default-player.svg');
 
   return (
-    <Card
-      className="h-100 custom-card-body"
-      style={{ width: '235px' }}
-    >
+    <Card className="h-100 custom-card-body" style={{ width: '235px' }}>
       <Container className="ms-2">
         <Card.Body className="p-3">
           <Card.Title>
@@ -52,36 +45,25 @@ const PlayerCard = ({
             height={160}
             rounded
             alt={player.username}
-            onError={() =>
-              setImgSrc(
-                '/default-player.svg',
-              )
-            }
+            onError={() => setImgSrc('/default-player.svg')}
             style={{
               objectFit: 'cover',
               borderRadius: '12px',
-              border:
-                '4px solid #b0e0e682',
+              border: '4px solid #b0e0e682',
             }}
             className="mb-3"
           />
 
-          <div>
-            Game: {player.game}
-          </div>
+          <div>Game: {player.game}</div>
 
-          <div className="mb-2">
-            Rank: {player.rank}
-          </div>
+          <div className="mb-2">Rank: {player.rank}</div>
 
           <Row className="ps-0 py-2 align-items-center">
             <Col xs="auto">
               <Button
                 className="custom-tag-btn d-flex align-items-center justify-content-center custom-link-button"
                 size="sm"
-                onClick={() =>
-                  onRequestClick(player)
-                }
+                onClick={() => onRequestClick(player)}
                 style={{
                   width: '32px',
                   height: '32px',
@@ -92,10 +74,16 @@ const PlayerCard = ({
               </Button>
             </Col>
 
-            <Col className="pl-0">
-              Connect
-            </Col>
+            <Col className="pl-0">Connect</Col>
+            
           </Row>
+            {player.moderationStatus === 'FLAGGED' && (
+            <div className="mb-2 pt-2">
+              <Badge bg="warning" text="dark">
+                Conduct Warning
+              </Badge>
+            </div>
+          )}
         </Card.Body>
       </Container>
     </Card>
