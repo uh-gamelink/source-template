@@ -155,7 +155,7 @@ const NavBar: React.FC = () => {
               Find Players
             </Nav.Link>
 
-            {!isAdmin && (
+            {session && !isAdmin && (
               <Nav.Link
                 as={Link}
                 href="/report"
@@ -173,7 +173,7 @@ const NavBar: React.FC = () => {
               Profile
             </Nav.Link>
 
-            {isAdmin && (
+            {session && isAdmin && (
               <Nav.Link
                 as={Link}
                 href="/admin/reports"

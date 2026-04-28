@@ -31,7 +31,7 @@ const ReportPage = () => {
       return;
     }
 
-    setMessage('User has been reported. An admin will review this case.');
+    setMessage('Report submitted. An admin will review this case.');
     setReportedUsername('');
     setIssue('');
     setIncidentDate('');
