@@ -26,7 +26,7 @@ test('admin can access the admin manage page', async ({ getUserPage }) => {
   ).toBeVisible();
 
   await expect(
-    adminPage.getByText('Games'),
+    adminPage.locator('strong').filter({ hasText: /^Games$/ }),
   ).toBeVisible();
 
   await adminPage.getByRole('button', { name: 'Manage Servers' }).click();
@@ -36,6 +36,6 @@ test('admin can access the admin manage page', async ({ getUserPage }) => {
   ).toBeVisible();
 
   await expect(
-    adminPage.getByText('Community Servers'),
+    adminPage.locator('strong').filter({ hasText: /^Community Servers$/ }),
   ).toBeVisible();
 });
