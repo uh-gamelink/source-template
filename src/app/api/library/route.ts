@@ -82,12 +82,7 @@ export async function DELETE(request: Request) {
     }
 
     const body = await request.json();
-    const { gameId } = body;
-
-    if (!gameId) {
-      return NextResponse.json({ error: 'gameId is required' }, { status: 400 });
-    }
-
+    const { gameId, gameIds } = body;
     const user = await prisma.user.findUnique({
       where: { email: session.user.email },
     });
@@ -96,11 +91,33 @@ export async function DELETE(request: Request) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
+    // Delete all games
+    if (Array.isArray(gameIds)) {
+      if (gameIds.length === 0) {
+        return NextResponse.json({ error: 'gameIds must not be empty' }, { status: 400 });
+      }
+
+      await prisma.userGame.deleteMany({
+        where: {
+          userId: user.id,
+          gameId: { in: gameIds.map((id) => parseInt(id)) },
+        },
+      });
+
+      return NextResponse.json({ message: 'Games removed from library' });
+    }
+
+    // Single game remove
+    if (!gameId) {
+      return NextResponse.json({ error: 'gameId is required' }, { status: 400 });
+    }
+
     await prisma.userGame.deleteMany({
       where: { userId: user.id, gameId: parseInt(gameId) },
     });
 
     return NextResponse.json({ message: 'Game removed from library' });
+    
   } catch (error) {
     console.error('Error removing from library:', error);
     return NextResponse.json({ error: 'Failed to remove from library' }, { status: 500 });
