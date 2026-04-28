@@ -30,9 +30,7 @@ const NavBar: React.FC = () => {
   const [isLoadingProfile, setIsLoadingProfile] = useState(false);
 
   useEffect(() => {
-    if (status !== 'authenticated') {
-      return;
-    }
+    if (status !== 'authenticated') return;
 
     let ignore = false;
 
@@ -41,22 +39,15 @@ const NavBar: React.FC = () => {
 
       try {
         const res = await fetch('/api/profile/me');
-
-        if (!res.ok) {
-          return;
-        }
+        if (!res.ok) return;
 
         const data: ProfileData = await res.json();
 
-        if (!ignore) {
-          setProfileData(data);
-        }
+        if (!ignore) setProfileData(data);
       } catch (err) {
         console.error(err);
       } finally {
-        if (!ignore) {
-          setIsLoadingProfile(false);
-        }
+        if (!ignore) setIsLoadingProfile(false);
       }
     };
 
@@ -106,6 +97,9 @@ const NavBar: React.FC = () => {
   const getNavLinkClass = (href: string) =>
     pathName === href ? 'custom-nav-link active-nav-link' : 'custom-nav-link';
 
+  // 🔥 SIMPLE ADMIN CHECK (replace later with role if you add it)
+  const isAdmin = session?.user?.email === 'admin@yourapp.com';
+
   return (
     <Navbar expand="lg" className="custom-navbar">
       <Container>
@@ -115,9 +109,7 @@ const NavBar: React.FC = () => {
           className="d-flex align-items-center gap-2 custom-brand"
         >
           <GiGamepad size={32} />
-          <span>
-            <strong> UH GameLink</strong>
-          </span>
+          <span><strong>UH GameLink</strong></span>
         </Navbar.Brand>
 
         <Navbar.Toggle
@@ -126,11 +118,12 @@ const NavBar: React.FC = () => {
         />
 
         <Navbar.Collapse id="main-navbar-nav">
+          {/* LEFT SIDE NAV */}
           <Nav className="me-auto gap-3">
+
             <Nav.Link
               as={Link}
               href="/gamelibrary"
-              active={pathName === '/gamelibrary'}
               className={getNavLinkClass('/gamelibrary')}
             >
               Game Library
@@ -139,8 +132,6 @@ const NavBar: React.FC = () => {
             <Nav.Link
               as={Link}
               href="/community"
-              active={pathName === '/community'}
-              id="community-nav"
               className={getNavLinkClass('/community')}
             >
               Community
@@ -149,37 +140,54 @@ const NavBar: React.FC = () => {
             <Nav.Link
               as={Link}
               href="/about"
-              active={pathName === '/about'}
               className={getNavLinkClass('/about')}
             >
               About Us
             </Nav.Link>
 
+            {/* USER FEATURES */}
             {session && (
-              <Nav.Link
-                as={Link}
-                href="/findplayers"
-                active={pathName === '/findplayers'}
-                id="findplayers-nav"
-                className={getNavLinkClass('/findplayers')}
-              >
-                Find Players
-              </Nav.Link>
+              <>
+                <Nav.Link
+                  as={Link}
+                  href="/findplayers"
+                  className={getNavLinkClass('/findplayers')}
+                >
+                  Find Players
+                </Nav.Link>
+
+                {/* 🔴 REPORT PLAYER PAGE */}
+                <Nav.Link
+                  as={Link}
+                  href="/report"
+                  className={getNavLinkClass('/report')}
+                >
+                  Report Player
+                </Nav.Link>
+
+                <Nav.Link
+                  as={Link}
+                  href="/profile"
+                  className={getNavLinkClass('/profile')}
+                >
+                  Profile
+                </Nav.Link>
+              </>
             )}
 
-            {session && (
+            {/* 🛠 ADMIN ONLY */}
+            {session && isAdmin && (
               <Nav.Link
                 as={Link}
-                href="/profile"
-                active={pathName === '/profile'}
-                id="profile-nav"
-                className={getNavLinkClass('/profile')}
+                href="/admin/reports"
+                className={getNavLinkClass('/admin/reports')}
               >
-                Profile
+                Reports Dashboard
               </Nav.Link>
             )}
           </Nav>
 
+          {/* RIGHT SIDE (AUTH / PROFILE) */}
           <Nav>
             {session ? (
               <NavDropdown
@@ -190,7 +198,6 @@ const NavBar: React.FC = () => {
                   <span className="d-inline-flex align-items-center gap-2">
                     {profileImage ? (
                       <Image
-                        key={profileImage}
                         src={profileImage}
                         alt="Profile picture"
                         width={49}
@@ -201,13 +208,7 @@ const NavBar: React.FC = () => {
                           border: '2px solid rgba(127, 153, 255, 0.85)',
                           boxShadow: '0 0 8px rgba(127, 153, 255, 0.45)',
                         }}
-                        unoptimized={
-                          profileImage.startsWith('blob:') ||
-                          profileImage.startsWith('/api/avatar') ||
-                          profileImage.includes(
-                            'public.blob.vercel-storage.com',
-                          )
-                        }
+                        unoptimized
                       />
                     ) : (
                       <div
@@ -216,8 +217,6 @@ const NavBar: React.FC = () => {
                           width: 49,
                           height: 49,
                           backgroundColor: '#101c37',
-                          border: '2px solid rgba(127, 153, 255, 0.85)',
-                          boxShadow: '0 0 8px rgba(127, 153, 255, 0.45)',
                         }}
                       />
                     )}
@@ -226,36 +225,24 @@ const NavBar: React.FC = () => {
                   </span>
                 }
               >
-                <NavDropdown.Item
-                  id="login-dropdown-sign-out"
-                  href="/auth/signout"
-                >
+                <NavDropdown.Item href="/auth/signout">
                   <BoxArrowRight className="me-2" />
                   Sign Out
                 </NavDropdown.Item>
 
-                <NavDropdown.Item
-                  id="login-dropdown-change-password"
-                  href="/auth/change-password"
-                >
+                <NavDropdown.Item href="/auth/change-password">
                   <Lock className="me-2" />
                   Change Password
                 </NavDropdown.Item>
               </NavDropdown>
             ) : (
-              <NavDropdown id="login-dropdown" title="Login">
-                <NavDropdown.Item
-                  id="login-dropdown-sign-in"
-                  href="/auth/signin"
-                >
+              <NavDropdown title="Login">
+                <NavDropdown.Item href="/auth/signin">
                   <PersonFill className="me-2" />
                   Sign In
                 </NavDropdown.Item>
 
-                <NavDropdown.Item
-                  id="login-dropdown-sign-up"
-                  href="/auth/signup"
-                >
+                <NavDropdown.Item href="/auth/signup">
                   <PersonPlusFill className="me-2" />
                   Sign Up
                 </NavDropdown.Item>

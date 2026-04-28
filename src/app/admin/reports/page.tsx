@@ -1,6 +1,7 @@
 import { prisma } from '@/lib/prisma';
+import type { Report } from '@prisma/client';
 import { Container, Row, Col, Card, Badge } from 'react-bootstrap';
-import ReportStatusButtons from '@/components/ReportStatusButtons';
+import ReportStatusButtons from '../../../components/ReportStatusButtons';
 
 const AdminReportsPage = async () => {
   const reports = await prisma.report.findMany({
@@ -12,7 +13,7 @@ const AdminReportsPage = async () => {
       <h1 className="text-center mb-4">Player Reports</h1>
 
       <Row className="g-3">
-        {reports.map((report) => (
+        {reports.map((report: Report) => (
           <Col key={report.id} xs={12} md={6} lg={4}>
             <Card className="custom-card-body h-100">
               <Card.Body>
