@@ -111,3 +111,20 @@ model UserCommunityServer {
 
   @@unique([userId, serverId])
 }
+
+enum ReportStatus {
+  PENDING
+  INVESTIGATING
+  WARNING
+  FLAGGED
+  BANNED
+}
+
+model Report {
+  id               Int          @id @default(autoincrement())
+  reportedUsername String
+  issue            String
+  incidentDate     DateTime
+  status           ReportStatus @default(PENDING)
+  createdAt        DateTime     @default(now())
+}
