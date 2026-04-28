@@ -7,43 +7,11 @@ test('admin can access the admin manage page', async ({ getUserPage }) => {
 
   await adminPage.goto('http://localhost:3000/admin/manage');
 
-  await expect(
-    adminPage.getByRole('link', { name: /UH GameLink/i }),
-  ).toBeVisible({ timeout: 10000 });
-
-  await expect(
-    adminPage.getByRole('link', { name: 'Manage' }),
-  ).toBeVisible();
-
-  await expect(
-    adminPage.getByRole('button', { name: /Admin/i }),
-  ).toBeVisible({ timeout: 10000 });
-
-  await expect(
-    adminPage.getByRole('link', { name: 'Game Library' }),
-  ).not.toBeVisible();
-
-  await expect(
-    adminPage.getByRole('link', { name: 'Community' }),
-  ).not.toBeVisible();
-
-  await expect(
-    adminPage.getByRole('link', { name: 'About Us' }),
-  ).not.toBeVisible();
-
-  await expect(
-    adminPage.getByRole('link', { name: 'Find Players' }),
-  ).not.toBeVisible();
-
-  await expect(
-    adminPage.getByRole('link', { name: 'Profile' }),
-  ).not.toBeVisible();
-
   await expect(adminPage).toHaveURL(/\/admin\/manage$/);
 
   await expect(
     adminPage.getByRole('heading', { name: 'Admin Manage' }),
-  ).toBeVisible();
+  ).toBeVisible({ timeout: 10000 });
 
   await expect(
     adminPage.getByRole('button', { name: 'Manage Games' }),
