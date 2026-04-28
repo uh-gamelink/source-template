@@ -43,10 +43,8 @@ async function authenticateWithUI(
 
       // Check if we're authenticated by looking for a sign-out option or user email
       const isAuthenticated = await Promise.race([
-        page.getByText(email).isVisible().then((visible) => visible),
-        page.getByRole('button', { name: email }).isVisible().then((visible) => visible),
-        page.getByText('Sign out').isVisible().then((visible) => visible),
-        page.getByRole('button', { name: 'Sign out' }).isVisible().then((visible) => visible),
+        page.locator('.dropdown-toggle').last().isVisible().then((visible) => visible),
+        page.getByRole('link', { name: /manage/i }).isVisible().then((visible) => visible),
         new Promise<boolean>((resolve) => setTimeout(() => resolve(false), 3000)),
       ]);
 
@@ -85,13 +83,12 @@ async function authenticateWithUI(
     }
 
 
-    // Wait for a clear post-login indicator (user button or sign out button)
-    const userButton = page.getByRole('button', { name: email });
-    const signOutButton = page.getByRole('button', { name: /sign out/i });
-    await Promise.any([
-      expect(userButton).toBeVisible({ timeout: 10000 }),
-      expect(signOutButton).toBeVisible({ timeout: 10000 })
-    ]);
+  // Wait for a clear post-login indicator.
+  // Admin shows "Admin" in the navbar.
+  // Regular users may show username or email, so do not rely only on email.
+  const accountDropdownButton = page.locator('.dropdown-toggle').last();
+
+  await expect(accountDropdownButton).toBeVisible({ timeout: 10000 });
 
     // Save session for future tests
     const cookies = await page.context().cookies();

@@ -28,11 +28,15 @@ test('john can access the main UH GameLink pages', async ({ getUserPage }) => {
   ).toBeVisible();
 
   await expect(
+    johnPage.getByRole('link', { name: 'Reviews' }),
+  ).toBeVisible();
+
+  await expect(
     johnPage.getByRole('link', { name: 'Profile' }),
   ).toBeVisible();
 
   await expect(
-    johnPage.getByRole('button', { name: /john@foo\.com/i }),
+    johnPage.locator('.dropdown-toggle').last(),
   ).toBeVisible({ timeout: 10000 });
 
   await johnPage.getByRole('link', { name: 'Game Library' }).click();
@@ -53,6 +57,15 @@ test('john can access the main UH GameLink pages', async ({ getUserPage }) => {
     johnPage.getByRole('heading', { name: 'Find Players' }),
   ).toBeVisible();
   await expect(johnPage.getByText(/Click the plus icon/i)).toBeVisible();
+
+  await johnPage.getByRole('link', { name: 'Reviews' }).click();
+  await expect(johnPage).toHaveURL(/\/reviews$/);
+  await expect(
+    johnPage.getByRole('heading', { name: 'Reviews' }),
+  ).toBeVisible();
+  await expect(
+    johnPage.getByRole('link', { name: /leave a review/i }),
+  ).toBeVisible();
 
   await johnPage.getByRole('link', { name: 'Profile' }).click();
   await expect(johnPage).toHaveURL(/\/profile$/);
