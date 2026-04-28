@@ -59,6 +59,8 @@ model Player {
   imageUrl String?
   game     String
   rank     String
+
+  moderationStatus PlayerModerationStatus @default(CLEAN)
 }
 
 model CommunityServer {
@@ -114,8 +116,7 @@ model UserCommunityServer {
 
 enum ReportStatus {
   PENDING
-  INVESTIGATING
-  WARNING
+  RESOLVED
   FLAGGED
   BANNED
 }
@@ -127,4 +128,10 @@ model Report {
   incidentDate     DateTime
   status           ReportStatus @default(PENDING)
   createdAt        DateTime     @default(now())
+}
+
+enum PlayerModerationStatus {
+  CLEAN
+  FLAGGED
+  BANNED
 }

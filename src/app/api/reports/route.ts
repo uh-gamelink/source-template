@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
+export const runtime = 'nodejs';
+
 export async function POST(request: Request) {
   try {
     const { reportedUsername, issue, incidentDate } = await request.json();
@@ -33,7 +35,12 @@ export async function POST(request: Request) {
 export async function GET() {
   try {
     const reports = await prisma.report.findMany({
-      orderBy: { createdAt: 'desc' },
+      where: {
+        status: 'PENDING',
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
     });
 
     return NextResponse.json(reports);

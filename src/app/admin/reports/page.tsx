@@ -25,29 +25,45 @@ const AdminReportsPage = () => {
   const [error, setError] = useState('');
 
   const fetchReports = async () => {
-    const res = await fetch('/api/reports');
-    const data = await res.json();
+    try {
+      const res = await fetch('/api/reports');
+      const data = await res.json();
 
-    if (!res.ok) {
-      setError(data.error || 'Failed to load reports.');
-      return;
+      if (!res.ok) {
+        setError(data.error || 'Failed to load reports.');
+        return;
+      }
+
+      setReports(data);
+    } catch (err) {
+      console.error(err);
+      setError('Something went wrong.');
     }
-
-    setReports(data);
   };
 
   useEffect(() => {
     fetchReports();
   }, []);
 
-  const updateStatus = async (reportId: number, status: string) => {
-    await fetch(`/api/reports/${reportId}`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ status }),
-    });
+  // 🔥 FIXED: use "action" instead of "status"
+  const updateStatus = async (reportId: number, action: string) => {
+    try {
+      const res = await fetch(`/api/reports/${reportId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action }),
+      });
 
-    fetchReports();
+      if (!res.ok) {
+        console.error('Failed to update report');
+        return;
+      }
+
+      // refresh dashboard after update
+      fetchReports();
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   return (
@@ -88,26 +104,18 @@ const AdminReportsPage = () => {
                   <div className="d-flex flex-wrap gap-2">
                     <Button
                       size="sm"
-                      variant="info"
-                      onClick={() => updateStatus(report.id, 'INVESTIGATING')}
+                      variant="success"
+                      onClick={() => updateStatus(report.id, 'RESOLVED')}
                     >
-                      Investigate
+                      Resolve
                     </Button>
 
                     <Button
                       size="sm"
                       variant="warning"
-                      onClick={() => updateStatus(report.id, 'WARNING')}
-                    >
-                      Warning
-                    </Button>
-
-                    <Button
-                      size="sm"
-                      variant="secondary"
                       onClick={() => updateStatus(report.id, 'FLAGGED')}
                     >
-                      Flag
+                      Flag Player
                     </Button>
 
                     <Button
@@ -115,7 +123,7 @@ const AdminReportsPage = () => {
                       variant="danger"
                       onClick={() => updateStatus(report.id, 'BANNED')}
                     >
-                      Ban
+                      Ban Player
                     </Button>
                   </div>
                 </Card.Footer>
