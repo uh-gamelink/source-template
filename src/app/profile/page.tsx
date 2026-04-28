@@ -239,7 +239,7 @@ export default function ProfilePage() {
                     )}
                   </>
                 ) : (
-                  <div className="text-muted mt-2">No games added yet.</div>
+                  <div className="mt-2">No games added yet.</div>
                 )}
               </div>
             </Col>
