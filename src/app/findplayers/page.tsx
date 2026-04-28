@@ -24,6 +24,10 @@ const FindPlayersPage = async ({
     redirect('/auth/signin');
   }
 
+  if (session.user.role === 'ADMIN') {
+    redirect('/admin/manage');
+  }
+
   const params = (await searchParams) ?? {};
 
   const currentPage = Math.max(
