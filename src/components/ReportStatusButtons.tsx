@@ -3,11 +3,11 @@
 import { useRouter } from 'next/navigation';
 import { Button } from 'react-bootstrap';
 
-type Props = {
+type ReportStatusButtonsProps = {
   reportId: number;
 };
 
-const ReportStatusButtons = ({ reportId }: Props) => {
+const ReportStatusButtons = ({ reportId }: ReportStatusButtonsProps) => {
   const router = useRouter();
 
   const updateStatus = async (status: string) => {
@@ -22,19 +22,35 @@ const ReportStatusButtons = ({ reportId }: Props) => {
 
   return (
     <div className="d-flex flex-wrap gap-2">
-      <Button size="sm" variant="info" onClick={() => updateStatus('INVESTIGATING')}>
+      <Button
+        size="sm"
+        variant="info"
+        onClick={() => updateStatus('INVESTIGATING')}
+      >
         Investigate
       </Button>
 
-      <Button size="sm" variant="warning" onClick={() => updateStatus('WARNING')}>
+      <Button
+        size="sm"
+        variant="warning"
+        onClick={() => updateStatus('WARNING')}
+      >
         Warning
       </Button>
 
-      <Button size="sm" variant="secondary" onClick={() => updateStatus('FLAGGED')}>
+      <Button
+        size="sm"
+        variant="secondary"
+        onClick={() => updateStatus('FLAGGED')}
+      >
         Flag
       </Button>
 
-      <Button size="sm" variant="danger" onClick={() => updateStatus('BANNED')}>
+      <Button
+        size="sm"
+        variant="danger"
+        onClick={() => updateStatus('BANNED')}
+      >
         Ban
       </Button>
     </div>

@@ -97,8 +97,8 @@ const NavBar: React.FC = () => {
   const getNavLinkClass = (href: string) =>
     pathName === href ? 'custom-nav-link active-nav-link' : 'custom-nav-link';
 
-  // 🔥 SIMPLE ADMIN CHECK (replace later with role if you add it)
-  const isAdmin = session?.user?.email === 'admin@yourapp.com';
+
+  const isAdmin = session?.user?.role === 'ADMIN';
 
   return (
     <Navbar expand="lg" className="custom-navbar">
@@ -118,7 +118,7 @@ const NavBar: React.FC = () => {
         />
 
         <Navbar.Collapse id="main-navbar-nav">
-          {/* LEFT SIDE NAV */}
+
           <Nav className="me-auto gap-3">
 
             <Nav.Link
@@ -145,38 +145,35 @@ const NavBar: React.FC = () => {
               About Us
             </Nav.Link>
 
-            {/* USER FEATURES */}
-            {session && (
-              <>
-                <Nav.Link
-                  as={Link}
-                  href="/findplayers"
-                  className={getNavLinkClass('/findplayers')}
-                >
-                  Find Players
-                </Nav.Link>
+         {session && (
+          <>
+            <Nav.Link
+              as={Link}
+              href="/findplayers"
+              className={getNavLinkClass('/findplayers')}
+            >
+              Find Players
+            </Nav.Link>
 
-                {/* 🔴 REPORT PLAYER PAGE */}
-                <Nav.Link
-                  as={Link}
-                  href="/report"
-                  className={getNavLinkClass('/report')}
-                >
-                  Report Player
-                </Nav.Link>
-
-                <Nav.Link
-                  as={Link}
-                  href="/profile"
-                  className={getNavLinkClass('/profile')}
-                >
-                  Profile
-                </Nav.Link>
-              </>
+            {!isAdmin && (
+              <Nav.Link
+                as={Link}
+                href="/report"
+                className={getNavLinkClass('/report')}
+              >
+                Report Player
+              </Nav.Link>
             )}
 
-            {/* 🛠 ADMIN ONLY */}
-            {session && isAdmin && (
+            <Nav.Link
+              as={Link}
+              href="/profile"
+              className={getNavLinkClass('/profile')}
+            >
+              Profile
+            </Nav.Link>
+
+            {isAdmin && (
               <Nav.Link
                 as={Link}
                 href="/admin/reports"
@@ -185,9 +182,10 @@ const NavBar: React.FC = () => {
                 Reports Dashboard
               </Nav.Link>
             )}
+          </>
+        )}
           </Nav>
 
-          {/* RIGHT SIDE (AUTH / PROFILE) */}
           <Nav>
             {session ? (
               <NavDropdown

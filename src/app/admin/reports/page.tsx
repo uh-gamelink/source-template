@@ -1,52 +1,44 @@
-import { prisma } from '@/lib/prisma';
-import type { Report } from '@prisma/client';
-import { Container, Row, Col, Card, Badge } from 'react-bootstrap';
-import ReportStatusButtons from '../../../components/ReportStatusButtons';
+'use client';
 
-const AdminReportsPage = async () => {
-  const reports = await prisma.report.findMany({
-    orderBy: { createdAt: 'desc' },
-  });
+import { useRouter } from 'next/navigation';
+import { Button } from 'react-bootstrap';
+
+type Props = {
+  reportId: number;
+};
+
+const ReportStatusButtons = ({ reportId }: Props) => {
+  const router = useRouter();
+
+  const updateStatus = async (status: string) => {
+    await fetch(`/api/reports/${reportId}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status }),
+    });
+
+    router.refresh();
+  };
 
   return (
-    <Container className="my-5">
-      <h1 className="text-center mb-4">Player Reports</h1>
+    <div className="d-flex flex-wrap gap-2">
+      <Button size="sm" variant="info" onClick={() => updateStatus('INVESTIGATING')}>
+        Investigate
+      </Button>
 
-      <Row className="g-3">
-        {reports.map((report: Report) => (
-          <Col key={report.id} xs={12} md={6} lg={4}>
-            <Card className="custom-card-body h-100">
-              <Card.Body>
-                <Card.Title>{report.reportedUsername}</Card.Title>
+      <Button size="sm" variant="warning" onClick={() => updateStatus('WARNING')}>
+        Warning
+      </Button>
 
-                <Badge bg="secondary" className="mb-3">
-                  {report.status}
-                </Badge>
+      <Button size="sm" variant="secondary" onClick={() => updateStatus('FLAGGED')}>
+        Flag
+      </Button>
 
-                <Card.Text>
-                  <strong>Issue:</strong> {report.issue}
-                </Card.Text>
-
-                <Card.Text>
-                  <strong>Date:</strong>{' '}
-                  {report.incidentDate.toLocaleDateString()}
-                </Card.Text>
-
-                <Card.Text>
-                  <strong>Submitted:</strong>{' '}
-                  {report.createdAt.toLocaleDateString()}
-                </Card.Text>
-              </Card.Body>
-
-              <Card.Footer>
-                <ReportStatusButtons reportId={report.id} />
-              </Card.Footer>
-            </Card>
-          </Col>
-        ))}
-      </Row>
-    </Container>
+      <Button size="sm" variant="danger" onClick={() => updateStatus('BANNED')}>
+        Ban
+      </Button>
+    </div>
   );
 };
 
-export default AdminReportsPage;
+export default ReportStatusButtons;
