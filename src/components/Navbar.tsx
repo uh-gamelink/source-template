@@ -152,6 +152,15 @@ const NavBar: React.FC = () => {
 
                 <Nav.Link
                   as={Link}
+                  href="/reviews"
+                  active={pathName === '/reviews'}
+                  className={getNavLinkClass('/reviews')}
+                >
+                  Reviews
+                </Nav.Link>
+
+                <Nav.Link
+                  as={Link}
                   href="/about"
                   active={pathName === '/about'}
                   className={getNavLinkClass('/about')}
