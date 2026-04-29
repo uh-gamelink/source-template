@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import {
   Container,
   Row,
@@ -156,9 +157,25 @@ export default function RequestsContent() {
 
   return (
     <Container className="py-4">
-      <h1 className="mb-4 custom-title">
-        Requests
-      </h1>
+      <div className="d-flex justify-content-between align-items-center mb-5 flex-wrap gap-3">
+        <h1 className="custom-title mb-0">
+          Requests
+        </h1>
+
+        <Link href="/findplayers">
+          <Button
+            className="custom-tag-btn px-4 py-2"
+            style={{
+              borderRadius: '12px',
+              minWidth: '190px',
+              fontWeight: 700,
+              fontSize: '1.05rem',
+            }}
+          >
+            ← Find Players
+          </Button>
+        </Link>
+      </div>
 
       {error && (
         <div className="alert alert-danger mb-4">
@@ -166,241 +183,240 @@ export default function RequestsContent() {
         </div>
       )}
 
-      {/* Incoming Requests */}
-      <h3 className="mb-3">
-        Incoming Requests
-      </h3>
+      <Row className="g-4">
+        {/* Incoming */}
+        <Col lg={6}>
+          <Card className="h-100 custom-card-body p-4">
+            <h3 className="mb-4">
+              Incoming Requests
+            </h3>
 
-      <Table
-        striped
-        bordered
-        hover
-        responsive
-        className="mb-5 status-table"
-      >
-        <thead>
-          <tr>
-            <th>
-              Username
-            </th>
-            <th>
-              Game
-            </th>
-            <th>
-              Rank
-            </th>
-            <th>
-              Status
-            </th>
-          </tr>
-        </thead>
+            <Table
+              striped
+              bordered
+              hover
+              responsive
+              className="status-table mb-0"
+            >
+              <thead>
+                <tr>
+                  <th>
+                    Username
+                  </th>
+                  <th>
+                    Game
+                  </th>
+                  <th>
+                    Rank
+                  </th>
+                  <th>
+                    Status
+                  </th>
+                </tr>
+              </thead>
 
-        <tbody>
-          {incomingRequests.length >
-          0 ? (
-            incomingRequests.map(
-              (req) => {
-                const sender =
-                  req.user
-                    .profile
-                    ?.username ||
-                  req.user.email.split(
-                    '@',
-                  )[0];
+              <tbody>
+                {incomingRequests.length >
+                0 ? (
+                  incomingRequests.map(
+                    (
+                      req,
+                    ) => {
+                      const sender =
+                        req.user
+                          .profile
+                          ?.username ||
+                        req.user.email.split(
+                          '@',
+                        )[0];
 
-                return (
-                  <tr
-                    key={
-                      req.id
-                    }
-                  >
-                    <td>
-                      {
-                        sender
-                      }
-                    </td>
-
-                    <td>
-                      {
-                        req.game
-                      }
-                    </td>
-
-                    <td>
-                      {
-                        req.rank
-                      }
-                    </td>
-
-                    <td>
-                      {req.status ===
-                      'PENDING' ? (
-                        <div className="d-flex gap-2">
-                          <Button
-                            size="sm"
-                            variant="success"
-                            onClick={() =>
-                              updateStatus(
-                                req.id,
-                                'ACCEPTED',
-                              )
+                      return (
+                        <tr
+                          key={
+                            req.id
+                          }
+                        >
+                          <td>
+                            {
+                              sender
                             }
-                          >
-                            Accept
-                          </Button>
+                          </td>
 
-                          <Button
-                            size="sm"
-                            variant="danger"
-                            onClick={() =>
-                              updateStatus(
-                                req.id,
-                                'REJECTED',
-                              )
+                          <td>
+                            {
+                              req.game
                             }
-                          >
-                            Reject
-                          </Button>
-                        </div>
-                      ) : (
-                        req.status
-                      )}
+                          </td>
+
+                          <td>
+                            {
+                              req.rank
+                            }
+                          </td>
+
+                          <td>
+                            {req.status ===
+                            'PENDING' ? (
+                              <div className="d-flex flex-column gap-2">
+                                <Button
+                                  size="sm"
+                                  variant="success"
+                                  onClick={() =>
+                                    updateStatus(
+                                      req.id,
+                                      'ACCEPTED',
+                                    )
+                                  }
+                                >
+                                  Accept
+                                </Button>
+
+                                <Button
+                                  size="sm"
+                                  variant="danger"
+                                  onClick={() =>
+                                    updateStatus(
+                                      req.id,
+                                      'REJECTED',
+                                    )
+                                  }
+                                >
+                                  Reject
+                                </Button>
+                              </div>
+                            ) : (
+                              req.status
+                            )}
+                          </td>
+                        </tr>
+                      );
+                    },
+                  )
+                ) : (
+                  <tr>
+                    <td
+                      colSpan={
+                        4
+                      }
+                      className="text-center"
+                    >
+                      No incoming
+                      requests right
+                      now.
                     </td>
                   </tr>
-                );
-              },
-            )
-          ) : (
-            <tr>
-              <td
-                colSpan={
-                  4
-                }
-                className="text-center"
-              >
-                No incoming requests.
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </Table>
+                )}
+              </tbody>
+            </Table>
+          </Card>
+        </Col>
 
-      {/* Outgoing Requests */}
-      <h3 className="mb-3">
-        Outgoing Requests
-      </h3>
+        {/* Outgoing */}
+        <Col lg={6}>
+          <Card className="h-100 custom-card-body p-4">
+            <h3 className="mb-4">
+              Outgoing Requests
+            </h3>
 
-      <Row className="g-4">
-        {outgoingRequests.length >
-        0 ? (
-          outgoingRequests.map(
-            (req) => {
-              const sender =
-                req.user
-                  .profile
-                  ?.username ||
-                req.user.email.split(
-                  '@',
-                )[0];
+            <Row className="g-3">
+              {outgoingRequests.length >
+              0 ? (
+                outgoingRequests.map(
+                  (
+                    req,
+                  ) => {
+                    const sender =
+                      req.user
+                        .profile
+                        ?.username ||
+                      req.user.email.split(
+                        '@',
+                      )[0];
 
-              const target =
-                req.receiver
-                  ?.profile
-                  ?.username ||
-                req.receiverUsername ||
-                'Open Request';
+                    const target =
+                      req
+                        .receiver
+                        ?.profile
+                        ?.username ||
+                      req.receiverUsername ||
+                      'Open Request';
 
-              return (
-                <Col
-                  md={4}
-                  key={
-                    req.id
-                  }
-                >
-                  <Card className="p-3 h-100 custom-card-body request-card">
-                    <div className="request-label">
-                      Request
-                    </div>
-
-                    <Card.Title>
-                      {
-                        sender
-                      }
-                    </Card.Title>
-
-                    <Card.Text>
-                      <small>
-                        @
-                        {
-                          sender
+                    return (
+                      <Col
+                        md={
+                          12
                         }
-                      </small>
-                    </Card.Text>
-
-                    <Card.Text>
-                      <strong>
-                        To:
-                      </strong>{' '}
-                      {
-                        target
-                      }
-                    </Card.Text>
-
-                    <Card.Text>
-                      <strong>
-                        Rank:
-                      </strong>{' '}
-                      {
-                        req.rank
-                      }
-                    </Card.Text>
-
-                    <Card.Text>
-                      <strong>
-                        Game:
-                      </strong>{' '}
-                      {
-                        req.game
-                      }
-                    </Card.Text>
-
-                    <Card.Text>
-                      <strong>
-                        Status:
-                      </strong>{' '}
-                      {req.status ||
-                        'PENDING'}
-                    </Card.Text>
-
-                    {req.notes && (
-                      <Card.Text>
-                        {
-                          req.notes
+                        key={
+                          req.id
                         }
-                      </Card.Text>
-                    )}
+                      >
+                        <Card className="p-3 custom-card-body request-card">
+                          <Card.Title>
+                            {
+                              sender
+                            }
+                          </Card.Title>
 
-                    <Button
-                      variant="danger"
-                      size="sm"
-                      onClick={() =>
-                        handleDelete(
-                          req.id,
-                        )
-                      }
-                    >
-                      Delete
-                    </Button>
-                  </Card>
-                </Col>
-              );
-            },
-          )
-        ) : (
-          <p>
-            No outgoing requests.
-          </p>
-        )}
+                          <Card.Text>
+                            <strong>
+                              To:
+                            </strong>{' '}
+                            {
+                              target
+                            }
+                          </Card.Text>
+
+                          <Card.Text>
+                            <strong>
+                              Game:
+                            </strong>{' '}
+                            {
+                              req.game
+                            }
+                          </Card.Text>
+
+                          <Card.Text>
+                            <strong>
+                              Rank:
+                            </strong>{' '}
+                            {
+                              req.rank
+                            }
+                          </Card.Text>
+
+                          <Card.Text>
+                            <strong>
+                              Status:
+                            </strong>{' '}
+                            {req.status ||
+                              'PENDING'}
+                          </Card.Text>
+
+                          <Button
+                            variant="danger"
+                            size="sm"
+                            onClick={() =>
+                              handleDelete(
+                                req.id,
+                              )
+                            }
+                          >
+                            Delete
+                          </Button>
+                        </Card>
+                      </Col>
+                    );
+                  },
+                )
+              ) : (
+                <p className="mb-0">
+                  You haven’t sent
+                  any requests yet.
+                </p>
+              )}
+            </Row>
+          </Card>
+        </Col>
       </Row>
     </Container>
   );
