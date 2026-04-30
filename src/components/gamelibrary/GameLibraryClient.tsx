@@ -264,23 +264,18 @@ export default function GameLibraryClient({
         {allTags.map(
           (tag) => (
             <Button
-              key={tag}
-              onClick={() => {
-                setSelectedTag(
-                  tag,
-                );
-                setPage(1);
-              }}
-              variant={
-                selectedTag ===
-                tag
-                  ? 'primary'
-                  : 'outline-primary'
-              }
-              size="sm"
-            >
-              {tag}
-            </Button>
+  key={tag}
+  onClick={() => {
+    setSelectedTag(tag);
+    setPage(1);
+  }}
+  className={`btn tag-btn ${
+    selectedTag === tag ? 'active' : ''
+  }`}
+  size="sm"
+>
+  {tag}
+</Button>
           ),
         )}
       </div>
