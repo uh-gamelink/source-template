@@ -19,33 +19,41 @@ type Report = {
   status: string;
   createdAt: string;
 };
-
 const AdminReportsPage = () => {
   const [reports, setReports] = useState<Report[]>([]);
   const [error, setError] = useState('');
-
-  const fetchReports = async () => {
-    try {
-      const res = await fetch('/api/reports');
-      const data = await res.json();
-
-      if (!res.ok) {
-        setError(data.error || 'Failed to load reports.');
-        return;
-      }
-
-      setReports(data);
-    } catch (err) {
-      console.error(err);
-      setError('Something went wrong.');
-    }
-  };
+  const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
-    fetchReports();
-  }, []);
+    let ignore = false;
 
-  // 🔥 FIXED: use "action" instead of "status"
+    async function loadReports() {
+      try {
+        const res = await fetch('/api/reports');
+        const data = await res.json();
+
+        if (!res.ok) {
+          if (!ignore) setError(data.error || 'Failed to load reports.');
+          return;
+        }
+
+        if (!ignore) {
+          setReports(data);
+          setError('');
+        }
+      } catch (err) {
+        console.error(err);
+        if (!ignore) setError('Something went wrong.');
+      }
+    }
+
+    loadReports();
+
+    return () => {
+      ignore = true;
+    };
+  }, [refreshKey]);
+
   const updateStatus = async (reportId: number, action: string) => {
     try {
       const res = await fetch(`/api/reports/${reportId}`, {
@@ -59,12 +67,12 @@ const AdminReportsPage = () => {
         return;
       }
 
-      // refresh dashboard after update
-      fetchReports();
+      setRefreshKey((prev) => prev + 1);
     } catch (err) {
       console.error(err);
     }
   };
+
 
   return (
     <Container className="my-5">

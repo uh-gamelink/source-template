@@ -25,10 +25,12 @@ const scrollingGames = [...games, ...games];
 
 const Home = () => {
   const { data: session, status } = useSession();
-  const communityHref = session ? '/findplayers' : '/auth/signin';
+  const communityHref = session ? '/community' : '/auth/signin';
   const communityLabel = session ? 'Find' : 'Join';
   const libraryHref = session ? '/gamelibrary' : '/auth/signin';
   const LibraryLabel = session ? 'View' : 'Sign up';
+  const findPlayersHref = session ? '/findplayers' : '/auth/signin';
+  const findPlayersLabel = session ? 'Search' : 'Sign in';
 
   return (
     <main>
@@ -93,10 +95,10 @@ const Home = () => {
               <Card className="h-100 shadow-sm custom-card-body p-3 text-center">
                 <p>Visit our community page to see UH&apos;s Discord game servers.</p>
                 <a
-                  href="/community"
+                  href={communityHref}
                   className="btn custom-home-btn border-0 w-50 mx-auto d-block"
                 >
-                  Connect
+                  {status === 'loading' ? 'Loading...' : communityLabel}
                 </a>
               </Card>
             </Col>
@@ -115,12 +117,12 @@ const Home = () => {
 
             <Col md={3}>
               <Card className="h-100 shadow-sm custom-card-body p-3 text-center">
-                <p>Join the UH gaming community and connect with other players.</p>
+                <p> Search for other players with other players.</p>
                 <a
-                  href={communityHref}
+                  href={findPlayersHref}
                   className="btn custom-home-btn border-0 w-50 mx-auto d-block"
                 >
-                  {status === 'loading' ? 'Loading...' : communityLabel}
+                  {status === 'loading' ? 'Loading...' : findPlayersLabel}
                 </a>
               </Card>
             </Col>

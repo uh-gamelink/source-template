@@ -1,16 +1,25 @@
--- CreateEnum
-CREATE TYPE "RequestStatus" AS ENUM ('PENDING', 'ACCEPTED', 'REJECTED');
+-- CreateEnum safely
+DO $$ BEGIN
+  CREATE TYPE "RequestStatus" AS ENUM ('PENDING', 'ACCEPTED', 'REJECTED');
+EXCEPTION
+  WHEN duplicate_object THEN null;
+END $$;
 
--- CreateEnum
-CREATE TYPE "ReportStatus" AS ENUM ('PENDING', 'INVESTIGATING', 'WARNING', 'FLAGGED', 'BANNED');
+-- CreateEnum safely
+DO $$ BEGIN
+  CREATE TYPE "ReportStatus" AS ENUM ('PENDING', 'RESOLVED', 'FLAGGED', 'BANNED');
+EXCEPTION
+  WHEN duplicate_object THEN null;
+END $$;
 
--- AlterTable
-ALTER TABLE "Request" ADD COLUMN     "receiverId" INTEGER,
-ADD COLUMN     "receiverUsername" TEXT,
-ADD COLUMN     "status" "RequestStatus" NOT NULL DEFAULT 'PENDING';
+-- AlterTable safely
+ALTER TABLE "Request"
+ADD COLUMN IF NOT EXISTS "receiverId" INTEGER,
+ADD COLUMN IF NOT EXISTS "receiverUsername" TEXT,
+ADD COLUMN IF NOT EXISTS "status" "RequestStatus" NOT NULL DEFAULT 'PENDING';
 
--- CreateTable
-CREATE TABLE "Report" (
+-- CreateTable safely
+CREATE TABLE IF NOT EXISTS "Report" (
     "id" SERIAL NOT NULL,
     "reportedUsername" TEXT NOT NULL,
     "issue" TEXT NOT NULL,
@@ -21,5 +30,11 @@ CREATE TABLE "Report" (
     CONSTRAINT "Report_pkey" PRIMARY KEY ("id")
 );
 
--- AddForeignKey
-ALTER TABLE "Request" ADD CONSTRAINT "Request_receiverId_fkey" FOREIGN KEY ("receiverId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+-- AddForeignKey safely
+DO $$ BEGIN
+  ALTER TABLE "Request" ADD CONSTRAINT "Request_receiverId_fkey"
+  FOREIGN KEY ("receiverId") REFERENCES "User"("id")
+  ON DELETE SET NULL ON UPDATE CASCADE;
+EXCEPTION
+  WHEN duplicate_object THEN null;
+END $$;
