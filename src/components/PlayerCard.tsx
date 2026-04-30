@@ -5,6 +5,7 @@ import {
   Card,
   Container,
   Image,
+  Row,
   Col,
   Button,
 } from 'react-bootstrap';
@@ -69,28 +70,32 @@ const PlayerCard = ({
             Game: {player.game}
           </div>
 
-          <div className="mb-3">
+          <div className="mb-2">
             Rank: {player.rank}
           </div>
 
-          <div className="d-flex justify-content-center mt-2">
-            <Button
-  className="custom-tag-btn d-flex align-items-center justify-content-center gap-2 w-auto"
-  size="sm"
-  onClick={() => onRequestClick(player)}
-  style={{
-    minWidth: '0',
-    width: '135px',
-    height: '34px',
-    padding: '0 10px',
-    borderRadius: '10px',
-    fontWeight: 600,
-  }}
->
-  <PlusLg size={14} />
-  Connect
-</Button>
-          </div>
+          <Row className="ps-0 py-2 align-items-center">
+            <Col xs="auto">
+              <Button
+                className="custom-tag-btn d-flex align-items-center justify-content-center custom-link-button"
+                size="sm"
+                onClick={() =>
+                  onRequestClick(player)
+                }
+                style={{
+                  width: '32px',
+                  height: '32px',
+                  padding: 0,
+                }}
+              >
+                <PlusLg size={16} />
+              </Button>
+            </Col>
+
+            <Col className="pl-0">
+              Connect
+            </Col>
+          </Row>
         </Card.Body>
       </Container>
     </Card>

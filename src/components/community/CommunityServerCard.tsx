@@ -99,7 +99,7 @@ export default function CommunityServerCard({
             <Button
               onClick={handleAdd}
               disabled={isPending || isAdded}
-              className={`action-btn ${isAdded ? 'added' : ''}`}
+              variant={isAdded ? 'success' : 'outline-primary'}
             >
               {isPending ? 'Adding...' : isAdded ? 'Added ✓' : 'Add to Profile'}
             </Button>

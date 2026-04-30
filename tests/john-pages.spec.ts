@@ -12,41 +12,55 @@ test('john can access the main UH GameLink pages', async ({ getUserPage }) => {
   ).toBeVisible({ timeout: 10000 });
 
   await expect(
-    johnPage.locator('.dropdown-toggle').last(),
+    johnPage.getByRole('link', { name: 'Game Library' }),
+  ).toBeVisible();
+
+  await expect(
+    johnPage.getByRole('link', { name: 'Community' }),
+  ).toBeVisible();
+
+  await expect(
+    johnPage.getByRole('link', { name: 'About Us' }),
+  ).toBeVisible();
+
+  await expect(
+    johnPage.getByRole('link', { name: 'Find Players' }),
+  ).toBeVisible();
+
+  await expect(
+    johnPage.getByRole('link', { name: 'Profile' }),
+  ).toBeVisible();
+
+  await expect(
+    johnPage.getByRole('button', { name: /john@foo\.com/i }),
   ).toBeVisible({ timeout: 10000 });
 
-  await johnPage.goto('http://localhost:3000/gamelibrary');
+  await johnPage.getByRole('link', { name: 'Game Library' }).click();
   await expect(johnPage).toHaveURL(/\/gamelibrary$/);
   await expect(
     johnPage.getByRole('heading', { name: 'Game Library' }),
   ).toBeVisible();
 
-  await johnPage.goto('http://localhost:3000/community');
+  await johnPage.getByRole('link', { name: 'Community' }).click();
   await expect(johnPage).toHaveURL(/\/community$/);
   await expect(
     johnPage.getByRole('heading', { name: 'Community' }),
   ).toBeVisible();
 
-  await johnPage.goto('http://localhost:3000/findplayers');
+  await johnPage.getByRole('link', { name: 'Find Players' }).click();
   await expect(johnPage).toHaveURL(/\/findplayers$/);
   await expect(
     johnPage.getByRole('heading', { name: 'Find Players' }),
   ).toBeVisible();
   await expect(johnPage.getByText(/Click the plus icon/i)).toBeVisible();
 
-  await johnPage.goto('http://localhost:3000/reviews');
-  await expect(johnPage).toHaveURL(/\/reviews$/);
-  await expect(
-    johnPage.getByRole('heading', { name: 'Reviews' }),
-  ).toBeVisible();
-
-  await johnPage.goto('http://localhost:3000/profile');
+  await johnPage.getByRole('link', { name: 'Profile' }).click();
   await expect(johnPage).toHaveURL(/\/profile$/);
   await expect(
     johnPage.getByRole('heading', { name: 'Your Profile' }),
   ).toBeVisible();
 
-  await johnPage.goto('http://localhost:3000/about');
+  await johnPage.getByRole('link', { name: 'About Us' }).click();
   await expect(johnPage).toHaveURL(/\/about$/);
   await expect(
     johnPage.getByRole('heading', { name: 'About' }),

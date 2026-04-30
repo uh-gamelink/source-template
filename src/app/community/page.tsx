@@ -1,4 +1,3 @@
-import { redirect } from 'next/navigation';
 import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import CommunityClient from '@/components/community/CommunityClient';
@@ -7,10 +6,6 @@ export const dynamic = 'force-dynamic';
 
 export default async function CommunityPage() {
   const session = await auth();
-
-  if (session?.user?.role === 'ADMIN') {
-    redirect('/admin/manage');
-  }
 
   const servers = await prisma.communityServer.findMany({
     orderBy: [

@@ -29,10 +29,8 @@ const NavBar: React.FC = () => {
   const [profileData, setProfileData] = useState<ProfileData | null>(null);
   const [isLoadingProfile, setIsLoadingProfile] = useState(false);
 
-  const isAdmin = session?.user?.role === 'ADMIN';
-
   useEffect(() => {
-    if (status !== 'authenticated' || isAdmin) {
+    if (status !== 'authenticated') {
       return;
     }
 
@@ -67,7 +65,7 @@ const NavBar: React.FC = () => {
     return () => {
       ignore = true;
     };
-  }, [status, isAdmin]);
+  }, [status]);
 
   if (status === 'loading') return null;
 
@@ -97,7 +95,7 @@ const NavBar: React.FC = () => {
     `/api/avatar?seed=${encodeURIComponent(avatarSeed)}&style=pixel-v3`;
 
   const isCheckingProfile =
-    status === 'authenticated' && isLoadingProfile && !isAdmin;
+    status === 'authenticated' && isLoadingProfile;
 
   const profileImage = isCheckingProfile
     ? ''
@@ -113,7 +111,7 @@ const NavBar: React.FC = () => {
       <Container>
         <Navbar.Brand
           as={Link}
-          href={isAdmin ? '/admin/manage' : '/'}
+          href="/"
           className="d-flex align-items-center gap-2 custom-brand"
         >
           <GiGamepad size={32} />
@@ -129,79 +127,55 @@ const NavBar: React.FC = () => {
 
         <Navbar.Collapse id="main-navbar-nav">
           <Nav className="me-auto gap-3">
-            {!isAdmin && (
-              <>
-                <Nav.Link
-                  as={Link}
-                  href="/gamelibrary"
-                  active={pathName === '/gamelibrary'}
-                  className={getNavLinkClass('/gamelibrary')}
-                >
-                  Game Library
-                </Nav.Link>
+            <Nav.Link
+              as={Link}
+              href="/gamelibrary"
+              active={pathName === '/gamelibrary'}
+              className={getNavLinkClass('/gamelibrary')}
+            >
+              Game Library
+            </Nav.Link>
 
-                <Nav.Link
-                  as={Link}
-                  href="/community"
-                  active={pathName === '/community'}
-                  id="community-nav"
-                  className={getNavLinkClass('/community')}
-                >
-                  Community
-                </Nav.Link>
+            <Nav.Link
+              as={Link}
+              href="/community"
+              active={pathName === '/community'}
+              id="community-nav"
+              className={getNavLinkClass('/community')}
+            >
+              Community
+            </Nav.Link>
 
-                <Nav.Link
-                  as={Link}
-                  href="/reviews"
-                  active={pathName === '/reviews'}
-                  className={getNavLinkClass('/reviews')}
-                >
-                  Reviews
-                </Nav.Link>
+            <Nav.Link
+              as={Link}
+              href="/about"
+              active={pathName === '/about'}
+              className={getNavLinkClass('/about')}
+            >
+              About Us
+            </Nav.Link>
 
-                <Nav.Link
-                  as={Link}
-                  href="/about"
-                  active={pathName === '/about'}
-                  className={getNavLinkClass('/about')}
-                >
-                  About Us
-                </Nav.Link>
-
-                {session && (
-                  <Nav.Link
-                    as={Link}
-                    href="/findplayers"
-                    active={pathName === '/findplayers'}
-                    id="findplayers-nav"
-                    className={getNavLinkClass('/findplayers')}
-                  >
-                    Find Players
-                  </Nav.Link>
-                )}
-
-                {session && (
-                  <Nav.Link
-                    as={Link}
-                    href="/profile"
-                    active={pathName === '/profile'}
-                    id="profile-nav"
-                    className={getNavLinkClass('/profile')}
-                  >
-                    Profile
-                  </Nav.Link>
-                )}
-              </>
-            )}
-
-            {isAdmin && (
+            {session && (
               <Nav.Link
                 as={Link}
-                href="/admin/manage"
-                active={pathName === '/admin/manage'}
-                className={getNavLinkClass('/admin/manage')}
+                href="/findplayers"
+                active={pathName === '/findplayers'}
+                id="findplayers-nav"
+                className={getNavLinkClass('/findplayers')}
               >
-                Manage
+                Find Players
+              </Nav.Link>
+            )}
+
+            {session && (
+              <Nav.Link
+                as={Link}
+                href="/profile"
+                active={pathName === '/profile'}
+                id="profile-nav"
+                className={getNavLinkClass('/profile')}
+              >
+                Profile
               </Nav.Link>
             )}
           </Nav>
@@ -218,7 +192,7 @@ const NavBar: React.FC = () => {
                       <Image
                         key={profileImage}
                         src={profileImage}
-                        alt={isAdmin ? 'Admin avatar' : 'Profile picture'}
+                        alt="Profile picture"
                         width={49}
                         height={49}
                         className="rounded-circle navbar-profile-img"
@@ -230,7 +204,9 @@ const NavBar: React.FC = () => {
                         unoptimized={
                           profileImage.startsWith('blob:') ||
                           profileImage.startsWith('/api/avatar') ||
-                          profileImage.includes('public.blob.vercel-storage.com')
+                          profileImage.includes(
+                            'public.blob.vercel-storage.com',
+                          )
                         }
                       />
                     ) : (
@@ -246,7 +222,7 @@ const NavBar: React.FC = () => {
                       />
                     )}
 
-                    <span>{isAdmin ? 'Admin' : currentUser}</span>
+                    <span>{currentUser}</span>
                   </span>
                 }
               >
