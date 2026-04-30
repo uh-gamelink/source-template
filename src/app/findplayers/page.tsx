@@ -24,6 +24,10 @@ const FindPlayersPage = async ({
     redirect('/auth/signin');
   }
 
+  if (session.user.role === 'ADMIN') {
+    redirect('/admin/manage');
+  }
+
   const params = (await searchParams) ?? {};
 
   const currentPage = Math.max(
@@ -34,14 +38,24 @@ const FindPlayersPage = async ({
   const search =
     params.search?.trim() || '';
 
-  const where = search
-    ? {
-        username: {
-          contains: search,
-          mode: 'insensitive' as const,
-        },
-      }
-    : {};
+  const where = {
+    ...(search
+      ? {
+          username: {
+            contains: search,
+            mode: 'insensitive' as const,
+          },
+        }
+      : {}),
+    NOT: [
+  {
+    username: {
+      equals: 'admin',
+      mode: 'insensitive' as const,
+    },
+  },
+],
+  };
 
   const totalPlayers =
     await prisma.player.count({
@@ -90,9 +104,7 @@ const FindPlayersPage = async ({
         players={players}
         currentPage={safePage}
         totalPages={totalPages}
-        totalPlayers={
-          totalPlayers
-        }
+        totalPlayers={totalPlayers}
         startItem={startItem}
         endItem={endItem}
         search={search}
