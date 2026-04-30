@@ -29,6 +29,7 @@ model User {
 
   userGames    UserGame[]
   savedServers UserCommunityServer[]
+  reviews      Review[]
 }
 
 model Profile {
@@ -134,4 +135,13 @@ enum PlayerModerationStatus {
   CLEAN
   FLAGGED
   BANNED
+}
+
+model Review {
+  id        Int      @id @default(autoincrement())
+  text      String
+  rating    Int
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
 }

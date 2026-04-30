@@ -5,10 +5,10 @@ import {
   Card,
   Container,
   Image,
-  Row,
   Col,
   Button,
   Badge,
+  Row,
 } from 'react-bootstrap';
 import { PlusLg } from 'react-bootstrap-icons';
 
@@ -75,7 +75,6 @@ const PlayerCard = ({ player, onRequestClick }: PlayerCardProps) => {
             </Col>
 
             <Col className="pl-0">Connect</Col>
-            
           </Row>
             {player.moderationStatus === 'FLAGGED' && (
             <div className="mb-2 pt-2">

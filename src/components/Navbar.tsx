@@ -29,8 +29,12 @@ const NavBar: React.FC = () => {
   const [profileData, setProfileData] = useState<ProfileData | null>(null);
   const [isLoadingProfile, setIsLoadingProfile] = useState(false);
 
+  const isAdmin = session?.user?.role === 'ADMIN';
+
   useEffect(() => {
-    if (status !== 'authenticated') return;
+    if (status !== 'authenticated' || isAdmin) {
+      return;
+    }
 
     let ignore = false;
 
@@ -56,7 +60,7 @@ const NavBar: React.FC = () => {
     return () => {
       ignore = true;
     };
-  }, [status]);
+  }, [status, isAdmin]);
 
   if (status === 'loading') return null;
 
@@ -86,7 +90,7 @@ const NavBar: React.FC = () => {
     `/api/avatar?seed=${encodeURIComponent(avatarSeed)}&style=pixel-v3`;
 
   const isCheckingProfile =
-    status === 'authenticated' && isLoadingProfile;
+    status === 'authenticated' && isLoadingProfile && !isAdmin;
 
   const profileImage = isCheckingProfile
     ? ''
@@ -97,15 +101,12 @@ const NavBar: React.FC = () => {
   const getNavLinkClass = (href: string) =>
     pathName === href ? 'custom-nav-link active-nav-link' : 'custom-nav-link';
 
-
-  const isAdmin = session?.user?.role === 'ADMIN';
-
   return (
     <Navbar expand="lg" className="custom-navbar">
       <Container>
         <Navbar.Brand
           as={Link}
-          href="/"
+          href={isAdmin ? '/admin/manage' : '/'}
           className="d-flex align-items-center gap-2 custom-brand"
         >
           <GiGamepad size={32} />
@@ -118,72 +119,54 @@ const NavBar: React.FC = () => {
         />
 
         <Navbar.Collapse id="main-navbar-nav">
-
           <Nav className="me-auto gap-3">
+            {!isAdmin && (
+              <>
+                <Nav.Link as={Link} href="/gamelibrary" className={getNavLinkClass('/gamelibrary')}>
+                  Game Library
+                </Nav.Link>
 
-            <Nav.Link
-              as={Link}
-              href="/gamelibrary"
-              className={getNavLinkClass('/gamelibrary')}
-            >
-              Game Library
-            </Nav.Link>
+                <Nav.Link as={Link} href="/community" id="community-nav" className={getNavLinkClass('/community')}>
+                  Community
+                </Nav.Link>
 
-            <Nav.Link
-              as={Link}
-              href="/community"
-              className={getNavLinkClass('/community')}
-            >
-              Community
-            </Nav.Link>
+                <Nav.Link as={Link} href="/reviews" className={getNavLinkClass('/reviews')}>
+                  Reviews
+                </Nav.Link>
 
-            <Nav.Link
-              as={Link}
-              href="/about"
-              className={getNavLinkClass('/about')}
-            >
-              About Us
-            </Nav.Link>
+                <Nav.Link as={Link} href="/about" className={getNavLinkClass('/about')}>
+                  About Us
+                </Nav.Link>
 
-         {session && (
-          <>
-            <Nav.Link
-              as={Link}
-              href="/findplayers"
-              className={getNavLinkClass('/findplayers')}
-            >
-              Find Players
-            </Nav.Link>
+                {session && (
+                  <>
+                    <Nav.Link as={Link} href="/findplayers" id="findplayers-nav" className={getNavLinkClass('/findplayers')}>
+                      Find Players
+                    </Nav.Link>
 
-            {session && !isAdmin && (
-              <Nav.Link
-                as={Link}
-                href="/report"
-                className={getNavLinkClass('/report')}
-              >
-                Report Player
-              </Nav.Link>
+                    <Nav.Link as={Link} href="/report" className={getNavLinkClass('/report')}>
+                      Report Player
+                    </Nav.Link>
+
+                    <Nav.Link as={Link} href="/profile" id="profile-nav" className={getNavLinkClass('/profile')}>
+                      Profile
+                    </Nav.Link>
+                  </>
+                )}
+              </>
             )}
-
-            <Nav.Link
-              as={Link}
-              href="/profile"
-              className={getNavLinkClass('/profile')}
-            >
-              Profile
-            </Nav.Link>
 
             {session && isAdmin && (
-              <Nav.Link
-                as={Link}
-                href="/admin/reports"
-                className={getNavLinkClass('/admin/reports')}
-              >
-                Reports Dashboard
-              </Nav.Link>
+              <>
+                <Nav.Link as={Link} href="/admin/manage" className={getNavLinkClass('/admin/manage')}>
+                  Manage
+                </Nav.Link>
+
+                <Nav.Link as={Link} href="/admin/reports" className={getNavLinkClass('/admin/reports')}>
+                  Reports Dashboard
+                </Nav.Link>
+              </>
             )}
-          </>
-        )}
           </Nav>
 
           <Nav>
@@ -197,7 +180,7 @@ const NavBar: React.FC = () => {
                     {profileImage ? (
                       <Image
                         src={profileImage}
-                        alt="Profile picture"
+                        alt={isAdmin ? 'Admin avatar' : 'Profile picture'}
                         width={49}
                         height={49}
                         className="rounded-circle navbar-profile-img"
@@ -206,7 +189,11 @@ const NavBar: React.FC = () => {
                           border: '2px solid rgba(127, 153, 255, 0.85)',
                           boxShadow: '0 0 8px rgba(127, 153, 255, 0.45)',
                         }}
-                        unoptimized
+                        unoptimized={
+                          profileImage.startsWith('blob:') ||
+                          profileImage.startsWith('/api/avatar') ||
+                          profileImage.includes('public.blob.vercel-storage.com')
+                        }
                       />
                     ) : (
                       <div
@@ -219,7 +206,7 @@ const NavBar: React.FC = () => {
                       />
                     )}
 
-                    <span>{currentUser}</span>
+                    <span>{isAdmin ? 'Admin' : currentUser}</span>
                   </span>
                 }
               >
