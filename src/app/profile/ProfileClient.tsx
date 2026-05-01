@@ -148,6 +148,7 @@ export default function ProfileClient() {
               }}
             >
               <Image
+                className="profile-avatar"
                 key={profileImage}
                 src={profileImage}
                 alt="Profile picture"
@@ -254,7 +255,7 @@ export default function ProfileClient() {
                     key={`${interest}-${index}`}
                     style={{
                       padding: '8px 0',
-                      borderBottom: '1px solid rgba(92, 148, 252, 0.45)',
+                      borderBottom: '1px solid rgba(99, 247, 82, 0.45)',
                     }}
                   >
                     {interest}

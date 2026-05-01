@@ -264,6 +264,7 @@ export default function GameLibraryClient({
         {allTags.map(
           (tag) => (
             <Button
+              className="tag-btn"
               key={tag}
               onClick={() => {
                 setSelectedTag(

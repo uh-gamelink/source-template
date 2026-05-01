@@ -185,7 +185,7 @@ const NavBar: React.FC = () => {
                         alt={isAdmin ? 'Admin avatar' : 'Profile picture'}
                         width={49}
                         height={49}
-                        className="rounded-circle navbar-profile-img"
+                        className="rounded-circle navbar-profile-img profile-avatar" 
                         style={{
                           objectFit: 'cover',
                           border: '2px solid rgba(127, 153, 255, 0.85)',

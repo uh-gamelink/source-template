@@ -96,7 +96,8 @@ export default function CommunityServerCard({
           </Button>
 
           {isLoggedIn && (
-            <Button
+            <Button 
+              className="add-profile-btn"
               onClick={handleAdd}
               disabled={isPending || isAdded}
               variant={isAdded ? 'success' : 'outline-primary'}

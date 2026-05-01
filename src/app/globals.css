@@ -152,6 +152,7 @@ h3 {
 .custom-navbar .nav-link.active {
   color: var(--color-primary-dim);
   font-weight: 500;
+  
 }
 
 .custom-navbar .dropdown-menu {
@@ -359,4 +360,109 @@ button.tag-btn:hover {
 .tag-btn:active {
   box-shadow: none !important;
   outline: none !important;
+}
+
+/* =============================
+   UH GameLink green cleanup
+   ============================= */
+
+/* Bootstrap outline-primary is usually the source of blue buttons/text */
+.btn-outline-primary,
+a.btn-outline-primary {
+  color: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
+  background-color: transparent !important;
+}
+
+.btn-outline-primary:hover,
+a.btn-outline-primary:hover,
+.btn-outline-primary:focus,
+a.btn-outline-primary:focus {
+  color: #06110a !important;
+  background-color: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
+  box-shadow: 0 0 0 0.2rem rgba(34, 197, 94, 0.25) !important;
+}
+
+/* Add to Profile button/link */
+.add-profile-btn,
+a.add-profile-btn {
+  color: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
+  background-color: transparent !important;
+}
+
+.add-profile-btn:hover,
+a.add-profile-btn:hover {
+  color: #06110a !important;
+  background-color: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
+}
+
+/* Profile picture border */
+.profile-avatar,
+.profile-pfp {
+  border: 3px solid var(--color-primary) !important;
+  box-shadow: 0 0 14px rgba(34, 197, 94, 0.45) !important;
+}
+
+/* Game Library filter buttons */
+.tag-btn,
+.tag-btn.btn,
+button.tag-btn {
+  color: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
+  background-color: transparent !important;
+}
+
+.tag-btn:hover,
+.tag-btn.btn:hover,
+button.tag-btn:hover {
+  color: #06110a !important;
+  background-color: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
+}
+
+.tag-btn.active,
+.tag-btn.btn.active,
+button.tag-btn.active {
+  color: #06110a !important;
+  background-color: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
+}
+
+/* Find Players search input green border */
+.find-player-search,
+.find-player-search.form-control {
+  border-color: var(--color-primary) !important;
+}
+
+.find-player-search:focus,
+.find-player-search.form-control:focus {
+  border-color: var(--color-primary) !important;
+  box-shadow: 0 0 0 0.2rem rgba(34, 197, 94, 0.25) !important;
+}
+
+/* Profile interest divider lines */
+.interest-item {
+  border-bottom: 1px solid var(--color-primary) !important;
+}
+
+.custom-navbar a.nav-link.active-nav-link,
+.custom-navbar .nav-link.active-nav-link,
+.custom-navbar .navbar-nav .nav-link.active-nav-link {
+  color: var(--color-primary) !important;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 6px;
+}
+
+.custom-navbar a.nav-link.custom-nav-link:not(.active-nav-link),
+.custom-navbar .nav-link.custom-nav-link:not(.active-nav-link) {
+  color: var(--color-text) !important;
+}
+
+.custom-navbar a.nav-link.custom-nav-link:hover,
+.custom-navbar .nav-link.custom-nav-link:hover {
+  color: var(--color-primary) !important;
 }

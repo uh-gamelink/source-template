@@ -185,7 +185,7 @@ const FindPlayersBrowser = ({
             <input
               type="text"
               placeholder="Search player..."
-              className="custom-card-body"
+              className="custom-card-body find-player-search"
               value={
                 searchTerm
               }
