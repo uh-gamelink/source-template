@@ -142,9 +142,9 @@ export default function ProfileClient() {
                 height: '80px',
                 borderRadius: '50%',
                 overflow: 'hidden',
-                border: '2px solid rgba(127, 153, 255, 0.85)',
-                boxShadow: '0 0 8px rgba(127, 153, 255, 0.35)',
-                backgroundColor: 'rgba(92, 148, 252, 0.12)',
+                border: '4px solid rgba(99, 247, 82, 0.45)',
+                boxShadow: '0 0 8px rgba(99, 247, 82, 0.35)',
+                backgroundColor: 'rgba(99, 247, 82, 0.12)',
               }}
             >
               <Image
@@ -158,6 +158,8 @@ export default function ProfileClient() {
                   width: '100%',
                   height: '100%',
                   objectFit: 'cover',
+                  display: 'block',
+                  transform: 'scale(1.15)',
                 }}
                 unoptimized={
                   profileImage.startsWith('blob:') ||
@@ -194,7 +196,7 @@ export default function ProfileClient() {
                     key={`${savedServer.server.name}-${index}`}
                     style={{
                       padding: '8px 0',
-                      borderBottom: '1px solid rgba(92, 148, 252, 0.45)',
+                      borderBottom: '1px solid rgba(99, 247, 82, 0.45)',
                     }}
                   >
                     {savedServer.server.name}
@@ -220,7 +222,7 @@ export default function ProfileClient() {
                         key={game.id}
                         style={{
                           padding: '8px 0',
-                          borderBottom: '1px solid rgba(92, 148, 252, 0.45)',
+                          borderBottom: '1px solid rgba(99, 247, 82, 0.45)',
                         }}
                       >
                         {game.title}
@@ -231,7 +233,7 @@ export default function ProfileClient() {
                       <div
                         style={{
                           padding: '6px 0',
-                          borderBottom: '1px solid rgba(92, 148, 252, 0.45)',
+                          borderBottom: '1px solid rgba(99, 247, 82, 0.45)',
                           fontStyle: 'italic',
                           fontSize: '0.9em',
                         }}

@@ -207,8 +207,8 @@ export default function CreateProfilePage() {
                         key={`${interest}-${idx}`}
                         className="px-3 py-2 rounded-pill d-inline-flex align-items-center"
                         style={{
-                          backgroundColor: 'rgb(65, 132, 255)',
-                          color: 'rgb(21, 9, 102)',
+                          backgroundColor: 'rgb(62, 216, 90)',
+                          color: 'rgb(4, 64, 19)',
                           fontWeight: 700,
                           cursor: 'pointer',
                         }}
@@ -254,6 +254,7 @@ export default function CreateProfilePage() {
                         width: 150,
                         height: 150,
                         backgroundColor: '#101c37',
+                        border: '2px solid rgba(99, 247, 82, 0.45)',
                         }}
                     />
                    )}
