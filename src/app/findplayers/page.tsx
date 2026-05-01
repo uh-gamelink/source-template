@@ -35,8 +35,7 @@ const FindPlayersPage = async ({
     1,
   );
 
-  const search =
-    params.search?.trim() || '';
+  const search = params.search?.trim() || '';
 
   const where = {
     ...(search
@@ -48,25 +47,22 @@ const FindPlayersPage = async ({
         }
       : {}),
     NOT: [
-  {
-    username: {
-      equals: 'admin',
-      mode: 'insensitive' as const,
-    },
-  },
-],
+      {
+        username: {
+          equals: 'admin',
+          mode: 'insensitive' as const,
+        },
+      },
+    ],
   };
 
-  const totalPlayers =
-    await prisma.player.count({
-      where,
-    });
+  const totalPlayers = await prisma.player.count({
+    where,
+  });
 
   const totalPages = Math.max(
     1,
-    Math.ceil(
-      totalPlayers / PAGE_SIZE,
-    ),
+    Math.ceil(totalPlayers / PAGE_SIZE),
   );
 
   const safePage = Math.min(
@@ -74,24 +70,30 @@ const FindPlayersPage = async ({
     totalPages,
   );
 
-  const players =
-    await prisma.player.findMany({
-      where,
-      skip:
-        (safePage - 1) *
-        PAGE_SIZE,
-      take: PAGE_SIZE,
-      orderBy: {
-        username: 'asc',
-      },
-    });
+  const players = await prisma.player.findMany({
+    where,
+    skip: (safePage - 1) * PAGE_SIZE,
+    take: PAGE_SIZE,
+    orderBy: {
+      username: 'asc',
+    },
+  });
+
+  const games = await prisma.game.findMany({
+    orderBy: {
+      title: 'asc',
+    },
+    select: {
+      title: true,
+    },
+  });
+
+  const gameTitles = games.map((game) => game.title);
 
   const startItem =
     totalPlayers === 0
       ? 0
-      : (safePage - 1) *
-          PAGE_SIZE +
-        1;
+      : (safePage - 1) * PAGE_SIZE + 1;
 
   const endItem = Math.min(
     safePage * PAGE_SIZE,
@@ -102,6 +104,7 @@ const FindPlayersPage = async ({
     <Container className="py-4">
       <FindPlayersBrowser
         players={players}
+        games={gameTitles}
         currentPage={safePage}
         totalPages={totalPages}
         totalPlayers={totalPlayers}

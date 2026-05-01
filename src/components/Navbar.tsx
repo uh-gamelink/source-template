@@ -191,11 +191,7 @@ const NavBar: React.FC = () => {
                           border: '2px solid rgba(127, 153, 255, 0.85)',
                           boxShadow: '0 0 8px rgba(127, 153, 255, 0.45)',
                         }}
-                        unoptimized={
-                          profileImage.startsWith('blob:') ||
-                          profileImage.startsWith('/api/avatar') ||
-                          profileImage.includes('public.blob.vercel-storage.com')
-                        }
+                        unoptimized
                       />
                     ) : (
                       <div

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
 import { auth } from '@/lib/auth';
+import { prisma } from '@/lib/prisma';
 
 export async function GET() {
   try {
@@ -14,21 +14,28 @@ export async function GET() {
     }
 
     const dbUser = await prisma.user.findUnique({
-      where: { email: session.user.email },
-      include: { profile: true },
+      where: {
+        email: session.user.email,
+      },
     });
 
     if (!dbUser) {
       return NextResponse.json(
-        { error: 'User not found' },
+        { error: 'User not found.' },
         { status: 404 },
       );
     }
 
-    // ONLY requests created by logged in user
     const requests = await prisma.request.findMany({
       where: {
-        userId: dbUser.id,
+        OR: [
+          {
+            userId: dbUser.id,
+          },
+          {
+            receiverId: dbUser.id,
+          },
+        ],
       },
       include: {
         user: {
@@ -47,18 +54,26 @@ export async function GET() {
       },
     });
 
-    return NextResponse.json(requests);
-  } catch (err) {
-    console.error('GET requests error:', err);
+    const requestRows = requests.map((request) => ({
+      ...request,
+      direction:
+        request.receiverId === dbUser.id
+          ? 'incoming'
+          : 'outgoing',
+    }));
+
+    return NextResponse.json(requestRows);
+  } catch (error) {
+    console.error('Error fetching requests:', error);
 
     return NextResponse.json(
-      { error: 'Failed to fetch requests' },
+      { error: 'Failed to fetch requests.' },
       { status: 500 },
     );
   }
 }
 
-export async function POST(req: Request) {
+export async function POST(request: Request) {
   try {
     const session = await auth();
 
@@ -69,88 +84,133 @@ export async function POST(req: Request) {
       );
     }
 
-    const dbUser = await prisma.user.findUnique({
-      where: { email: session.user.email },
-      include: { profile: true },
-    });
-
-    if (!dbUser) {
+    if (session.user.role === 'ADMIN') {
       return NextResponse.json(
-        { error: 'User not found' },
-        { status: 404 },
+        {
+          error:
+            'Admins cannot send player requests.',
+        },
+        { status: 403 },
       );
     }
 
-    const body = await req.json();
+    const body = await request.json();
 
-    const {
-      game,
-      rank,
-      notes,
-      receiverUsername,
-    } = body;
+    const receiverPlayerId = Number(
+      body.receiverPlayerId,
+    );
 
-    if (!game || !rank) {
+    const requesterUsername = String(
+      body.requesterUsername ?? '',
+    ).trim();
+
+    const requesterRank = String(
+      body.requesterRank ?? '',
+    ).trim();
+
+    const notes = String(
+      body.notes ?? '',
+    ).trim();
+
+    if (!receiverPlayerId) {
       return NextResponse.json(
-        { error: 'Game and rank required' },
+        { error: 'Missing receiver player listing.' },
         { status: 400 },
       );
     }
 
-    const cleanUsername =
-      receiverUsername?.trim();
-
-    let receiverId: number | null = null;
-
-    if (cleanUsername) {
-      const receiverUser =
-        await prisma.user.findFirst({
-          where: {
-            profile: {
-              username: {
-                equals: cleanUsername,
-                mode: 'insensitive',
-              },
-            },
-          },
-        });
-
-      if (receiverUser) {
-        receiverId = receiverUser.id;
-      }
+    if (!requesterUsername || !requesterRank) {
+      return NextResponse.json(
+        {
+          error:
+            'Your username and rank are required.',
+        },
+        { status: 400 },
+      );
     }
 
-    const newRequest =
-      await prisma.request.create({
-        data: {
-          game,
-          rank,
-          notes,
-          userId: dbUser.id,
-          receiverId,
-          receiverUsername:
-            cleanUsername || null,
-        },
-        include: {
-          user: {
-            include: {
-              profile: true,
-            },
-          },
-          receiver: {
-            include: {
-              profile: true,
-            },
-          },
+    const sender = await prisma.user.findUnique({
+      where: {
+        email: session.user.email,
+      },
+    });
+
+    if (!sender) {
+      return NextResponse.json(
+        { error: 'Sender not found.' },
+        { status: 404 },
+      );
+    }
+
+    const receiverPlayer =
+      await prisma.player.findUnique({
+        where: {
+          id: receiverPlayerId,
         },
       });
 
-    return NextResponse.json(newRequest);
-  } catch (err) {
-    console.error('POST request error:', err);
+    if (!receiverPlayer) {
+      return NextResponse.json(
+        { error: 'Player listing not found.' },
+        { status: 404 },
+      );
+    }
+
+    if (receiverPlayer.userId === sender.id) {
+      return NextResponse.json(
+        { error: 'You cannot request yourself.' },
+        { status: 400 },
+      );
+    }
+
+    const existingPendingRequest =
+      await prisma.request.findFirst({
+        where: {
+          userId: sender.id,
+          receiverId: receiverPlayer.userId,
+          game: receiverPlayer.game,
+          status: 'PENDING',
+        },
+      });
+
+    if (existingPendingRequest) {
+      return NextResponse.json(
+        {
+          error:
+            'You already have a pending request for this player and game.',
+        },
+        { status: 409 },
+      );
+    }
+
+    const createdRequest =
+      await prisma.request.create({
+        data: {
+          game: receiverPlayer.game,
+
+          // This keeps the receiver/listing owner's rank.
+          rank: receiverPlayer.rank,
+
+          // These are the sender's typed request details.
+          requesterUsername,
+          requesterRank,
+
+          notes,
+          userId: sender.id,
+          receiverId: receiverPlayer.userId,
+          receiverUsername: receiverPlayer.username,
+        },
+      });
 
     return NextResponse.json(
-      { error: 'Failed to create request' },
+      createdRequest,
+      { status: 201 },
+    );
+  } catch (error) {
+    console.error('Error creating request:', error);
+
+    return NextResponse.json(
+      { error: 'Failed to create request.' },
       { status: 500 },
     );
   }

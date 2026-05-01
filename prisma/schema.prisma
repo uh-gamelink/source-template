@@ -30,6 +30,8 @@ model User {
   userGames    UserGame[]
   savedServers UserCommunityServer[]
   reviews      Review[]
+
+  players Player[]
 }
 
 model Profile {
@@ -56,12 +58,20 @@ model Game {
 
 model Player {
   id       Int     @id @default(autoincrement())
-  username String  @unique
+  username String
   imageUrl String?
   game     String
   rank     String
 
+  userId Int
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   moderationStatus PlayerModerationStatus @default(CLEAN)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, game])
 }
 
 model CommunityServer {
@@ -82,6 +92,9 @@ model Request {
   rank      String
   notes     String?
   createdAt DateTime @default(now())
+
+  requesterUsername String?
+  requesterRank     String?
 
   status RequestStatus @default(PENDING)
 

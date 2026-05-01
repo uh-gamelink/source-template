@@ -161,11 +161,7 @@ export default function ProfileClient() {
                   display: 'block',
                   transform: 'scale(1.15)',
                 }}
-                unoptimized={
-                  profileImage.startsWith('blob:') ||
-                  profileImage.startsWith('/api/avatar') ||
-                  profileImage.includes('public.blob.vercel-storage.com')
-                }
+                unoptimized
               />
             </div>
 

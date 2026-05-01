@@ -1,6 +1,40 @@
 {
   "defaultAccounts": [
     { "email": "admin@foo.com", "password": "changeme", "role": "ADMIN" },
-    { "email": "john@foo.com", "password": "changeme" }
+    { "email": "john@foo.com", "password": "changeme" },
+
+    { "email": "zebass@foo.com", "password": "changeme" },
+    { "email": "mathedealer1@foo.com", "password": "changeme" },
+    { "email": "koldqt@foo.com", "password": "changeme" },
+    { "email": "tesidn@foo.com", "password": "changeme" },
+    { "email": "bazingahi50@foo.com", "password": "changeme" },
+    { "email": "bullzye@foo.com", "password": "changeme" },
+    { "email": "kai808@foo.com", "password": "changeme" },
+    { "email": "noahk@foo.com", "password": "changeme" },
+    { "email": "michealwouldgo@foo.com", "password": "changeme" },
+    { "email": "kaimana_x@foo.com", "password": "changeme" },
+    { "email": "braddahjay@foo.com", "password": "changeme" },
+    { "email": "keonifps@foo.com", "password": "changeme" },
+    { "email": "laniplays@foo.com", "password": "changeme" },
+    { "email": "tuaclutch@foo.com", "password": "changeme" },
+    { "email": "nathaniel_sv@foo.com", "password": "changeme" },
+    { "email": "rey808@foo.com", "password": "changeme" },
+    { "email": "aidenhnl@foo.com", "password": "changeme" },
+    { "email": "zachary999@foo.com", "password": "changeme" },
+    { "email": "jaygg@foo.com", "password": "changeme" },
+    { "email": "nalu@foo.com", "password": "changeme" },
+    { "email": "micahx@foo.com", "password": "changeme" },
+    { "email": "dre808@foo.com", "password": "changeme" },
+    { "email": "tasi@foo.com", "password": "changeme" },
+    { "email": "koafps@foo.com", "password": "changeme" },
+    { "email": "zane@foo.com", "password": "changeme" },
+    { "email": "leilani@foo.com", "password": "changeme" },
+    { "email": "tyler808@foo.com", "password": "changeme" },
+    { "email": "kekoa@foo.com", "password": "changeme" },
+    { "email": "brandonhi@foo.com", "password": "changeme" },
+    { "email": "chris96819@foo.com", "password": "changeme" },
+    { "email": "noelx@foo.com", "password": "changeme" },
+    { "email": "alikabasco01@foo.com", "password": "changeme" },
+    { "email": "sean808@foo.com", "password": "changeme" }
   ]
 }

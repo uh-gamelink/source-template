@@ -1,159 +1,245 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 import {
-  Container,
-  Row,
-  Col,
-  Card,
-  Button,
-  Table,
-} from 'react-bootstrap';
+  useEffect,
+  useState,
+} from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import Alert from 'react-bootstrap/Alert';
+import Button from 'react-bootstrap/Button';
+import Container from 'react-bootstrap/Container';
+import Spinner from 'react-bootstrap/Spinner';
+import Table from 'react-bootstrap/Table';
 
-type Request = {
-  id: number;
-  game: string;
-  rank: string;
-  notes?: string;
-  receiverUsername?: string | null;
-  status?: string;
+type RequestStatus =
+  | 'PENDING'
+  | 'ACCEPTED'
+  | 'REJECTED';
 
-  user: {
-    email: string;
-    profile?: {
-      username?: string | null;
-    } | null;
-  };
+type RequestDirection =
+  | 'incoming'
+  | 'outgoing';
 
-  receiver?: {
-    email: string;
-    profile?: {
-      username?: string | null;
-    } | null;
+type RequestUser = {
+  email: string;
+  profile?: {
+    username?: string | null;
   } | null;
 };
 
-export default function RequestsContent() {
+type PlayerRequest = {
+  id: number;
+  game: string;
+  rank: string;
+  requesterUsername?: string | null;
+  requesterRank?: string | null;
+  notes?: string | null;
+  receiverUsername?: string | null;
+  status?: RequestStatus;
+  direction: RequestDirection;
+
+  user: RequestUser;
+
+  receiver?: RequestUser | null;
+};
+
+const fetchRequests = async (): Promise<PlayerRequest[]> => {
+  const res = await fetch('/api/requests', {
+    cache: 'no-store',
+  });
+
+  const data = await res.json();
+
+  if (!res.ok) {
+    throw new Error(
+      data?.error || 'Failed to load requests.',
+    );
+  }
+
+  return data;
+};
+
+const getDisplayUsername = (
+  user?: RequestUser | null,
+) =>
+  user?.profile?.username ||
+  user?.email?.split('@')[0] ||
+  'Unknown User';
+
+const getRequesterUsername = (
+  request: PlayerRequest,
+) =>
+  request.requesterUsername ||
+  getDisplayUsername(request.user);
+
+const getRequesterRank = (
+  request: PlayerRequest,
+) => request.requesterRank || request.rank;
+
+const getReceiverUsername = (
+  request: PlayerRequest,
+) =>
+  request.receiverUsername ||
+  getDisplayUsername(request.receiver);
+
+const RequestsContent = () => {
+  const router = useRouter();
+
   const [requests, setRequests] =
-    useState<Request[]>([]);
+    useState<PlayerRequest[]>([]);
+
+  const [isLoading, setIsLoading] =
+    useState(true);
 
   const [error, setError] =
     useState('');
 
-  const router = useRouter();
+  const [actionError, setActionError] =
+    useState('');
 
-  const fetchRequests =
-    async () => {
-      try {
-        const res =
-          await fetch(
-            '/api/requests',
-          );
-
-        const data =
-          await res.json();
-
-        if (!res.ok) {
-          setError(
-            data?.error ||
-              'Failed to load requests.',
-          );
-
-          return;
-        }
-
-        setRequests(data);
-      } catch (err) {
-        console.error(err);
-
-        setError(
-          'Failed to load requests.',
-        );
-      }
-    };
+  const [pendingActionId, setPendingActionId] =
+    useState<number | null>(null);
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    fetchRequests();
-  }, []);
+    let ignore = false;
 
-  const handleDelete =
-    async (id: number) => {
-      setError('');
-
+    const loadInitialRequests = async () => {
       try {
-        const res =
-          await fetch(
-            `/api/requests/${id}`,
-            {
-              method:
-                'DELETE',
-            },
-          );
+        const data = await fetchRequests();
 
-        const data =
-          await res.json();
-
-        if (!res.ok) {
-          setError(
-            data?.error ||
-              'Failed to delete request.',
-          );
-
+        if (ignore) {
           return;
         }
 
-        fetchRequests();
-      } catch (err) {
-        console.error(err);
+        setError('');
+        setRequests(data);
+      } catch (fetchError) {
+        if (ignore) {
+          return;
+        }
+
+        console.error(fetchError);
 
         setError(
-          'Failed to delete request.',
+          fetchError instanceof Error
+            ? fetchError.message
+            : 'Something went wrong loading requests.',
         );
+      } finally {
+        if (!ignore) {
+          setIsLoading(false);
+        }
       }
     };
 
-  const updateStatus =
-    async (
-      id: number,
-      status:
-        | 'ACCEPTED'
-        | 'REJECTED',
-    ) => {
-      await fetch(
+    void loadInitialRequests();
+
+    return () => {
+      ignore = true;
+    };
+  }, []);
+
+  const reloadRequests = async () => {
+    const data = await fetchRequests();
+
+    setError('');
+    setRequests(data);
+  };
+
+  const updateStatus = async (
+    id: number,
+    status: RequestStatus,
+  ) => {
+    try {
+      setActionError('');
+      setPendingActionId(id);
+
+      const res = await fetch(
         `/api/requests/${id}`,
         {
-          method:
-            'PATCH',
+          method: 'PATCH',
           headers: {
             'Content-Type':
               'application/json',
           },
-          body: JSON.stringify(
-            {
-              status,
-            },
-          ),
+          body: JSON.stringify({ status }),
         },
       );
 
-      fetchRequests();
+      const data = await res.json();
+
+      if (!res.ok) {
+        setActionError(
+          data?.error ||
+            'Failed to update request.',
+        );
+        return;
+      }
+
+      await reloadRequests();
       router.refresh();
-    };
+    } catch (updateError) {
+      console.error(updateError);
 
-  const incomingRequests =
-    requests.filter(
-      (req) =>
-        req.receiver,
-    );
+      setActionError(
+        updateError instanceof Error
+          ? updateError.message
+          : 'Something went wrong updating the request.',
+      );
+    } finally {
+      setPendingActionId(null);
+    }
+  };
 
-  const outgoingRequests =
-    requests.filter(
-      (req) =>
-        req.user,
-    );
+  const deleteRequest = async (
+    id: number,
+  ) => {
+    try {
+      setActionError('');
+      setPendingActionId(id);
+
+      const res = await fetch(
+        `/api/requests/${id}`,
+        {
+          method: 'DELETE',
+        },
+      );
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setActionError(
+          data?.error ||
+            'Failed to delete request.',
+        );
+        return;
+      }
+
+      await reloadRequests();
+      router.refresh();
+    } catch (deleteError) {
+      console.error(deleteError);
+
+      setActionError(
+        deleteError instanceof Error
+          ? deleteError.message
+          : 'Something went wrong deleting the request.',
+      );
+    } finally {
+      setPendingActionId(null);
+    }
+  };
+
+  const incomingRequests = requests.filter(
+    (request) =>
+      request.direction === 'incoming',
+  );
+
+  const outgoingRequests = requests.filter(
+    (request) =>
+      request.direction === 'outgoing',
+  );
 
   return (
     <Container className="py-4">
@@ -178,246 +264,221 @@ export default function RequestsContent() {
       </div>
 
       {error && (
-        <div className="alert alert-danger mb-4">
+        <Alert variant="danger">
           {error}
-        </div>
+        </Alert>
       )}
 
-      <Row className="g-4">
-        {/* Incoming */}
-        <Col lg={6}>
-          <Card className="h-100 custom-card-body p-4">
-            <h3 className="mb-4">
-              Incoming Requests
-            </h3>
+      {actionError && (
+        <Alert variant="danger">
+          {actionError}
+        </Alert>
+      )}
 
-            <Table
-              striped
-              bordered
-              hover
-              responsive
-              className="status-table mb-0"
-            >
-              <thead>
-                <tr>
-                  <th>
-                    Username
-                  </th>
-                  <th>
-                    Game
-                  </th>
-                  <th>
-                    Rank
-                  </th>
-                  <th>
-                    Status
-                  </th>
-                </tr>
-              </thead>
+      {isLoading ? (
+        <div className="text-center py-5">
+          <Spinner animation="border" />
 
-              <tbody>
-                {incomingRequests.length >
-                0 ? (
-                  incomingRequests.map(
-                    (
-                      req,
-                    ) => {
-                      const sender =
-                        req.user
-                          .profile
-                          ?.username ||
-                        req.user.email.split(
-                          '@',
-                        )[0];
+          <p className="mt-3 mb-0">
+            Loading requests...
+          </p>
+        </div>
+      ) : (
+        <div className="row g-4">
+          <div className="col-12 col-xl-6">
+            <div className="custom-card-body p-4 h-100">
+              <h2 className="mb-4">
+                Incoming Requests
+              </h2>
 
-                      return (
-                        <tr
-                          key={
-                            req.id
+              <div className="status-table-wrapper">
+                <Table
+                  responsive
+                  className="status-table mb-0"
+                >
+                  <thead>
+                    <tr>
+                      <th>
+                        Requester Username
+                      </th>
+                      <th>Game</th>
+                      <th>
+                        Requester Rank
+                      </th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    {incomingRequests.length > 0 ? (
+                      incomingRequests.map(
+                        (request) => (
+                          <tr key={request.id}>
+                            <td>
+                              {getRequesterUsername(
+                                request,
+                              )}
+                            </td>
+
+                            <td>
+                              {request.game}
+                            </td>
+
+                            <td>
+                              {getRequesterRank(
+                                request,
+                              )}
+                            </td>
+
+                            <td>
+                              {request.status ===
+                              'PENDING' ? (
+                                <div className="d-flex flex-column gap-2">
+                                  <Button
+                                    size="sm"
+                                    className="request-accept-btn"
+                                    disabled={
+                                      pendingActionId ===
+                                      request.id
+                                    }
+                                    onClick={() =>
+                                      updateStatus(
+                                        request.id,
+                                        'ACCEPTED',
+                                      )
+                                    }
+                                  >
+                                    Accept
+                                  </Button>
+
+                                  <Button
+                                    size="sm"
+                                    className="request-reject-btn"
+                                    disabled={
+                                      pendingActionId ===
+                                      request.id
+                                    }
+                                    onClick={() =>
+                                      updateStatus(
+                                        request.id,
+                                        'REJECTED',
+                                      )
+                                    }
+                                  >
+                                    Reject
+                                  </Button>
+                                </div>
+                              ) : (
+                                <span className="request-status-text">
+                                  {request.status}
+                                </span>
+                              )}
+                            </td>
+                          </tr>
+                        ),
+                      )
+                    ) : (
+                      <tr>
+                        <td
+                          colSpan={4}
+                          className="text-center"
+                        >
+                          No incoming requests
+                          right now.
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </Table>
+              </div>
+            </div>
+          </div>
+
+          <div className="col-12 col-xl-6">
+            <div className="custom-card-body p-4 h-100">
+              <h2 className="mb-4">
+                Outgoing Requests
+              </h2>
+
+              {outgoingRequests.length > 0 ? (
+                <div className="d-flex flex-column gap-3">
+                  {outgoingRequests.map(
+                    (request) => (
+                      <div
+                        key={request.id}
+                        className="custom-card-body p-3"
+                      >
+                        <h4 className="mb-3">
+                          {getRequesterUsername(
+                            request,
+                          )}
+                        </h4>
+
+                        <p className="mb-2">
+                          <strong>To:</strong>{' '}
+                          {getReceiverUsername(
+                            request,
+                          )}
+                        </p>
+
+                        <p className="mb-2">
+                          <strong>Game:</strong>{' '}
+                          {request.game}
+                        </p>
+
+                        <p className="mb-2">
+                          <strong>
+                            Your Rank:
+                          </strong>{' '}
+                          {getRequesterRank(
+                            request,
+                          )}
+                        </p>
+
+                        <p className="mb-2">
+                          <strong>
+                            Their Listing Rank:
+                          </strong>{' '}
+                          {request.rank}
+                        </p>
+
+                        <p className="mb-3">
+                          <strong>Status:</strong>{' '}
+                          {request.status ||
+                            'PENDING'}
+                        </p>
+
+                        <Button
+                          size="sm"
+                          className="request-reject-btn w-100"
+                          disabled={
+                            pendingActionId ===
+                            request.id
+                          }
+                          onClick={() =>
+                            deleteRequest(
+                              request.id,
+                            )
                           }
                         >
-                          <td>
-                            {
-                              sender
-                            }
-                          </td>
-
-                          <td>
-                            {
-                              req.game
-                            }
-                          </td>
-
-                          <td>
-                            {
-                              req.rank
-                            }
-                          </td>
-
-                          <td>
-                            {req.status ===
-                            'PENDING' ? (
-                              <div className="d-flex flex-column gap-2">
-                                <Button
-                                  size="sm"
-                                  variant="success"
-                                  onClick={() =>
-                                    updateStatus(
-                                      req.id,
-                                      'ACCEPTED',
-                                    )
-                                  }
-                                >
-                                  Accept
-                                </Button>
-
-                                <Button
-                                  size="sm"
-                                  variant="danger"
-                                  onClick={() =>
-                                    updateStatus(
-                                      req.id,
-                                      'REJECTED',
-                                    )
-                                  }
-                                >
-                                  Reject
-                                </Button>
-                              </div>
-                            ) : (
-                              req.status
-                            )}
-                          </td>
-                        </tr>
-                      );
-                    },
-                  )
-                ) : (
-                  <tr>
-                    <td
-                      colSpan={
-                        4
-                      }
-                      className="text-center"
-                    >
-                      No incoming
-                      requests right
-                      now.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </Table>
-          </Card>
-        </Col>
-
-        {/* Outgoing */}
-        <Col lg={6}>
-          <Card className="h-100 custom-card-body p-4">
-            <h3 className="mb-4">
-              Outgoing Requests
-            </h3>
-
-            <Row className="g-3">
-              {outgoingRequests.length >
-              0 ? (
-                outgoingRequests.map(
-                  (
-                    req,
-                  ) => {
-                    const sender =
-                      req.user
-                        .profile
-                        ?.username ||
-                      req.user.email.split(
-                        '@',
-                      )[0];
-
-                    const target =
-                      req
-                        .receiver
-                        ?.profile
-                        ?.username ||
-                      req.receiverUsername ||
-                      'Open Request';
-
-                    return (
-                      <Col
-                        md={
-                          12
-                        }
-                        key={
-                          req.id
-                        }
-                      >
-                        <Card className="p-3 custom-card-body request-card">
-                          <Card.Title>
-                            {
-                              sender
-                            }
-                          </Card.Title>
-
-                          <Card.Text>
-                            <strong>
-                              To:
-                            </strong>{' '}
-                            {
-                              target
-                            }
-                          </Card.Text>
-
-                          <Card.Text>
-                            <strong>
-                              Game:
-                            </strong>{' '}
-                            {
-                              req.game
-                            }
-                          </Card.Text>
-
-                          <Card.Text>
-                            <strong>
-                              Rank:
-                            </strong>{' '}
-                            {
-                              req.rank
-                            }
-                          </Card.Text>
-
-                          <Card.Text>
-                            <strong>
-                              Status:
-                            </strong>{' '}
-                            {req.status ||
-                              'PENDING'}
-                          </Card.Text>
-
-                          <Button
-                            variant="danger"
-                            size="sm"
-                            onClick={() =>
-                              handleDelete(
-                                req.id,
-                              )
-                            }
-                          >
-                            Delete
-                          </Button>
-                        </Card>
-                      </Col>
-                    );
-                  },
-                )
+                          Delete
+                        </Button>
+                      </div>
+                    ),
+                  )}
+                </div>
               ) : (
-                <p className="mb-0">
-                  You haven’t sent
-                  any requests yet.
-                </p>
+                <div className="text-center py-4">
+                  No outgoing requests right
+                  now.
+                </div>
               )}
-            </Row>
-          </Card>
-        </Col>
-      </Row>
+            </div>
+          </div>
+        </div>
+      )}
     </Container>
   );
-}
+};
+
+export default RequestsContent;

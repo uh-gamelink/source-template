@@ -1,14 +1,15 @@
-'use client';
-
-import { Suspense } from 'react';
+import { redirect } from 'next/navigation';
+import { auth } from '@/lib/auth';
 import RequestsContent from './RequestsContent';
 
-export const dynamic = 'force-dynamic';
+const RequestsPage = async () => {
+  const session = await auth();
 
-export default function RequestsPage() {
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <RequestsContent />
-    </Suspense>
-  );
-}
+  if (!session?.user?.email) {
+    redirect('/auth/signin');
+  }
+
+  return <RequestsContent />;
+};
+
+export default RequestsPage;

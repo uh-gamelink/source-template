@@ -466,3 +466,100 @@ button.tag-btn.active {
 .custom-navbar .nav-link.custom-nav-link:hover {
   color: var(--color-primary) !important;
 }
+
+.form-select {
+  background-color: #0b120d !important;
+  border: 1px solid var(--color-border) !important;
+  color: var(--color-text) !important;
+}
+
+.form-select:focus {
+  border-color: var(--color-primary) !important;
+  box-shadow: 0 0 6px rgba(34, 197, 94, 0.4) !important;
+}
+
+.form-select option {
+  background-color: #0b120d;
+  color: var(--color-text);
+}
+
+/* =============================
+   Request status table
+   ============================= */
+
+.status-table-wrapper {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 0 12px rgba(34, 197, 94, 0.08);
+}
+
+.status-table {
+  margin-bottom: 0 !important;
+  color: var(--color-text) !important;
+  background-color: transparent !important;
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+}
+
+.status-table > :not(caption) > * > * {
+  border-color: var(--color-border) !important;
+}
+
+.status-table thead th {
+  border-top: none !important;
+  background-color: rgba(34, 197, 94, 0.12) !important;
+  color: var(--color-primary) !important;
+  font-weight: 700;
+  padding: 1rem;
+  text-align: center !important;
+  vertical-align: middle !important;
+  padding: 1.2rem 1rem !important;
+}
+
+.status-table tbody td {
+  background-color: #0b120d !important;
+  color: var(--color-text) !important;
+  padding: 1rem;
+  text-align: center !important;
+  vertical-align: middle !important;
+}
+
+.status-table tbody tr:first-child td {
+  border-top: none !important;
+}
+
+.status-table tbody tr:hover td {
+  background-color: #101712 !important;
+}
+
+.request-status-text {
+  color: var(--color-text) !important;
+  font-weight: 600;
+}
+
+.request-accept-btn {
+  background-color: rgba(34, 197, 94, 0.85) !important;
+  border: 1px solid var(--color-primary) !important;
+  color: #ffffff !important;
+  min-width: 90px;
+}
+
+.request-accept-btn:hover {
+  background-color: rgba(34, 197, 94, 1) !important;
+  border-color: var(--color-primary) !important;
+}
+
+.request-reject-btn {
+  background-color: #c94747 !important;
+  border: 1px solid #e26464 !important;
+  color: #ffffff !important;
+  min-width: 90px;
+}
+
+.request-reject-btn:hover {
+  background-color: #d95555 !important;
+  border-color: #ef7777 !important;
+}
+
