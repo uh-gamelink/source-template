@@ -130,6 +130,12 @@ const NavBar: React.FC = () => {
                   Community
                 </Nav.Link>
 
+                {session && (
+                  <Nav.Link as={Link} href="/findplayers" id="findplayers-nav" className={getNavLinkClass('/findplayers')}>
+                    Find Players
+                  </Nav.Link>
+                )}
+
                 <Nav.Link as={Link} href="/reviews" className={getNavLinkClass('/reviews')}>
                   Reviews
                 </Nav.Link>
@@ -140,10 +146,6 @@ const NavBar: React.FC = () => {
 
                 {session && (
                   <>
-                    <Nav.Link as={Link} href="/findplayers" id="findplayers-nav" className={getNavLinkClass('/findplayers')}>
-                      Find Players
-                    </Nav.Link>
-
                     <Nav.Link as={Link} href="/report" className={getNavLinkClass('/report')}>
                       Report Player
                     </Nav.Link>
