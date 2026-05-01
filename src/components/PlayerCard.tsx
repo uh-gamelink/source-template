@@ -49,7 +49,7 @@ const PlayerCard = ({ player, onRequestClick }: PlayerCardProps) => {
             style={{
               objectFit: 'cover',
               borderRadius: '12px',
-              border: '4px solid #b0e0e682',
+              border: '4px solid #25f036b4',
             }}
             className="mb-3"
           />

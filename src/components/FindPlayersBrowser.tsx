@@ -21,6 +21,29 @@ type Player = {
   rank: string;
 };
 
+const isRealProfileImage = (imageUrl?: string | null) =>
+  Boolean(
+    imageUrl &&
+      imageUrl !== 'null' &&
+      imageUrl !== 'undefined' &&
+      !imageUrl.startsWith('blob:') &&
+      imageUrl !== '/default-player.svg' &&
+      imageUrl !== '/default-profile.png',
+  );
+
+const getGeneratedAvatar = (player: Player): string =>
+  `/api/avatar?seed=${encodeURIComponent(
+    `${player.username}-${player.id}`,
+  )}&style=pixel-v3`;
+
+const getPlayerImage = (player: Player): string => {
+  if (isRealProfileImage(player.imageUrl)) {
+    return player.imageUrl as string;
+  }
+
+  return getGeneratedAvatar(player);
+};
+
 type FindPlayersBrowserProps = {
   players: Player[];
   games: string[];
@@ -479,6 +502,11 @@ const FindPlayersBrowser = ({
     (_, i) => i + 1,
   );
 
+  const displayPlayers = players.map((player) => ({
+    ...player,
+    imageUrl: getPlayerImage(player),
+  }));
+
   return (
     <>
       <div className="d-flex justify-content-between align-items-start mb-3 flex-wrap gap-3">
@@ -574,7 +602,7 @@ const FindPlayersBrowser = ({
             justifyItems: 'center',
           }}
         >
-          {players.map((player) => (
+          {displayPlayers.map((player) => (
             <PlayerCard
               key={player.id}
               player={player}
@@ -642,10 +670,7 @@ const FindPlayersBrowser = ({
             <>
               <div className="text-center mb-3">
                 <Image
-                  src={
-                    selectedPlayer.imageUrl ||
-                    '/default-player.svg'
-                  }
+                  src={getPlayerImage(selectedPlayer)}
                   width={120}
                   height={120}
                   roundedCircle
