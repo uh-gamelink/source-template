@@ -30,9 +30,13 @@ export async function PATCH(
     }
 
     if (action === 'FLAGGED') {
-      await prisma.player.update({
-        where: { username: report.reportedUsername },
-        data: { moderationStatus: 'FLAGGED' },
+      await prisma.player.updateMany({
+        where: {
+          username: report.reportedUsername,
+        },
+        data: {
+          moderationStatus: 'FLAGGED',
+        },
       });
 
       await prisma.report.update({
@@ -42,9 +46,13 @@ export async function PATCH(
     }
 
     if (action === 'BANNED') {
-      await prisma.player.update({
-        where: { username: report.reportedUsername },
-        data: { moderationStatus: 'BANNED' },
+      await prisma.player.updateMany({
+        where: {
+          username: report.reportedUsername,
+        },
+        data: {
+          moderationStatus: 'BANNED',
+        },
       });
 
       await prisma.report.update({
