@@ -9,6 +9,7 @@ import {
   Badge,
   Alert,
   Button,
+  Modal,
 } from 'react-bootstrap';
 
 type Report = {
@@ -19,10 +20,13 @@ type Report = {
   status: string;
   createdAt: string;
 };
+
 const AdminReportsPage = () => {
   const [reports, setReports] = useState<Report[]>([]);
   const [error, setError] = useState('');
   const [refreshKey, setRefreshKey] = useState(0);
+  const [showBanModal, setShowBanModal] = useState(false);
+  const [selectedReport, setSelectedReport] = useState<Report | null>(null);
 
   useEffect(() => {
     let ignore = false;
@@ -73,6 +77,22 @@ const AdminReportsPage = () => {
     }
   };
 
+  const openBanModal = (report: Report) => {
+    setSelectedReport(report);
+    setShowBanModal(true);
+  };
+
+  const closeBanModal = () => {
+    setSelectedReport(null);
+    setShowBanModal(false);
+  };
+
+  const confirmBan = async () => {
+    if (!selectedReport) return;
+
+    await updateStatus(selectedReport.id, 'BANNED');
+    closeBanModal();
+  };
 
   return (
     <Container className="my-5">
@@ -129,7 +149,7 @@ const AdminReportsPage = () => {
                     <Button
                       size="sm"
                       variant="danger"
-                      onClick={() => updateStatus(report.id, 'BANNED')}
+                      onClick={() => openBanModal(report)}
                     >
                       Ban Player
                     </Button>
@@ -140,6 +160,34 @@ const AdminReportsPage = () => {
           ))}
         </Row>
       )}
+
+      <Modal
+        show={showBanModal}
+        onHide={closeBanModal}
+        centered
+        contentClassName="custom-card-body"
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Confirm Ban</Modal.Title>
+        </Modal.Header>
+
+        <Modal.Body>
+          <p className="mb-0">
+            Are you sure you want to ban{' '}
+            <strong>{selectedReport?.reportedUsername}</strong>?
+          </p>
+        </Modal.Body>
+
+        <Modal.Footer>
+          <Button variant="secondary" onClick={closeBanModal}>
+            Cancel
+          </Button>
+
+          <Button variant="danger" onClick={confirmBan}>
+            Yes, Ban Player
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </Container>
   );
 };
