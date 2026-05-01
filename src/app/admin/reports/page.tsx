@@ -165,7 +165,7 @@ const AdminReportsPage = () => {
         show={showBanModal}
         onHide={closeBanModal}
         centered
-        contentClassName="custom-card-body"
+        contentClassName="custom-modal-card"
       >
         <Modal.Header closeButton>
           <Modal.Title>Confirm Ban</Modal.Title>

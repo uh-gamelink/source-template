@@ -229,6 +229,10 @@ button:hover,
   background: var(--color-surface-2);
 }
 
+.custom-modal-card .modal-header {
+  border-bottom: 1px solid var(--color-border) !important;
+}
+
 /* =============================
    Forms
    ============================= */
@@ -563,3 +567,30 @@ button.tag-btn.active {
   border-color: #ef7777 !important;
 }
 
+.custom-modal-card.modal-content {
+  background: var(--color-surface) !important;
+  border: 1px solid var(--color-border) !important;
+  border-radius: 16px !important;
+  color: var(--color-text) !important;
+  box-shadow: 0 0 18px rgba(34, 197, 94, 0.25) !important;
+  overflow: hidden;
+}
+
+.custom-modal-card .modal-header {
+  background: var(--color-surface-2) !important;
+  border-bottom: 1px solid var(--color-border) !important;
+}
+
+.custom-modal-card .modal-body {
+  background: var(--color-surface) !important;
+  border: 0 !important;
+}
+
+.custom-modal-card .modal-footer {
+  background: var(--color-surface-2) !important;
+  border-top: 1px solid var(--color-border) !important;
+}
+
+.custom-modal-card .btn-close {
+  filter: invert(1);
+}
