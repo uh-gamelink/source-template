@@ -1,8 +1,13 @@
 'use client';
 
 import { useState } from 'react';
+import { useSession } from 'next-auth/react';
+import { Card, Container, Form, Button } from 'react-bootstrap';
 
 export default function ReviewForm() {
+  const { data: session } = useSession(); // ✅ get user
+  const username = session?.user?.name || 'Anonymous';
+
   const [text, setText] = useState('');
   const [rating, setRating] = useState(5);
   const [loading, setLoading] = useState(false);
@@ -15,61 +20,74 @@ export default function ReviewForm() {
       const res = await fetch('/api/reviews', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text, rating }),
+        body: JSON.stringify({
+          text,
+          rating,
+          username, // ✅ always sent, user can't change it
+        }),
       });
 
       if (!res.ok) {
-        let errorMessage = 'Failed to submit review';
-
-        try {
-          const data = await res.json();
-          errorMessage = data.error || errorMessage;
-        } catch {
-          errorMessage = `Failed to submit review. Status: ${res.status}`;
-        }
-
-        alert(errorMessage);
+        const data = await res.json();
+        alert(data.error || 'Failed to submit review');
         return;
       }
 
       window.location.href = '/reviews';
     } catch (error) {
-      console.error('Error submitting review:', error);
-      alert('Something went wrong while submitting the review.');
+      console.error(error);
+      alert('Something went wrong.');
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <form onSubmit={handleSubmit} className="custom-card-body p-3">
-      <textarea
-        className="form-control mb-3"
-        placeholder="Write your review..."
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        required
-      />
-
-      <select
-        className="form-control mb-3"
-        value={rating}
-        onChange={(e) => setRating(Number(e.target.value))}
+    <Container className="d-flex justify-content-center mt-5">
+      <Card
+        className="custom-card-body shadow-lg"
+        style={{ maxWidth: '700px', width: '100%' }}
       >
-        {[5, 4, 3, 2, 1].map((r) => (
-          <option key={r} value={r}>
-            {r} Stars
-          </option>
-        ))}
-      </select>
+        <Card.Body className="p-4">
+          <h3 className="mb-3 text-center">Write a Review</h3>
 
-      <button
-        type="submit"
-        className="btn btn-primary"
-        disabled={loading}
-      >
-        {loading ? 'Submitting...' : 'Submit Review'}
-      </button>
-    </form>
+          {/* ✅ Display username (read-only) */}
+          <p className="text-center mb-4">
+            Posting as <strong>{username}</strong>
+          </p>
+
+          <Form onSubmit={handleSubmit}>
+            <Form.Group className="mb-3">
+              <Form.Control
+                as="textarea"
+                rows={5}
+                placeholder="Write your review..."
+                value={text}
+                onChange={(e) => setText(e.target.value)}
+                required
+              />
+            </Form.Group>
+
+            <Form.Select
+              className="mb-3"
+              value={rating}
+              onChange={(e) => setRating(Number(e.target.value))}
+            >
+              {[5, 4, 3, 2, 1].map((r) => (
+                <option key={r} value={r}>
+                  {r} Stars
+                </option>
+              ))}
+            </Form.Select>
+
+            <div className="d-grid">
+              <Button type="submit" disabled={loading}>
+                {loading ? 'Submitting...' : 'Submit Review'}
+              </Button>
+            </div>
+          </Form>
+        </Card.Body>
+      </Card>
+    </Container>
   );
 }

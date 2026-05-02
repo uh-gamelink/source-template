@@ -18,9 +18,10 @@ export default async function ReviewsPage() {
   });
 
   return (
-    <div className="container py-5">
+    <div className="container py-5" style={{ maxWidth: '700px' }}>
+      {/* Header */}
       <div className="d-flex justify-content-between align-items-center mb-4">
-        <h1>Reviews</h1>
+        <h1 className="mb-0">Reviews</h1>
 
         <Link
           href={
@@ -35,6 +36,7 @@ export default async function ReviewsPage() {
         </Link>
       </div>
 
+      {/* Reviews */}
       <div className="d-flex flex-column gap-3">
         {reviews.map((review) => {
           const isOwner =
@@ -42,23 +44,39 @@ export default async function ReviewsPage() {
             Number(session.user.id) === review.userId;
 
           return (
-            <div key={review.id} className="custom-card-body p-3">
+            <div
+              key={review.id}
+              className="custom-card-body p-3"
+            >
+              {/* Row 1: User + Stars */}
               <div className="d-flex justify-content-between align-items-center">
                 <strong>
                   {review.user.profile?.username ||
                     review.user.email}
                 </strong>
 
-                <div className="d-flex align-items-center gap-2">
-                  <span>{'⭐'.repeat(review.rating)}</span>
-
-                  {isOwner && (
-                    <DeleteReviewButton id={review.id} />
-                  )}
-                </div>
+                <span>{'⭐'.repeat(review.rating)}</span>
               </div>
 
-              <p className="mt-2 mb-0">{review.text}</p>
+              {/* Row 2: Description */}
+              <p className="mt-2 mb-2">
+                {review.text}
+              </p>
+
+              {/* Row 3: Date + Delete */}
+              <div className="d-flex justify-content-between align-items-center small opacity-75">
+                <span>
+                  {new Date(review.createdAt).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                  })}
+                </span>
+
+                {isOwner && (
+                  <DeleteReviewButton id={review.id} />
+                )}
+              </div>
             </div>
           );
         })}
