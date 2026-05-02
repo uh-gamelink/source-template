@@ -18,10 +18,9 @@ export default async function ReviewsPage() {
   });
 
   return (
-    <div className="container py-5" style={{ maxWidth: '700px' }}>
-      {/* Header */}
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <h1 className="mb-0">Reviews</h1>
+    <div className="container py-5">
+    <div className="d-flex justify-content-between align-items-center mb-4">
+      <h1 className="mb-0">Reviews</h1>
 
         <Link
           href={
@@ -37,7 +36,7 @@ export default async function ReviewsPage() {
       </div>
 
       {/* Reviews */}
-      <div className="d-flex flex-column gap-3">
+      <div className="d-flex flex-column gap-3" style={{ maxWidth: '450px' }}>
         {reviews.map((review) => {
           const isOwner =
             session?.user?.id &&
