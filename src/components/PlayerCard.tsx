@@ -78,7 +78,7 @@ const PlayerCard = ({ player, onRequestClick }: PlayerCardProps) => {
           </Row>
             {player.moderationStatus === 'FLAGGED' && (
             <div className="mb-2 pt-2">
-              <Badge bg="warning" text="dark">
+              <Badge bg="warning" text="dark" className="flag-font">
                 Conduct Warning
               </Badge>
             </div>
