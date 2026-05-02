@@ -74,9 +74,11 @@ export default function GameLibraryCard({
 
       <Card.Footer className="bg-transparent border-0">
         <div className="mt-3">
+
+          {/* FAVORITES PAGE → ONLY REMOVE */}
           {isFavoritesPage ? (
             <Button
-              className="custom-reg-btn w-100"
+              className="custom-reset-btn w-100"
               disabled={isLoading}
               onClick={() => onRemove?.(game.id)}
             >
@@ -87,10 +89,10 @@ export default function GameLibraryCard({
               <Button
                 className={
                   inLibrary
-                    ? 'custom-tag-btn w-100 added-btn'
+                    ? 'custom-reset-btn w-100 added-btn'
                     : 'custom-tag-btn w-100'
                 }
-                disabled={isLoading}
+                disabled={isLoading || inLibrary}
                 onClick={() => {
                   if (!inLibrary) {
                     onToggleLibrary(game.id);
@@ -100,11 +102,12 @@ export default function GameLibraryCard({
                 {isLoading
                   ? 'Adding...'
                   : inLibrary
-                    ? 'Added to Favorites'
+                    ? 'Added to Favorites ✓'
                     : 'Add to Favorites'}
               </Button>
             )
           )}
+
         </div>
       </Card.Footer>
     </Card>

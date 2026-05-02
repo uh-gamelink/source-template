@@ -107,7 +107,29 @@ export default function GameLibraryClient({
       setLoadingId(null);
     }
   }
+  async function handleRemove(gameId: number) {
+    setLoadingId(gameId);
 
+    try {
+      const res = await fetch('/api/library', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ gameId }),
+      });
+
+      if (res.ok) {
+        setLibraryIds((prev) => {
+          const next = new Set(prev);
+          next.delete(gameId);
+          return next;
+        });
+      }
+    } finally {
+      setLoadingId(null);
+    }
+  }
   const sortedGames =
     useMemo(() => {
       return [
@@ -296,24 +318,15 @@ export default function GameLibraryClient({
                 game.id
               }
             >
-              <GameLibraryCard
-                game={
-                  game
-                }
-                inLibrary={libraryIds.has(
-                  game.id,
-                )}
-                isLoading={
-                  loadingId ===
-                  game.id
-                }
-                onToggleLibrary={
-                  handleAdd
-                }
-                isLoggedIn={
-                  isLoggedIn
-                }
-              />
+            <GameLibraryCard
+              game={game}
+              inLibrary={libraryIds.has(game.id)}
+              isLoading={loadingId === game.id}
+              onToggleLibrary={handleAdd}
+              isLoggedIn={isLoggedIn}
+              isFavoritesPage={showFavorites}
+              onRemove={handleRemove}
+            />
             </Col>
           ),
         )}

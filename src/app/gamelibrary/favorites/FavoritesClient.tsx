@@ -58,51 +58,46 @@ return (
         <Spinner animation="border" />
       </div>
     ) : (
-      <Container className="py-4">
-        <Row className="align-items-center mb-4">
-          <Col className="text-start">
-            <h1>Favorites</h1>
-          </Col>
-          <Col className="text-end">
-            <PopUpFavoritesClient 
-              onRemove={(gameId) => setFavorites((prev) => prev.filter((g) => g.id !== gameId))} 
-              onRemoveAll={() => setFavorites([])} />
-          </Col>
-        </Row>
+     <Container className="py-4">
+      <Row className="align-items-center mb-4">
+        <Col className="text-start">
+          <h1>Favorites</h1>
+        </Col>
 
-        {favorites.length === 0 ? (
-          <div className="text-center py-4">
-            <p>No favorite games yet.</p>
-          </div>
-        ) : (
-          <Row className="g-4">
-            {favorites.map((game) => (
-              <Col md={4} key={game.id}>
-                <GameLibraryCard
-                  game={game}
-                  inLibrary
-                  isLoading={loadingId === game.id}
-                  onToggleLibrary={() => {}}
-                  isLoggedIn
-                  isFavoritesPage
-                  onRemove={handleRemove}
-                />
-              </Col>
-            ))}
-          </Row>
-        )}
+        <Col className="text-end">
+          <PopUpFavoritesClient
+            onRemove={(gameId) =>
+              setFavorites((prev) =>
+                prev.filter((game) => game.id !== gameId),
+              )
+            }
+            onRemoveAll={() => setFavorites([])}
+          />
+        </Col>
+      </Row>
 
-        <Row className="mt-4">
-          <p>
-            Return to
-            <Link href="/gamelibrary">
-              <Button className="custom-reset-btn ms-2">
-                Game Library
-              </Button>
-            </Link>
-          </p>
+      {favorites.length === 0 ? (
+        <div className="text-center py-4">
+          <p>No favorite games yet.</p>
+        </div>
+      ) : (
+        <Row className="g-4">
+          {favorites.map((game) => (
+            <Col md={4} key={game.id}>
+              <GameLibraryCard
+                game={game}
+                inLibrary
+                isLoading={loadingId === game.id}
+                onToggleLibrary={() => {}}
+                isLoggedIn
+                isFavoritesPage
+                onRemove={handleRemove}
+              />
+            </Col>
+          ))}
         </Row>
-      </Container>
+      )}
+    </Container>
     )}
   </>
   );
