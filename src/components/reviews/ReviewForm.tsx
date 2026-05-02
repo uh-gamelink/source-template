@@ -23,7 +23,7 @@ export default function ReviewForm() {
         body: JSON.stringify({
           text,
           rating,
-          username, // ✅ always sent, user can't change it
+          username, 
         }),
       });
 
@@ -51,7 +51,7 @@ export default function ReviewForm() {
         <Card.Body className="p-4">
           <h3 className="mb-3 text-center">Write a Review</h3>
 
-          {/* ✅ Display username (read-only) */}
+
           <p className="text-center mb-4">
             Posting as <strong>{username}</strong>
           </p>

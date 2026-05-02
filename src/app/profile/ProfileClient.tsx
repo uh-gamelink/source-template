@@ -124,7 +124,7 @@ export default function ProfileClient() {
   return (
     <Container className="py-5">
       <Card
-        className="custom-card-body"
+        className="custom-card-body py-3"
         style={{ borderRadius: '15px', padding: '10px' }}
       >
         <Card.Body>
@@ -167,9 +167,8 @@ export default function ProfileClient() {
 
             <h1 style={{ margin: 0 }}>Your Profile</h1>
           </div>
-
-          <Row>
-            <Col md={3}>
+          <Row className="align-items-stretch">
+            <Col md={3} className="d-flex flex-column">
               <p>
                 <strong>Username:</strong> {username}
               </p>
@@ -180,10 +179,12 @@ export default function ProfileClient() {
                 {user.profile?.description || 'No description added yet.'}
               </p>
 
-              <Link href="/profile/edit">Edit Profile</Link>
+              <div className="mt-auto pt-3">
+                <Link href="/profile/edit">Edit Profile</Link>
+              </div>
             </Col>
 
-            <Col md={3}>
+            <Col md={3} className="d-flex flex-column">
               <h5>Communities</h5>
 
               {savedServers.length > 0 ? (
@@ -201,14 +202,13 @@ export default function ProfileClient() {
               ) : (
                 <div>No communities added yet.</div>
               )}
+              <div className="mt-auto pt-3">
+                <Link href="/community">Edit Commmunity</Link>
+              </div>
             </Col>
 
-            <Col md={3}>
-              <h5>
-                <Link href="/gamelibrary/favorites" className="custom-link">
-                  Favorites
-                </Link>
-              </h5>
+            <Col md={3} className="d-flex flex-column">
+              <h5>Favorites</h5>
 
               <div className="favorites-list">
                 {library.length > 0 ? (
@@ -242,9 +242,15 @@ export default function ProfileClient() {
                   <div className="mt-2">No games added yet.</div>
                 )}
               </div>
+
+              <div className="mt-auto pt-3">
+                <Link href="/gamelibrary/favorites" className="custom-link">
+                  Edit Favorites
+                </Link>
+              </div>
             </Col>
 
-            <Col md={3}>
+            <Col md={3} className="d-flex flex-column">
               <h5>Interests</h5>
 
               {interestsList.length > 0 ? (
@@ -262,6 +268,10 @@ export default function ProfileClient() {
               ) : (
                 <div>No interests added yet.</div>
               )}
+
+              <div className="mt-auto pt-3">
+                <Link href="/profile/edit">Edit Interests</Link>
+              </div>
             </Col>
           </Row>
         </Card.Body>
