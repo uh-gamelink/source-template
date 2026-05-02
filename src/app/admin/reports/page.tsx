@@ -177,11 +177,11 @@ const AdminReportsPage = () => {
         </Modal.Body>
 
         <Modal.Footer>
-          <Button variant="secondary" onClick={closeBanModal}>
+          <Button variant="danger" onClick={closeBanModal}>
             Cancel
           </Button>
 
-          <Button variant="danger" onClick={confirmBan}>
+          <Button variant="secondary" onClick={confirmBan}>
             Yes, Ban Player
           </Button>
         </Modal.Footer>
