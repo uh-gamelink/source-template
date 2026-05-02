@@ -109,7 +109,7 @@ const NavBar: React.FC = () => {
           href={isAdmin ? '/admin/manage' : '/'}
           className="d-flex align-items-center gap-2 custom-brand"
         >
-          <GiGamepad size={32} />
+          <GiGamepad size={32} className="... custom-brand"/>
           <span><strong>UH GameLink</strong></span>
         </Navbar.Brand>
 

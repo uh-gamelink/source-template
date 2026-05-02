@@ -625,7 +625,7 @@ button.tag-btn.active {
 
 .btn-danger:hover {
   background-color: #072111!important;
-  border-color: #1d6c3a  !important;
+  border-color: var(--color-primary) !important;
   color: #1d6c3a !important;
 }
 
