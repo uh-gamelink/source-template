@@ -594,3 +594,38 @@ button.tag-btn.active {
 .custom-modal-card .btn-close {
   filter: invert(1);
 }
+
+.custom-resolve-btn {
+  background-color: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
+  border: none !important;
+  color: #ffffff !important;
+  font-weight: 600;
+}
+
+.btn-flag {
+  background-color: #129344!important;
+  border-color: var(--color-primary) !important;
+  color: #020905 !important;
+  font-weight: 600;
+}
+
+.btn-flag:hover {
+  background-color: #176d38!important;
+  border-color: #1a7e40 !important;
+  color: #060606 !important;
+}
+
+
+.btn-danger {
+  background-color: #072111!important;
+  border-color: var(--color-primary) !important;
+  color: #38c56c !important;
+}
+
+.btn-danger:hover {
+  background-color: #072111!important;
+  border-color: #1d6c3a  !important;
+  color: #1d6c3a !important;
+}
+

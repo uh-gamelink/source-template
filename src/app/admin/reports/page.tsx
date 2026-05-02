@@ -130,25 +130,23 @@ const AdminReportsPage = () => {
 
                 <Card.Footer>
                   <div className="d-flex flex-wrap gap-2">
+                  <Button
+                    size="sm"
+                    className="custom-resolve-btn"
+                    onClick={() => updateStatus(report.id, 'RESOLVED')}
+                  >
+                    Resolve
+                  </Button>
                     <Button
                       size="sm"
-                      variant="success"
-                      onClick={() => updateStatus(report.id, 'RESOLVED')}
-                    >
-                      Resolve
-                    </Button>
-
-                    <Button
-                      size="sm"
-                      variant="warning"
+                      className="btn-flag"
                       onClick={() => updateStatus(report.id, 'FLAGGED')}
                     >
                       Flag Player
                     </Button>
-
                     <Button
                       size="sm"
-                      variant="danger"
+                      className="btn-danger"
                       onClick={() => openBanModal(report)}
                     >
                       Ban Player
