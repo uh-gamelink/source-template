@@ -103,7 +103,7 @@ const NavBar: React.FC = () => {
 
   return (
     <Navbar expand="lg" className="custom-navbar">
-      <Container>
+      <Container fluid>
         <Navbar.Brand
           as={Link}
           href={isAdmin ? '/admin/manage' : '/'}
