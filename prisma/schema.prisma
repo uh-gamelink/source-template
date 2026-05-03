@@ -32,6 +32,7 @@ model User {
   reviews      Review[]
 
   players Player[]
+  userPlayers UserPlayer[]
 }
 
 model Profile {
@@ -63,10 +64,12 @@ model Player {
   game     String
   rank     String
 
-  userId Int
-  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId Int?
+  user   User? @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   moderationStatus PlayerModerationStatus @default(CLEAN)
+
+  userPlayers UserPlayer[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -126,6 +129,17 @@ model UserCommunityServer {
   server CommunityServer @relation(fields: [serverId], references: [id], onDelete: Cascade)
 
   @@unique([userId, serverId])
+}
+
+model UserPlayer {
+  id        Int     @id @default(autoincrement())
+  userId    Int
+  playerId  Int
+
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  player    Player  @relation(fields: [playerId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, playerId])
 }
 
 enum ReportStatus {
