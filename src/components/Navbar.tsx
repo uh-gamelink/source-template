@@ -102,8 +102,8 @@ const NavBar: React.FC = () => {
     pathName === href ? 'custom-nav-link active-nav-link' : 'custom-nav-link';
 
   return (
-    <Navbar expand="lg" className="custom-navbar">
-      <Container fluid>
+    <Navbar expand="lg" className="custom-navbar container-fluid">
+      <Container>
         <Navbar.Brand
           as={Link}
           href={isAdmin ? '/admin/manage' : '/'}

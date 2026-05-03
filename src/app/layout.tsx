@@ -38,7 +38,7 @@ export default function RootLayout({
           <div className="d-flex flex-column min-vh-100">
             <NavBar />
 
-            <main className="flex-grow-1">
+            <main className="container-fluid flex-grow-1">
               {children}
             </main>
 

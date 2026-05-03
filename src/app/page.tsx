@@ -34,7 +34,7 @@ const Home = () => {
 
   return (
     <main>
-      <Container fluid className="py-1 mt-5">
+      <Container className="py-1 mt-5">
         <h1>
           Welcome to
           <br />

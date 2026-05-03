@@ -50,6 +50,10 @@ body {
     fixed;
 }
 
+main {
+  padding-bottom: 80px;
+}
+
 h1 {
   font-size: 50px;
   font-family: 'Impact', sans-serif;
@@ -630,3 +634,6 @@ button.tag-btn.active {
   color: #1d6c3a !important;
 }
 
+.flag-font{
+  font-size: 18px;
+}
