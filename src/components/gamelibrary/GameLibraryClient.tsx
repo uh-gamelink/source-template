@@ -245,7 +245,8 @@ export default function GameLibraryClient({
               '700px',
           }}
         />
-
+      
+      {isLoggedIn && (
         <Button
           onClick={() => {
             setShowFavorites(
@@ -279,6 +280,7 @@ export default function GameLibraryClient({
             ? 'Show All Games'
             : 'View Favorites'}
         </Button>
+       )}
       </div>
 
       {/* Tags */}
