@@ -1,4 +1,5 @@
 import { redirect } from 'next/navigation';
+import { PlayerModerationStatus, Prisma } from '@prisma/client';
 import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import Container from 'react-bootstrap/Container';
@@ -30,45 +31,41 @@ const FindPlayersPage = async ({
 
   const params = (await searchParams) ?? {};
 
-  const currentPage = Math.max(
-    Number(params.page) || 1,
-    1,
-  );
-
+  const currentPage = Math.max(Number(params.page) || 1, 1);
   const search = params.search?.trim() || '';
 
-  const where = {
+  const where: Prisma.PlayerWhereInput = {
     ...(search
       ? {
           username: {
             contains: search,
-            mode: 'insensitive' as const,
+            mode: 'insensitive',
           },
         }
       : {}),
+
+    moderationStatus: {
+      not: PlayerModerationStatus.BANNED,
+    },
+
     NOT: [
       {
         username: {
           equals: 'admin',
-          mode: 'insensitive' as const,
+          mode: 'insensitive',
         },
       },
     ],
   };
 
-  const totalPlayers = await prisma.player.count({
-    where,
-  });
+  const totalPlayers = await prisma.player.count({ where });
 
   const totalPages = Math.max(
     1,
     Math.ceil(totalPlayers / PAGE_SIZE),
   );
 
-  const safePage = Math.min(
-    currentPage,
-    totalPages,
-  );
+  const safePage = Math.min(currentPage, totalPages);
 
   const players = await prisma.player.findMany({
     where,
@@ -91,14 +88,9 @@ const FindPlayersPage = async ({
   const gameTitles = games.map((game) => game.title);
 
   const startItem =
-    totalPlayers === 0
-      ? 0
-      : (safePage - 1) * PAGE_SIZE + 1;
+    totalPlayers === 0 ? 0 : (safePage - 1) * PAGE_SIZE + 1;
 
-  const endItem = Math.min(
-    safePage * PAGE_SIZE,
-    totalPlayers,
-  );
+  const endItem = Math.min(safePage * PAGE_SIZE, totalPlayers);
 
   return (
     <Container className="py-4">
