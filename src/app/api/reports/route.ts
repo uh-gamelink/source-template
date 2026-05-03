@@ -14,9 +14,27 @@ export async function POST(request: Request) {
       );
     }
 
+    const trimmedUsername = reportedUsername.trim();
+
+    const player = await prisma.player.findFirst({
+      where: {
+        username: trimmedUsername,
+      },
+    });
+
+    if (!player) {
+      return NextResponse.json(
+        {
+          error:
+            'Player not found. Please reconfirm with the correct username.',
+        },
+        { status: 404 },
+      );
+    }
+
     const report = await prisma.report.create({
       data: {
-        reportedUsername,
+        reportedUsername: trimmedUsername,
         issue,
         incidentDate: new Date(incidentDate),
       },

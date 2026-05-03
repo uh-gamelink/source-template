@@ -79,8 +79,8 @@ const ReportPage = () => {
                   />
                 </Form.Group>
 
-                {message && <Alert variant="success">{message}</Alert>}
-                {error && <Alert variant="danger">{error}</Alert>}
+                {message && <Alert variant="secondary-emphasis">{message}</Alert>}
+                {error && <Alert variant="secondary">{error}</Alert>}
               </Card.Body>
 
               <Card.Footer>

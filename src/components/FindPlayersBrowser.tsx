@@ -532,7 +532,7 @@ const FindPlayersBrowser = ({
             className="custom-tag-btn"
             onClick={handleOpenAddListingModal}
           >
-            Add Player Listing
+            Add My Player Listing
           </Button>
 
           <div
