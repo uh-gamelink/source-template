@@ -31,7 +31,7 @@ model User {
   savedServers UserCommunityServer[]
   reviews      Review[]
 
-  players Player[]
+  players     Player[]
   userPlayers UserPlayer[]
 }
 
@@ -132,12 +132,12 @@ model UserCommunityServer {
 }
 
 model UserPlayer {
-  id        Int     @id @default(autoincrement())
-  userId    Int
-  playerId  Int
+  id       Int @id @default(autoincrement())
+  userId   Int
+  playerId Int
 
-  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  player    Player  @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  player Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
 
   @@unique([userId, playerId])
 }
