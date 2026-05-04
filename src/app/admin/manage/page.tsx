@@ -47,11 +47,5 @@ export default async function AdminManagePage() {
     },
   });
 
-  const players = await prisma.player.findMany({
-    orderBy: {
-      id: 'asc',
-    },
-  });
-
-  return <ManageClient games={games} servers={servers} players={players}/>;
+  return <ManageClient games={games} servers={servers} />;
 }
