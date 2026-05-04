@@ -147,8 +147,9 @@ export async function deleteServerAction(formData: FormData) {
 }
 
 export async function createPlayerAction(formData: FormData) {
-
-  const userId = formData.get('userId');
+  {/* Convert ID to number from string */}
+  const rawUserId = formData.get('userId');
+  const userId = rawUserId ? parseInt(String(rawUserId)) : null;
 
   await prisma.player.create({
     data: {
@@ -156,13 +157,14 @@ export async function createPlayerAction(formData: FormData) {
       imageUrl: getOptionalString(formData, 'imageUrl'),
       game: getRequiredString(formData, 'game'),
       rank: getRequiredString(formData, 'rank'),
-      moderationStatus: "CLEAN",
+      moderationStatus: 'CLEAN',
       ...(userId ? { user: { connect: { id: userId } } } : {}),
     },
   });
 
   revalidatePath('/admin/manage');
 }
+
 
 export async function banPlayerAction(formData: FormData) {
   const id = getId(formData);
