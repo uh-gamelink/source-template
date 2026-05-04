@@ -9,6 +9,7 @@ import {
   Container,
   Stack,
   Table,
+  Modal
 } from 'react-bootstrap';
 import GameForm from './GameForm';
 import ServerForm from './ServerForm';
@@ -67,7 +68,7 @@ type ManageClientProps = {
 type ManageTab = 'games' | 'servers' | 'players';
 type FormMode = 'none' | 'add-game' | 'edit-game' | 
                 'add-server' | 'edit-server' | 
-                'add-player' | 'edit-player';
+                'add-player' | 'edit-player' | 'delete-player';
 
 export default function ManageClient({
   games,
@@ -129,7 +130,7 @@ export default function ManageClient({
         <div>
           <h1 className="mb-1">Admin Manage</h1>
           <p className="mb-0 text-muted">
-            Add, edit, or remove games and community servers.
+            Add, edit, or remove games, players, and community servers.
           </p>
         </div>
 
@@ -416,16 +417,32 @@ export default function ManageClient({
                   <span className="text-muted ms-2">({players.length})</span>
                 </div>
 
-                <Button
-                  type="button"
-                  size="sm"
-                  onClick={() => {
-                    setSelectedPlayer(null); // ✅ was setSelectedServer
-                    setFormMode('add-player');
-                  }}
-                >
-                  + Add Player
-                </Button>
+                <ButtonGroup className='mx-2'>
+                  <Button
+                    type="button"
+                    size="sm"
+                    className='mx-3 border-0'
+                    onClick={() => {
+                      setSelectedPlayer(null);
+                      setFormMode('delete-player');
+                    }}
+                  >
+                    - Delete Player
+                  </Button>
+
+                  <Button
+                    type="button"
+                    size="sm"
+                    className='border-0'
+                    onClick={() => {
+                      setSelectedPlayer(null);
+                      setFormMode('add-player');
+                    }}
+                  >
+                    + Add Player
+                  </Button>
+                </ButtonGroup>
+                
               </Card.Header>
 
               <Card.Body>
@@ -461,7 +478,10 @@ export default function ManageClient({
                         </td>
 
                         <td style={actionsColumnStyle}>
-                          <Stack direction="horizontal" gap={2}>
+                          <Stack 
+                            direction="horizontal" 
+                            gap={2}
+                            className='justify-content-between'>
                             <Button
                               type="button"
                               size="sm"
@@ -534,6 +554,67 @@ export default function ManageClient({
                 onSavedAction={closeForm}
               />
             )}
+
+            {formMode === 'delete-player' && (
+                <Modal show onHide={closeForm} centered size="lg">
+                  <Modal.Header closeButton>
+                    <Modal.Title id="contained-modal-title-vhcenter">Delete Player</Modal.Title>
+                  </Modal.Header>
+
+                  <Modal.Body style={{
+                    overflowY: 'auto', 
+                    maxHeight: '55vh', 
+                    padding: '0.3rem 1rem', 
+                    minHeight: '185px'}}>
+                    <Table responsive bordered hover className="align-middle">
+                      <thead>
+                        <tr>
+                          <th>ID</th>
+                          <th>Username</th>
+                          <th>Game</th>
+                          <th>Rank</th>
+                          <th>Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {players.map((player) => (
+                          <tr key={player.id}>
+                            <td>{player.id}</td>
+                            <td>{player.username}</td>
+                            <td>{player.game}</td>
+                            <td>{player.rank}</td>
+                            <td style={actionsColumnStyle}>
+                              <form
+                                action={deletePlayerAction}
+                                onSubmit={(event) => {
+                                  if (!window.confirm(`Delete ${player.username}? This cannot be undone.`)) {
+                                    event.preventDefault();
+                                  }
+                                }}
+                              >
+                                <input type="hidden" name="id" value={player.id} />
+                                <Button size="sm" variant="outline-danger" type="submit">
+                                  Delete
+                                </Button>
+                              </form>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </Table>
+
+                    {players.length === 0 && (
+                      <p className="text-muted mb-0">No players found.</p>
+                    )}
+                  </Modal.Body>
+
+                  <Modal.Footer>
+                    <Button variant="secondary" onClick={closeForm}>
+                      Cancel
+                    </Button>
+                  </Modal.Footer>
+                </Modal>
+              )}
           </>
         )}
     </Container>
