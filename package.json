@@ -16,7 +16,7 @@
     "@hookform/resolvers": "^5.2.2",
     "@prisma/adapter-neon": "^7.7.0",
     "@prisma/adapter-pg": "^7.7.0",
-    "@prisma/client": "^7.7.0",
+    "@prisma/client": "^7.8.0",
     "@vercel/blob": "^2.3.3",
     "bcrypt": "^6.0.0",
     "bootstrap": "^5.3.8",
@@ -45,7 +45,7 @@
     "eslint": "^9.39.4",
     "eslint-config-next": "16.1.6",
     "eslint-config-prettier": "^10.1.8",
-    "prisma": "^7.7.0",
+    "prisma": "^7.8.0",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3"
   }

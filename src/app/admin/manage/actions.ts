@@ -145,3 +145,99 @@ export async function deleteServerAction(formData: FormData) {
 
   revalidatePath('/admin/manage');
 }
+
+export async function createPlayerAction(formData: FormData) {
+
+  const userId = formData.get('userId');
+
+  await prisma.player.create({
+    data: {
+      username: getRequiredString(formData, 'username'),
+      imageUrl: getOptionalString(formData, 'imageUrl'),
+      game: getRequiredString(formData, 'game'),
+      rank: getRequiredString(formData, 'rank'),
+      moderationStatus: "CLEAN",
+      ...(userId ? { user: { connect: { id: userId } } } : {}),
+    },
+  });
+
+  revalidatePath('/admin/manage');
+}
+
+export async function banPlayerAction(formData: FormData) {
+  const id = getId(formData);
+
+  await prisma.player.updateMany({
+    where: { 
+      id,
+      moderationStatus: {
+        in: ['CLEAN', 'FLAGGED'],
+      },
+     },
+    data: { moderationStatus: 'BANNED' },
+  });
+
+  revalidatePath('/admin/manage');
+}
+
+export async function unbanPlayerAction(formData: FormData) {
+  const id = getId(formData);
+
+  await prisma.player.updateMany({
+    where: { 
+      id,
+      moderationStatus: {
+        in: ['BANNED', 'FLAGGED'],
+      }
+    },
+    data: { moderationStatus: 'CLEAN' },
+  });
+
+  revalidatePath('/admin/manage');
+}
+
+export async function updatePlayerAction(formData: FormData) {
+  const id = getId(formData);
+
+  await prisma.player.update({
+    where: { id },
+    data: {
+      username: getRequiredString(formData, 'username'),
+      imageUrl: getOptionalString(formData, 'imageUrl'),
+      game: getRequiredString(formData, 'game'),
+      rank: getRequiredString(formData, 'rank'),
+    },
+  });
+
+  revalidatePath('/admin/manage');
+}
+
+export async function flagPlayerAction(formData: FormData) {
+  const id = getId(formData);
+
+  await prisma.player.update({
+    where: { id },
+    data: { moderationStatus : "FLAGGED"},
+  });
+
+  revalidatePath('/admin/manage');
+}
+
+export async function deletePlayerAction(formData: FormData) {
+  const id = getId(formData);
+
+  await prisma.$transaction([
+    prisma.userPlayer.deleteMany({
+      where: {
+        playerId: id,
+      },
+    }),
+    prisma.player.delete({
+      where: {
+        id,
+      },
+    }),
+  ]);
+
+  revalidatePath('/admin/manage');
+}
