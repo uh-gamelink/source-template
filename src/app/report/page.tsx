@@ -80,7 +80,7 @@ const ReportPage = () => {
                 </Form.Group>
 
                 {message && <Alert variant="secondary-emphasis">{message}</Alert>}
-                {error && <Alert variant="secondary">{error}</Alert>}
+                {error && <Alert variant="light">{error}</Alert>}
               </Card.Body>
 
               <Card.Footer>

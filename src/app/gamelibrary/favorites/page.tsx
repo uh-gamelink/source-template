@@ -1,4 +1,4 @@
-import FavoritesClient from '@/app/gamelibrary/favorites/FavoritesClient';
+import FavoritesClient from './FavoritesClient';
 
 export const dynamic = 'force-dynamic';
 

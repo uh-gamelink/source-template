@@ -105,6 +105,7 @@ const FindPlayersPage = async ({
         search={search}
       />
     </Container>
+    
   );
 };
 

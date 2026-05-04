@@ -244,8 +244,8 @@ export default function ProfileForm() {
                         key={`${interest}-${idx}`}
                         className="px-3 py-2 rounded-pill d-inline-flex align-items-center"
                         style={{
-                          backgroundColor: 'rgb(65, 132, 255)',
-                          color: 'rgb(21, 9, 102)',
+                          backgroundColor: 'rgb(1, 179, 75)',
+                          color: 'black',
                           fontWeight: 700,
                           cursor: 'pointer',
                         }}

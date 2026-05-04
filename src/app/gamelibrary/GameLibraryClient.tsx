@@ -1,5 +1,5 @@
 'use client';
-
+import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import { useSession } from 'next-auth/react';
@@ -19,7 +19,6 @@ export default function GameLibraryClient({
   const [searchTerm, setSearchTerm] = useState('');
   const [libraryIds, setLibraryIds] = useState<Set<number>>(new Set());
   const [loadingId, setLoadingId] = useState<number | null>(null);
-  const [showFavorites, setShowFavorites] = useState(false);
 
   const { status } = useSession();
   const isLoggedIn = status === 'authenticated';
@@ -108,12 +107,9 @@ export default function GameLibraryClient({
         game.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         game.developer.toLowerCase().includes(searchTerm.toLowerCase());
 
-      const matchesFavorites =
-        !showFavorites || libraryIds.has(game.id);
-
-      return matchesTag && matchesSearch && matchesFavorites;
+      return matchesTag && matchesSearch;
     });
-  }, [sortedGames, selectedTag, searchTerm, showFavorites, libraryIds]);
+  }, [sortedGames, selectedTag, searchTerm]);
 
   const totalPages = Math.ceil(filteredGames.length / PAGE_SIZE) || 1;
 
@@ -141,17 +137,13 @@ export default function GameLibraryClient({
           style={{ maxWidth: '700px' }}
         />
 
-        <Button
-          className="custom-home-btn"
-          onClick={() => {
-            setShowFavorites((prev) => !prev);
-            setPage(1);
-          }}
+        <Link
+          href="/gamelibrary/favorites"
+          className="custom-tag-btn"
         >
-          {showFavorites ? 'Show All Games' : 'View Favorites'}
-        </Button>
+          View Favorites
+        </Link>
       </div>
-
       <div className="d-flex flex-wrap justify-content-center gap-2 mb-4">
         {allTags.map((tag) => (
           <Button
@@ -181,7 +173,6 @@ export default function GameLibraryClient({
               isLoading={loadingId === game.id}
               onToggleLibrary={handleAdd}
               isLoggedIn={isLoggedIn}
-              isFavoritesPage={showFavorites}
               onRemove={handleRemove}
             />
           </Col>

@@ -495,13 +495,6 @@ const FindPlayersBrowser = ({
     router.push(query);
   };
 
-  const pageNumbers = Array.from(
-    {
-      length: totalPages,
-    },
-    (_, i) => i + 1,
-  );
-
   const displayPlayers = players.map((player) => ({
     ...player,
     imageUrl: getPlayerImage(player),
@@ -511,7 +504,7 @@ const FindPlayersBrowser = ({
     <>
       <div className="d-flex justify-content-between align-items-start mb-3 flex-wrap gap-3">
         <div>
-          <h1 className="mb-1">
+          <h1 className="mb-3">
             Find Players
           </h1>
 
@@ -581,18 +574,12 @@ const FindPlayersBrowser = ({
         </div>
       </div>
 
-      <div className="mb-3">
-        Showing {startItem}–
-        {endItem} of{' '}
-        {totalPlayers}{' '}
-        players
+    {players.length === 0 ? (
+      <div className="text-center mt-5">
+        No players found.
       </div>
-
-      {players.length === 0 ? (
-        <div className="text-center mt-5">
-          No players found.
-        </div>
-      ) : (
+    ) : (
+      <>
         <div
           style={{
             display: 'grid',
@@ -606,52 +593,37 @@ const FindPlayersBrowser = ({
             <PlayerCard
               key={player.id}
               player={player}
-              onRequestClick={
-                handleOpenModal
-              }
+              onRequestClick={handleOpenModal}
             />
           ))}
         </div>
-      )}
 
-      <div className="d-flex justify-content-center align-items-center gap-2 mt-4 flex-wrap">
-        <Button
-          className="custom-reset-btn"
-          disabled={currentPage === 1}
-          onClick={() =>
-            goToPage(currentPage - 1)
-          }
-        >
-          Previous
-        </Button>
+        <div className="text-center mt-3">
+          Showing {startItem}–{endItem} of {totalPlayers} players
+        </div>
+      </>
+    )}
+    <div className="d-flex justify-content-center align-items-center gap-3 mt-4 flex-wrap">
+      <Button
+        className="custom-tag-btn"
+        disabled={currentPage === 1}
+        onClick={() => goToPage(currentPage - 1)}
+      >
+        ← Previous
+      </Button>
 
-        {pageNumbers.map((page) => (
-          <Button
-            key={page}
-            variant={
-              page === currentPage
-                ? 'dark'
-                : 'light'
-            }
-            onClick={() => goToPage(page)}
-          >
-            {page}
-          </Button>
-        ))}
+      <span style={{ fontWeight: 600 }}>
+        Page {currentPage} of {totalPages}
+      </span>
 
-        <Button
-          variant="secondary"
-          className="custom-reset-btn"
-          disabled={
-            currentPage === totalPages
-          }
-          onClick={() =>
-            goToPage(currentPage + 1)
-          }
-        >
-          Next
-        </Button>
-      </div>
+      <Button
+        className="custom-tag-btn"
+        disabled={currentPage === totalPages}
+        onClick={() => goToPage(currentPage + 1)}
+      >
+        Next →
+      </Button>
+    </div>
 
       <Modal
         show={showModal}

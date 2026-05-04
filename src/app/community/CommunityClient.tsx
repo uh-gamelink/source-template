@@ -25,7 +25,6 @@ export default function CommunityClient({
     <Container className="py-4">
       <h1 className="text-center mb-4">Community</h1>
 
-      {/* 🔥 Admin-only button */}
       {session?.user?.role === 'ADMIN' && (
         <div className="text-end mb-3">
           <Link href="/admin/add-server">

@@ -36,8 +36,6 @@ export default function GameLibraryClient({
   const [loadingId, setLoadingId] =
     useState<number | null>(null);
 
-  const [showFavorites, setShowFavorites] =
-    useState(false);
 
   const { status } = useSession();
 
@@ -183,26 +181,15 @@ export default function GameLibraryClient({
                 searchTerm.toLowerCase(),
               );
 
-          const matchesFavorites =
-            !showFavorites ||
-            libraryIds.has(
-              g.id,
-            );
 
-          return (
-            matchesTag &&
-            matchesSearch &&
-            matchesFavorites
-          );
+          return  matchesTag && matchesSearch;
         },
       );
-    }, [
-      sortedGames,
-      selectedTag,
-      searchTerm,
-      showFavorites,
-      libraryIds,
-    ]);
+}, [
+  sortedGames,
+  selectedTag,
+  searchTerm,
+]);
 
   const totalPages =
     Math.ceil(
@@ -247,39 +234,19 @@ export default function GameLibraryClient({
         />
       
       {isLoggedIn && (
-        <Button
-          onClick={() => {
-            setShowFavorites(
-              !showFavorites,
-            );
-            setPage(1);
-          }}
-          style={{
-            minWidth:
-              '180px',
-            height: '46px',
-            fontWeight: 700,
-            borderRadius:
-              '12px',
-            whiteSpace:
-              'nowrap',
-            border: 'none',
-            backgroundColor:
-              showFavorites
-                ? '#ffc107'
-                : '#4d8dff',
-            color:
-              showFavorites
-                ? '#111'
-                : 'white',
-            boxShadow:
-              '0 4px 12px rgba(0,0,0,0.25)',
-          }}
-        >
-          {showFavorites
-            ? 'Show All Games'
-            : 'View Favorites'}
-        </Button>
+        <a
+        href="/gamelibrary/favorites"
+        className="btn"
+        style={{
+          minWidth: '180px',
+          height: '46px',
+          fontWeight: 700,
+          borderRadius: '12px',
+          whiteSpace: 'nowrap',
+        }}
+      >
+        View Favorites
+      </a>
        )}
       </div>
 
@@ -326,7 +293,7 @@ export default function GameLibraryClient({
               isLoading={loadingId === game.id}
               onToggleLibrary={handleAdd}
               isLoggedIn={isLoggedIn}
-              isFavoritesPage={showFavorites}
+              isFavoritesPage={false}
               onRemove={handleRemove}
             />
             </Col>
