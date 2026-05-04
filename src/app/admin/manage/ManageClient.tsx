@@ -65,7 +65,9 @@ type ManageClientProps = {
 };
 
 type ManageTab = 'games' | 'servers' | 'players';
-type FormMode = 'none' | 'add-game' | 'edit-game' | 'add-server' | 'edit-server' | 'add-player' | 'edit-player';
+type FormMode = 'none' | 'add-game' | 'edit-game' | 
+                'add-server' | 'edit-server' | 
+                'add-player' | 'edit-player';
 
 export default function ManageClient({
   games,
