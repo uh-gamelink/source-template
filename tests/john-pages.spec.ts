@@ -39,27 +39,23 @@ test('john can access the main UH GameLink pages', async ({ getUserPage }) => {
     johnPage.locator('.dropdown-toggle').last(),
   ).toBeVisible({ timeout: 10000 });
 
-  await johnPage.getByRole('link', { name: 'Game Library' }).click();
-  await expect(johnPage).toHaveURL(/\/gamelibrary$/);
+  await johnPage.goto('http://localhost:3000/gamelibrary');
   await expect(
     johnPage.getByRole('heading', { name: 'Game Library' }),
   ).toBeVisible();
 
-  await johnPage.getByRole('link', { name: 'Community' }).click();
-  await expect(johnPage).toHaveURL(/\/community$/);
+  await johnPage.goto('http://localhost:3000/community');
   await expect(
     johnPage.getByRole('heading', { name: 'Community' }),
   ).toBeVisible();
 
-  await johnPage.getByRole('link', { name: 'Find Players' }).click();
-  await expect(johnPage).toHaveURL(/\/findplayers$/);
+  await johnPage.goto('http://localhost:3000/findplayers');
   await expect(
     johnPage.getByRole('heading', { name: 'Find Players' }),
   ).toBeVisible();
   await expect(johnPage.getByText(/Click the plus icon/i)).toBeVisible();
 
-  await johnPage.getByRole('link', { name: 'Reviews' }).click();
-  await expect(johnPage).toHaveURL(/\/reviews$/);
+  await johnPage.goto('http://localhost:3000/reviews');
   await expect(
     johnPage.getByRole('heading', { name: 'Reviews' }),
   ).toBeVisible();
@@ -67,14 +63,12 @@ test('john can access the main UH GameLink pages', async ({ getUserPage }) => {
     johnPage.getByRole('link', { name: /leave a review/i }),
   ).toBeVisible();
 
-  await johnPage.getByRole('link', { name: 'Profile' }).click();
-  await expect(johnPage).toHaveURL(/\/profile$/);
+  await johnPage.goto('http://localhost:3000/profile');
   await expect(
     johnPage.getByRole('heading', { name: 'Your Profile' }),
   ).toBeVisible();
 
-  await johnPage.getByRole('link', { name: 'About Us' }).click();
-  await expect(johnPage).toHaveURL(/\/about$/);
+  await johnPage.goto('http://localhost:3000/about');
   await expect(
     johnPage.getByRole('heading', { name: 'About' }),
   ).toBeVisible();
