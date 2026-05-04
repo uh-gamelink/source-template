@@ -19,6 +19,7 @@ import {
   deletePlayerAction,
   banPlayerAction,
   unbanPlayerAction,
+  flagPlayerAction,
 } from '@/app/admin/manage/actions';
 
 
@@ -470,6 +471,15 @@ export default function ManageClient({
                             >
                               Edit
                             </Button>
+
+                            {player.moderationStatus === 'CLEAN' && (
+                              <form action={flagPlayerAction}>
+                                <input type="hidden" name="id" value={player.id} />
+                                <Button size="sm" variant="outline-info" type="submit">
+                                  Flag
+                                </Button>
+                              </form>
+                            )}
 
                             {player.moderationStatus !== 'BANNED' ? (
                               <form action={banPlayerAction}>

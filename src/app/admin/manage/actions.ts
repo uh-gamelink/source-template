@@ -167,8 +167,13 @@ export async function createPlayerAction(formData: FormData) {
 export async function banPlayerAction(formData: FormData) {
   const id = getId(formData);
 
-  await prisma.player.update({
-    where: { id },
+  await prisma.player.updateMany({
+    where: { 
+      id,
+      moderationStatus: {
+        in: ['CLEAN', 'FLAGGED'],
+      },
+     },
     data: { moderationStatus: 'BANNED' },
   });
 
@@ -178,8 +183,13 @@ export async function banPlayerAction(formData: FormData) {
 export async function unbanPlayerAction(formData: FormData) {
   const id = getId(formData);
 
-  await prisma.player.update({
-    where: { id },
+  await prisma.player.updateMany({
+    where: { 
+      id,
+      moderationStatus: {
+        in: ['BANNED', 'FLAGGED'],
+      }
+    },
     data: { moderationStatus: 'CLEAN' },
   });
 
@@ -196,8 +206,18 @@ export async function updatePlayerAction(formData: FormData) {
       imageUrl: getOptionalString(formData, 'imageUrl'),
       game: getRequiredString(formData, 'game'),
       rank: getRequiredString(formData, 'rank'),
-      moderationStatus: "FLAGGED",
     },
+  });
+
+  revalidatePath('/admin/manage');
+}
+
+export async function flagPlayerAction(formData: FormData) {
+  const id = getId(formData);
+
+  await prisma.player.update({
+    where: { id },
+    data: { moderationStatus : "FLAGGED"},
   });
 
   revalidatePath('/admin/manage');
