@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { redirect, useRouter } from 'next/navigation';
 import { upload } from '@vercel/blob/client';
 import { useSession } from 'next-auth/react';
 import {
@@ -29,6 +29,17 @@ export default function ProfileForm() {
   const [existingImage, setExistingImage] = useState<string | null>(null);
 
   const router = useRouter();
+
+  const { data: session } = useSession();
+
+  {/* Admin should not be able to edit their profile using user's page. 
+      Can create + edit in Manage Players insteaad.
+  */}
+  if (!session) {
+    redirect('/');
+  } else if (session?.user.role === "ADMIN") {
+    redirect('/not-authorized')
+  }
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -77,7 +88,6 @@ export default function ProfileForm() {
       };
     }, [preview]);
 
-  const { data: session } = useSession();
   
   const avatarSeed = session?.user?.email || 'guest';
 

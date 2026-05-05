@@ -5,7 +5,7 @@ import RequestsContent from './RequestsContent';
 const RequestsPage = async () => {
   const session = await auth();
 
-  if (!session?.user?.email) {
+  if (!session || !session?.user?.email) {
     redirect('/auth/signin');
   }
 

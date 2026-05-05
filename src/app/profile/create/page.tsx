@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { redirect, useRouter } from 'next/navigation';
 import { upload } from '@vercel/blob/client';
 import { useSession } from 'next-auth/react';
 import {
@@ -28,6 +28,17 @@ export default function CreateProfilePage() {
 
   const router = useRouter();
 
+  const { data: session, status } = useSession();
+
+  {/* Admin should not be able to create their profile using user's page. 
+      Can create + edit in Manage Players insteaad.
+  */}
+  if (!session) {
+    redirect('/');
+  } else if (session?.user.role === "ADMIN") {
+    redirect('/not-authorized')
+  }
+
   useEffect(() => {
     return () => {
       if (preview && preview.startsWith('blob:')) {
@@ -36,15 +47,14 @@ export default function CreateProfilePage() {
     };
   }, [preview]);
 
-    const { data: session, status } = useSession();
 
-    const avatarSeed = session?.user?.email || 'guest';
+  const avatarSeed = session?.user?.email || 'guest';
 
-    const generatedAvatar =
-    `/api/avatar?seed=${encodeURIComponent(avatarSeed)}&style=pixel-v3`;
+  const generatedAvatar =
+  `/api/avatar?seed=${encodeURIComponent(avatarSeed)}&style=pixel-v3`;
 
-    const previewImage =
-    preview || (status === 'authenticated' ? generatedAvatar : '');
+  const previewImage =
+  preview || (status === 'authenticated' ? generatedAvatar : '');
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null;
