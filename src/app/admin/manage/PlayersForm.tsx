@@ -63,7 +63,7 @@ export default function PlayersForm({
 
   return (
     <Modal show={show} onHide={onCancelAction} centered size="lg">
-      <Modal.Header closeButton>
+      <Modal.Header closeButton className="json-modal-header">
         <Modal.Title>{isEdit ? 'Edit Player' : 'Add Player'}</Modal.Title>
       </Modal.Header>
 

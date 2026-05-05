@@ -64,7 +64,7 @@ export default function GameForm({
 
   return (
     <Modal show={show} onHide={onCancelAction} centered size="lg">
-      <Modal.Header closeButton>
+      <Modal.Header closeButton className="json-modal-header">
         <Modal.Title>{isEdit ? 'Edit Game' : 'Add Game'}</Modal.Title>
       </Modal.Header>
 
@@ -116,7 +116,7 @@ export default function GameForm({
                   defaultValue={game?.imageUrl ?? ''}
                   placeholder="/gameLibrary/minecraft.png or https://..."
                 />
-                <Form.Text className="text-muted">
+                <Form.Text className="json-modal-guiding-text ">
                   For local images, place the file in public/gameLibrary and use a path like /gameLibrary/minecraft.png.
                 </Form.Text>
               </Form.Group>
@@ -130,7 +130,7 @@ export default function GameForm({
                   defaultValue={game?.tags.join(', ') ?? ''}
                   placeholder="FPS, Competitive, Casual"
                 />
-                <Form.Text className="text-muted">
+                <Form.Text className="json-modal-guiding-text ">
                   Separate tags with commas.
                 </Form.Text>
               </Form.Group>

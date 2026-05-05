@@ -1,15 +1,18 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import {
+  Alert,
   Badge,
   Button,
   ButtonGroup,
   Card,
   Container,
+  Form,
+  Modal,
   Stack,
   Table,
-  Modal
 } from 'react-bootstrap';
 import GameForm from './GameForm';
 import ServerForm from './ServerForm';
@@ -22,7 +25,6 @@ import {
   unbanPlayerAction,
   flagPlayerAction,
 } from '@/app/admin/manage/actions';
-
 
 type Game = {
   id: number;
@@ -66,20 +68,36 @@ type ManageClientProps = {
 };
 
 type ManageTab = 'games' | 'servers' | 'players';
-type FormMode = 'none' | 'add-game' | 'edit-game' | 
-                'add-server' | 'edit-server' | 
-                'add-player' | 'edit-player' | 'delete-player';
+type FormMode =
+  | 'none'
+  | 'add-game'
+  | 'edit-game'
+  | 'add-server'
+  | 'edit-server'
+  | 'add-player'
+  | 'edit-player'
+  | 'delete-player';
+
+type JsonTarget = 'games' | 'servers' | null;
 
 export default function ManageClient({
   games,
   servers,
   players,
 }: ManageClientProps) {
+  const router = useRouter();
+
   const [activeTab, setActiveTab] = useState<ManageTab>('games');
   const [formMode, setFormMode] = useState<FormMode>('none');
   const [selectedGame, setSelectedGame] = useState<Game | null>(null);
   const [selectedServer, setSelectedServer] = useState<CommunityServer | null>(null);
   const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null);
+
+  const [jsonTarget, setJsonTarget] = useState<JsonTarget>(null);
+  const [jsonText, setJsonText] = useState('');
+  const [jsonMessage, setJsonMessage] = useState('');
+  const [jsonError, setJsonError] = useState('');
+  const [isSavingJson, setIsSavingJson] = useState(false);
 
   const savedByColumnStyle = {
     width: '115px',
@@ -98,6 +116,47 @@ export default function ManageClient({
   const showGames = activeTab === 'games';
   const showServers = activeTab === 'servers';
   const showPlayers = activeTab === 'players';
+
+  const getGamesJson = () =>
+    games.map((game) => ({
+      title: game.title,
+      developer: game.developer,
+      platform: game.platform ?? '',
+      tags: game.tags,
+      description: game.description ?? '',
+      imageUrl: game.imageUrl ?? '',
+    }));
+
+  const getServersJson = () =>
+    servers.map((server) => ({
+      name: server.name,
+      description: server.description,
+      inviteUrl: server.inviteUrl,
+      tags: server.tags,
+      imageUrl: server.imageUrl ?? '',
+      featured: server.featured,
+    }));
+
+  const openJsonEditor = (target: Exclude<JsonTarget, null>) => {
+    closeForm();
+    setJsonTarget(target);
+    setJsonMessage('');
+    setJsonError('');
+
+    if (target === 'games') {
+      setJsonText(JSON.stringify(getGamesJson(), null, 2));
+    } else {
+      setJsonText(JSON.stringify(getServersJson(), null, 2));
+    }
+  };
+
+  const closeJsonEditor = () => {
+    setJsonTarget(null);
+    setJsonText('');
+    setJsonMessage('');
+    setJsonError('');
+    setIsSavingJson(false);
+  };
 
   const closeForm = () => {
     setFormMode('none');
@@ -119,7 +178,55 @@ export default function ManageClient({
   const switchToPlayers = () => {
     setActiveTab('players');
     closeForm();
-  }
+  };
+
+  const handleSaveJson = async (event: React.FormEvent) => {
+    event.preventDefault();
+
+    setJsonMessage('');
+    setJsonError('');
+    setIsSavingJson(true);
+
+    try {
+      const parsedJson = JSON.parse(jsonText);
+
+      if (!Array.isArray(parsedJson)) {
+        setJsonError('The JSON must be an array.');
+        return;
+      }
+
+      const response = await fetch('/api/admin/edit-json', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          games: jsonTarget === 'games' ? parsedJson : getGamesJson(),
+          communityServers:
+            jsonTarget === 'servers' ? parsedJson : getServersJson(),
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setJsonError(data.error ?? 'Failed to save JSON data.');
+        return;
+      }
+
+      setJsonMessage(
+        jsonTarget === 'games'
+          ? `Saved ${data.gamesImported} games.`
+          : `Saved ${data.communityServersImported} community servers.`,
+      );
+
+      router.refresh();
+    } catch {
+      setJsonError('Invalid JSON. Check your quotes, commas, and brackets.');
+    } finally {
+      setIsSavingJson(false);
+    }
+  };
 
   return (
     <Container className="py-4">
@@ -129,7 +236,7 @@ export default function ManageClient({
       >
         <div>
           <h1 className="mb-1">Admin Manage</h1>
-          <p className="mb-0 text-muted">
+          <p className="mb-0">
             Add, edit, or remove games, players, and community servers.
           </p>
         </div>
@@ -142,6 +249,7 @@ export default function ManageClient({
           >
             Manage Games
           </Button>
+
           <Button
             variant={showServers ? 'primary' : 'outline-primary'}
             style={!showServers ? { backgroundColor: 'transparent' } : {}}
@@ -149,6 +257,7 @@ export default function ManageClient({
           >
             Manage Servers
           </Button>
+
           <Button
             variant={showPlayers ? 'primary' : 'outline-primary'}
             style={!showPlayers ? { backgroundColor: 'transparent' } : {}}
@@ -168,16 +277,26 @@ export default function ManageClient({
                 <span className="text-muted ms-2">({games.length})</span>
               </div>
 
-              <Button
-                type="button"
-                size="sm"
-                onClick={() => {
-                  setSelectedGame(null);
-                  setFormMode('add-game');
-                }}
-              >
-                + Add Game
-              </Button>
+              <Stack direction="horizontal" gap={2}>
+                <Button
+                  type="button"
+                  size="sm"
+                  onClick={() => openJsonEditor('games')}
+                >
+                  Edit Games JSON
+                </Button>
+
+                <Button
+                  type="button"
+                  size="sm"
+                  onClick={() => {
+                    setSelectedGame(null);
+                    setFormMode('add-game');
+                  }}
+                >
+                  + Add Game
+                </Button>
+              </Stack>
             </Card.Header>
 
             <Card.Body>
@@ -287,16 +406,26 @@ export default function ManageClient({
                 <span className="text-muted ms-2">({servers.length})</span>
               </div>
 
-              <Button
-                type="button"
-                size="sm"
-                onClick={() => {
-                  setSelectedServer(null);
-                  setFormMode('add-server');
-                }}
-              >
-                + Add Server
-              </Button>
+              <Stack direction="horizontal" gap={2}>
+                <Button
+                  type="button"
+                  size="sm"
+                  onClick={() => openJsonEditor('servers')}
+                >
+                  Edit Server JSON
+                </Button>
+
+                <Button
+                  type="button"
+                  size="sm"
+                  onClick={() => {
+                    setSelectedServer(null);
+                    setFormMode('add-server');
+                  }}
+                >
+                  + Add Server
+                </Button>
+              </Stack>
             </Card.Header>
 
             <Card.Body>
@@ -325,11 +454,12 @@ export default function ManageClient({
                           href={server.inviteUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-break"
+                          className="text-break admin-manage-link"
                         >
                           {formatInviteUrl(server.inviteUrl)}
                         </a>
                       </td>
+
                       <td>
                         {server.tags.length > 0 ? (
                           server.tags.map((tag) => (
@@ -341,6 +471,7 @@ export default function ManageClient({
                           '-'
                         )}
                       </td>
+
                       <td>{server.featured ? 'Yes' : 'No'}</td>
 
                       <td style={savedByColumnStyle}>
@@ -409,52 +540,186 @@ export default function ManageClient({
       )}
 
       {showPlayers && (
-          <>
-            <Card className="custom-card-body mb-4">
-              <Card.Header className="d-flex justify-content-between align-items-center">
-                <div>
-                  <strong>Players</strong>
-                  <span className="text-muted ms-2">({players.length})</span>
-                </div>
+        <>
+          <Card className="custom-card-body mb-4">
+            <Card.Header className="d-flex justify-content-between align-items-center">
+              <div>
+                <strong>Players</strong>
+                <span className="text-muted ms-2">({players.length})</span>
+              </div>
 
-                <ButtonGroup className='mx-2'>
-                  <Button
-                    type="button"
-                    size="sm"
-                    className='mx-3 border-0'
-                    onClick={() => {
-                      setSelectedPlayer(null);
-                      setFormMode('delete-player');
-                    }}
-                  >
-                    - Delete Player
-                  </Button>
+              <ButtonGroup className="mx-2">
+                <Button
+                  type="button"
+                  size="sm"
+                  className="mx-3 border-0"
+                  onClick={() => {
+                    setSelectedPlayer(null);
+                    setFormMode('delete-player');
+                  }}
+                >
+                  - Delete Player
+                </Button>
 
-                  <Button
-                    type="button"
-                    size="sm"
-                    className='border-0'
-                    onClick={() => {
-                      setSelectedPlayer(null);
-                      setFormMode('add-player');
-                    }}
-                  >
-                    + Add Player
-                  </Button>
-                </ButtonGroup>
-                
-              </Card.Header>
+                <Button
+                  type="button"
+                  size="sm"
+                  className="border-0"
+                  onClick={() => {
+                    setSelectedPlayer(null);
+                    setFormMode('add-player');
+                  }}
+                >
+                  + Add Player
+                </Button>
+              </ButtonGroup>
+            </Card.Header>
 
-              <Card.Body>
+            <Card.Body>
+              <Table responsive bordered hover className="align-middle">
+                <thead>
+                  <tr>
+                    <th style={{ width: '70px' }}>ID</th>
+                    <th>Username</th>
+                    <th>Game</th>
+                    <th>Rank</th>
+                    <th>Status</th>
+                    <th style={actionsColumnStyle}>Actions</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {players.map((player) => (
+                    <tr key={player.id}>
+                      <td>{player.id}</td>
+                      <td>{player.username}</td>
+                      <td>{player.game}</td>
+                      <td>{player.rank}</td>
+                      <td>
+                        <Badge
+                          bg={
+                            player.moderationStatus === 'BANNED'
+                              ? 'danger'
+                              : player.moderationStatus === 'FLAGGED'
+                                ? 'warning'
+                                : 'success'
+                          }
+                        >
+                          {player.moderationStatus}
+                        </Badge>
+                      </td>
+
+                      <td style={actionsColumnStyle}>
+                        <Stack
+                          direction="horizontal"
+                          gap={2}
+                          className="justify-content-between"
+                        >
+                          <Button
+                            type="button"
+                            size="sm"
+                            variant="outline-primary"
+                            onClick={() => {
+                              setSelectedPlayer(player);
+                              setFormMode('edit-player');
+                            }}
+                          >
+                            Edit
+                          </Button>
+
+                          {player.moderationStatus === 'CLEAN' && (
+                            <form action={flagPlayerAction}>
+                              <input type="hidden" name="id" value={player.id} />
+                              <Button size="sm" variant="outline-info" type="submit">
+                                Flag
+                              </Button>
+                            </form>
+                          )}
+
+                          {player.moderationStatus !== 'BANNED' ? (
+                            <form action={banPlayerAction}>
+                              <input type="hidden" name="id" value={player.id} />
+                              <Button
+                                size="sm"
+                                variant="outline-warning"
+                                type="submit"
+                              >
+                                Ban
+                              </Button>
+                            </form>
+                          ) : (
+                            <form action={unbanPlayerAction}>
+                              <input type="hidden" name="id" value={player.id} />
+                              <Button
+                                size="sm"
+                                variant="outline-success"
+                                type="submit"
+                              >
+                                Unban
+                              </Button>
+                            </form>
+                          )}
+
+                          <form
+                            action={deletePlayerAction}
+                            onSubmit={(event) => {
+                              if (!window.confirm(`Delete ${player.username}?`)) {
+                                event.preventDefault();
+                              }
+                            }}
+                          >
+                            <input type="hidden" name="id" value={player.id} />
+                            <Button size="sm" variant="outline-danger" type="submit">
+                              Delete
+                            </Button>
+                          </form>
+                        </Stack>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+
+              {players.length === 0 && (
+                <p className="text-muted mb-0">No players found.</p>
+              )}
+            </Card.Body>
+          </Card>
+
+          {(formMode === 'add-player' || formMode === 'edit-player') && (
+            <PlayersForm
+              show
+              mode={formMode === 'add-player' ? 'add' : 'edit'}
+              player={selectedPlayer ?? undefined}
+              onCancelAction={closeForm}
+              onSavedAction={closeForm}
+            />
+          )}
+
+          {formMode === 'delete-player' && (
+            <Modal show onHide={closeForm} centered size="lg">
+              <Modal.Header closeButton className="json-modal-header">
+                <Modal.Title id="contained-modal-title-vhcenter">
+                  Delete Player
+                </Modal.Title>
+              </Modal.Header>
+
+              <Modal.Body
+                style={{
+                  overflowY: 'auto',
+                  maxHeight: '55vh',
+                  padding: '0.3rem 1rem',
+                  minHeight: '185px',
+                }}
+              >
                 <Table responsive bordered hover className="align-middle">
                   <thead>
                     <tr>
-                      <th style={{ width: '70px' }}>ID</th>
+                      <th>ID</th>
                       <th>Username</th>
                       <th>Game</th>
                       <th>Rank</th>
-                      <th>Status</th>
-                      <th style={actionsColumnStyle}>Actions</th>
+                      <th>Action</th>
                     </tr>
                   </thead>
 
@@ -465,158 +730,99 @@ export default function ManageClient({
                         <td>{player.username}</td>
                         <td>{player.game}</td>
                         <td>{player.rank}</td>
-                        <td>
-                          <Badge
-                            bg={
-                              player.moderationStatus === 'BANNED' ? 'danger'
-                              : player.moderationStatus === 'FLAGGED' ? 'warning'
-                              : 'success'
-                            }
-                          >
-                            {player.moderationStatus}
-                          </Badge>
-                        </td>
-
                         <td style={actionsColumnStyle}>
-                          <Stack 
-                            direction="horizontal" 
-                            gap={2}
-                            className='justify-content-between'>
+                          <form
+                            action={deletePlayerAction}
+                            onSubmit={(event) => {
+                              if (
+                                !window.confirm(
+                                  `Delete ${player.username}? This cannot be undone.`,
+                                )
+                              ) {
+                                event.preventDefault();
+                              }
+                            }}
+                          >
+                            <input type="hidden" name="id" value={player.id} />
                             <Button
-                              type="button"
                               size="sm"
-                              variant="outline-primary"
-                              onClick={() => {
-                                setSelectedPlayer(player);
-                                setFormMode('edit-player');
-                              }}
+                              variant="outline-danger"
+                              type="submit"
                             >
-                              Edit
+                              Delete
                             </Button>
-
-                            {player.moderationStatus === 'CLEAN' && (
-                              <form action={flagPlayerAction}>
-                                <input type="hidden" name="id" value={player.id} />
-                                <Button size="sm" variant="outline-info" type="submit">
-                                  Flag
-                                </Button>
-                              </form>
-                            )}
-
-                            {player.moderationStatus !== 'BANNED' ? (
-                              <form action={banPlayerAction}>
-                                <input type="hidden" name="id" value={player.id} />
-                                <Button size="sm" variant="outline-warning" type="submit">
-                                  Ban
-                                </Button>
-                              </form>
-                            ) : (
-                              <form action={unbanPlayerAction}>
-                                <input type="hidden" name="id" value={player.id} />
-                                <Button size="sm" variant="outline-success" type="submit">
-                                  Unban
-                                </Button>
-                              </form>
-                            )}
-
-                            <form
-                              action={deletePlayerAction}
-                              onSubmit={(event) => {
-                                if (!window.confirm(`Delete ${player.username}?`)) {
-                                  event.preventDefault();
-                                }
-                              }}
-                            >
-                              <input type="hidden" name="id" value={player.id} />
-                              <Button size="sm" variant="outline-danger" type="submit">
-                                Delete
-                              </Button>
-                            </form>
-                          </Stack>
+                          </form>
                         </td>
                       </tr>
                     ))}
                   </tbody>
                 </Table>
 
-                {players.length === 0 && ( 
+                {players.length === 0 && (
                   <p className="text-muted mb-0">No players found.</p>
                 )}
-              </Card.Body>
-            </Card>
+              </Modal.Body>
 
-            {(formMode === 'add-player' || formMode === 'edit-player') && (
-              <PlayersForm
-                show
-                mode={formMode === 'add-player' ? 'add' : 'edit'}
-                player={selectedPlayer ?? undefined}
-                onCancelAction={closeForm}
-                onSavedAction={closeForm}
+              <Modal.Footer>
+                <Button variant="secondary" onClick={closeForm}>
+                  Cancel
+                </Button>
+              </Modal.Footer>
+            </Modal>
+          )}
+        </>
+      )}
+
+      <Modal show={jsonTarget !== null} onHide={closeJsonEditor} centered size="xl">
+        <Modal.Header closeButton className="json-modal-header">
+          <Modal.Title>
+            {jsonTarget === 'games'
+              ? 'Edit Games JSON'
+              : 'Edit Community Servers JSON'}
+          </Modal.Title>
+        </Modal.Header>
+
+        <Modal.Body>
+          <p>
+            Edit the JSON below, then save to add new records or update existing
+            records in the database.
+          </p>
+
+          {jsonMessage && <Alert variant="success">{jsonMessage}</Alert>}
+          {jsonError && <Alert variant="danger">{jsonError}</Alert>}
+
+          <Form id="json-edit-form" onSubmit={handleSaveJson}>
+            <Form.Group>
+              <Form.Label>
+                {jsonTarget === 'games' ? 'Games JSON' : 'Community Servers JSON'}
+              </Form.Label>
+
+              <Form.Control
+                as="textarea"
+                rows={22}
+                value={jsonText}
+                onChange={(event) => setJsonText(event.target.value)}
+                spellCheck={false}
+                style={{
+                  fontFamily:
+                    'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace',
+                  fontSize: '0.9rem',
+                }}
               />
-            )}
+            </Form.Group>
+          </Form>
+        </Modal.Body>
 
-            {formMode === 'delete-player' && (
-                <Modal show onHide={closeForm} centered size="lg">
-                  <Modal.Header closeButton>
-                    <Modal.Title id="contained-modal-title-vhcenter">Delete Player</Modal.Title>
-                  </Modal.Header>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={closeJsonEditor}>
+            Cancel
+          </Button>
 
-                  <Modal.Body style={{
-                    overflowY: 'auto', 
-                    maxHeight: '55vh', 
-                    padding: '0.3rem 1rem', 
-                    minHeight: '185px'}}>
-                    <Table responsive bordered hover className="align-middle">
-                      <thead>
-                        <tr>
-                          <th>ID</th>
-                          <th>Username</th>
-                          <th>Game</th>
-                          <th>Rank</th>
-                          <th>Action</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {players.map((player) => (
-                          <tr key={player.id}>
-                            <td>{player.id}</td>
-                            <td>{player.username}</td>
-                            <td>{player.game}</td>
-                            <td>{player.rank}</td>
-                            <td style={actionsColumnStyle}>
-                              <form
-                                action={deletePlayerAction}
-                                onSubmit={(event) => {
-                                  if (!window.confirm(`Delete ${player.username}? This cannot be undone.`)) {
-                                    event.preventDefault();
-                                  }
-                                }}
-                              >
-                                <input type="hidden" name="id" value={player.id} />
-                                <Button size="sm" variant="outline-danger" type="submit">
-                                  Delete
-                                </Button>
-                              </form>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </Table>
-
-                    {players.length === 0 && (
-                      <p className="text-muted mb-0">No players found.</p>
-                    )}
-                  </Modal.Body>
-
-                  <Modal.Footer>
-                    <Button variant="secondary" onClick={closeForm}>
-                      Cancel
-                    </Button>
-                  </Modal.Footer>
-                </Modal>
-              )}
-          </>
-        )}
+          <Button type="submit" form="json-edit-form" disabled={isSavingJson}>
+            {isSavingJson ? 'Saving...' : 'Save JSON'}
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </Container>
   );
 }

@@ -64,7 +64,7 @@ export default function ServerForm({
 
   return (
     <Modal show={show} onHide={onCancelAction} centered size="lg">
-      <Modal.Header closeButton>
+      <Modal.Header closeButton className="json-modal-header">
         <Modal.Title>{isEdit ? 'Edit Server' : 'Add Server'}</Modal.Title>
       </Modal.Header>
 
@@ -106,7 +106,7 @@ export default function ServerForm({
                   defaultValue={server?.imageUrl ?? ''}
                   placeholder="/servers/uh-minecraft.png or https://..."
                 />
-                <Form.Text className="text-muted">
+                <Form.Text className="json-modal-guiding-text ">
                   For local images, place the file in public/servers and use a path like /servers/uh-minecraft.png.
                 </Form.Text>
               </Form.Group>
@@ -120,7 +120,7 @@ export default function ServerForm({
                   defaultValue={server?.tags.join(', ') ?? ''}
                   placeholder="Minecraft, Casual, UH"
                 />
-                <Form.Text className="text-muted">
+                <Form.Text className="json-modal-guiding-text ">
                   Separate tags with commas.
                 </Form.Text>
               </Form.Group>

@@ -670,3 +670,26 @@ a.add-profile-btn:hover {
   text-align: left !important;
   width: 100%;
 }
+
+.json-modal-header {
+  background-color: #17803c;
+  color: white;
+}
+
+.json-modal-header .btn-close {
+  filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+.json-modal-guiding-text {
+  color: #ffffff !important;
+}
+
+.admin-manage-link {
+  color: var(--color-primary) !important;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.admin-manage-link:hover {
+  color: #017e0e !important;
+}
