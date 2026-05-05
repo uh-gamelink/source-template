@@ -34,7 +34,7 @@ const Home = () => {
 
   return (
     <main>
-      <Container className="py-1 mt-5">
+      <Container className="py-1 mt-5 px-5">
         <h1>
           Welcome to
           <br />
@@ -71,7 +71,7 @@ const Home = () => {
           </div>
         </div>
 
-        <Container>
+        <div className="px-5">
           <Row className="mb-2 mt-4">
             <Col className="text-center">
               <h3>Directory</h3>
@@ -127,7 +127,7 @@ const Home = () => {
               </Card>
             </Col>
           </Row>
-        </Container>
+        </div>
       </Container>
     </main>
   );

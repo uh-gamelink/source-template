@@ -637,3 +637,42 @@ button.tag-btn.active {
 .flag-font{
   font-size: 14.5px;
 }
+
+/* =============================
+   Full screen scaling fix (Issue #80)
+   ============================= */
+
+@media (min-width: 1200px) {
+  main {
+    padding-left: 80px;
+    padding-right: 80px;
+  }
+
+  h1 {
+    font-size: 64px;
+  }
+
+  h3 {
+    font-size: 50px;
+  }
+
+  p {
+    font-size: 1.2rem;
+    max-width: 1200px;
+  }
+}
+
+@media (min-width: 1600px) {
+  main {
+    padding-left: 120px;
+    padding-right: 120px;
+  }
+
+  h1 {
+    font-size: 72px;
+  }
+
+  p {
+    font-size: 1.3rem;
+  }
+}
