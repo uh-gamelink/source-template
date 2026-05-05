@@ -38,6 +38,7 @@ async function authenticateWithUI(
 ): Promise<void> {
   const sessionPath = path.join(SESSION_STORAGE_PATH, `${sessionName}.json`);
 
+  // 🔁 Try restoring saved session
   if (fs.existsSync(sessionPath)) {
     try {
       const sessionData = JSON.parse(fs.readFileSync(sessionPath, 'utf8'));
@@ -48,6 +49,10 @@ async function authenticateWithUI(
 
       if (await isLoggedIn(page)) {
         console.log(`✓ Restored session for ${email}`);
+
+        // 🔥 CRITICAL FIX: allow NextAuth to stabilize
+        await page.waitForTimeout(1000);
+
         return;
       }
 
@@ -57,6 +62,7 @@ async function authenticateWithUI(
     }
   }
 
+  // 🔐 Fresh login
   try {
     console.log(`→ Authenticating ${email} via UI...`);
 
@@ -81,6 +87,9 @@ async function authenticateWithUI(
         timeout: 10000,
       })
       .toBe(true);
+
+    // 🔥 CRITICAL FIX: stabilize session after login
+    await page.waitForTimeout(1000);
 
     const cookies = await page.context().cookies();
     fs.writeFileSync(sessionPath, JSON.stringify({ cookies }));

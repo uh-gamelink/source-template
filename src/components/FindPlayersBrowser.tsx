@@ -4,7 +4,7 @@ import {
   useState,
   useEffect,
 } from 'react';
-import { redirect, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
@@ -320,15 +320,21 @@ const FindPlayersBrowser = ({
 
   const router = useRouter();
 
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
 
-  if (!session || !session?.user?.email) {
-    redirect('/auth/signin');
+  useEffect(() => {
+  if (status === 'loading') return;
+
+  if (!session?.user?.email) {
+    router.replace('/auth/signin');
+    return;
   }
 
-  if (session?.user.role === "ADMIN") {
-    redirect('/admin/manage');
+  if (session.user.role === 'ADMIN') {
+    router.replace('/admin/manage');
   }
+}, [session, status, router]);
+
 
   const listingRankOptions = listingGame
     ? getRanksForGame(listingGame)
@@ -511,6 +517,10 @@ const FindPlayersBrowser = ({
     imageUrl: getPlayerImage(player),
   }));
 
+  if (status === 'loading') {
+  return null;
+  }
+  
   return (
     <>
       <div className="d-flex justify-content-between align-items-start mb-3 flex-wrap gap-3">
