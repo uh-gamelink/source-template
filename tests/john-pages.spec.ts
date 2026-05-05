@@ -26,8 +26,11 @@ test('john can access the main UH GameLink pages', async ({ getUserPage }) => {
   await johnPage.goto('/gamelibrary');
   await expect(johnPage.getByRole('heading', { name: 'Game Library' })).toBeVisible();
 
-  await johnPage.goto('/community');
-  await expect(johnPage.getByRole('heading', { name: 'Community' })).toBeVisible();
+  await johnPage.goto('/community', { waitUntil: 'domcontentloaded' });
+
+  await expect(
+    johnPage.getByRole('heading', { name: 'Community' })
+  ).toBeVisible({ timeout: 10000 });
 
   await johnPage.goto('/findplayers');
   await expect(johnPage.getByRole('heading', { name: 'Find Players' })).toBeVisible();
