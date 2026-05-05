@@ -45,36 +45,26 @@ export default async function ReviewsPage() {
       </div>
 
       {/* Reviews */}
-      <div
-        className="d-flex flex-column gap-3 mx-auto"
-        style={{ maxWidth: '700px' }}
-      >
+      <div className="d-flex flex-column gap-3 mx-auto" style={{ maxWidth: '700px' }}>
         {reviews.map((review) => {
           const isOwner =
             session?.user?.id &&
             Number(session.user.id) === review.userId;
 
           return (
-            <div
-              key={review.id}
-              className="custom-card-body p-3"
-            >
-              {/* Row 1: User + Stars */}
+            <div key={review.id} className="custom-card-body p-3">
+              {/* Row 1 */}
               <div className="d-flex justify-content-between align-items-center">
                 <strong>
-                  {review.user.profile?.username ||
-                    review.user.email}
+                  {review.user.profile?.username || review.user.email}
                 </strong>
-
                 <span>{'⭐'.repeat(review.rating)}</span>
               </div>
 
-              {/* Row 2: Description */}
-              <p className="mt-2 mb-2">
-                {review.text}
-              </p>
+              {/* Row 2 */}
+              <p className="mt-2 mb-2">{review.text}</p>
 
-              {/* Row 3: Date + Delete */}
+              {/* Row 3 */}
               <div className="d-flex justify-content-between align-items-center small opacity-75">
                 <span>
                   {new Date(review.createdAt).toLocaleDateString('en-US', {
@@ -85,7 +75,15 @@ export default async function ReviewsPage() {
                 </span>
 
                 {isOwner && (
-                  <DeleteReviewButton id={review.id} />
+                  <div className="d-flex gap-2">
+                    <Link href={`/reviews/${review.id}/edit`}>
+                      <button className="btn btn-sm btn-outline-light">
+                        Edit
+                      </button>
+                    </Link>
+
+                    <DeleteReviewButton id={review.id} />
+                  </div>
                 )}
               </div>
             </div>
