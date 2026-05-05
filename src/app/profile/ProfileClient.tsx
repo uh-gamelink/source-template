@@ -203,7 +203,7 @@ export default function ProfileClient() {
                 <div>No communities added yet.</div>
               )}
               <div className="mt-auto pt-3">
-                <Link href="/community">Edit Commmunity</Link>
+                <Link href="/community">Edit Community</Link>
               </div>
             </Col>
 
