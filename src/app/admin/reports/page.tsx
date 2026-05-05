@@ -12,7 +12,7 @@ export default async function AdminManagePage() {
   }
 
   if (session.user.role !== 'ADMIN') {
-    redirect('/');
+    redirect('/not-authorized');
   }
 
   return <AdminReportsPage />;
