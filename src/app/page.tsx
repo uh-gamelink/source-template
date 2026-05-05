@@ -34,7 +34,7 @@ const Home = () => {
 
   return (
     <main>
-      <Container className="py-1 mt-5 px-5">
+      <Container className="py-1 mt-5">
         <h1>
           Welcome to
           <br />
@@ -71,7 +71,7 @@ const Home = () => {
           </div>
         </div>
 
-        <div className="px-5">
+        <div>
           <Row className="mb-2 mt-4">
             <Col className="text-center">
               <h3>Directory</h3>
@@ -79,7 +79,7 @@ const Home = () => {
             </Col>
           </Row>
 
-          <Row className="g-5 pb-5 pt-1 mx-5">
+          <Row className="g-4 pb-5 pt-1">
             <Col md={3}>
               <Card className="h-100 shadow-sm custom-card-body p-3 text-center">
                 <p> See our game library to add to view our avaible games and add to your favorites.</p>
@@ -128,6 +128,22 @@ const Home = () => {
             </Col>
           </Row>
         </div>
+        <Row className="mt-5 mb-5">
+          <Col className="text-center">
+            <Card className="custom-card-body p-4 shadow-sm mx-auto" style={{ maxWidth: '600px' }}>
+              <h5>Need Help?</h5>
+              <p className="mb-2">
+                For player-related issues, please use the Report Player page.
+              </p>
+              <p className="mb-2">
+                For other concerns or technical issues, contact the admin below:
+              </p>
+              <p className="mb-0">
+                📧 <strong>admin@uhgamelink.com</strong>
+              </p>
+            </Card>
+          </Col>
+        </Row>
       </Container>
     </main>
   );
