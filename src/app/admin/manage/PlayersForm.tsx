@@ -119,19 +119,6 @@ export default function PlayersForm({
                 />
               </Form.Group>
             </Col>
-
-            {!isEdit && (
-              <Col md={6}>
-                <Form.Group controlId="player-email">
-                  <Form.Label>Assign to User (email)</Form.Label>
-                  <Form.Control
-                    name="email"
-                    type="email"
-                    placeholder="user@email.com"
-                  />
-                </Form.Group>
-              </Col>
-            )}
           </Row>
         </Modal.Body>
 
