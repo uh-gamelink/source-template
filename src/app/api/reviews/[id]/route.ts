@@ -41,3 +41,40 @@ export async function PUT(
 
   return NextResponse.json(updated);
 }
+
+export async function DELETE(
+  req: Request,
+  { params }: { params: Promise<{ id: string }> },
+) {
+  const { id } = await params;
+
+  const session = await auth();
+
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  const reviewId = Number(id);
+
+  if (Number.isNaN(reviewId)) {
+    return NextResponse.json({ error: 'Invalid ID' }, { status: 400 });
+  }
+
+  const review = await prisma.review.findUnique({
+    where: { id: reviewId },
+  });
+
+  if (!review) {
+    return NextResponse.json({ error: 'Review not found' }, { status: 404 });
+  }
+
+  if (review.userId !== Number(session.user.id)) {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  }
+
+  await prisma.review.delete({
+    where: { id: reviewId },
+  });
+
+  return NextResponse.json({ message: 'Review deleted' });
+}
