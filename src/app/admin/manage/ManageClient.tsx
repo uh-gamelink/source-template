@@ -765,7 +765,7 @@ export default function ManageClient({
 
               <Modal.Footer>
                 <Button variant="secondary" onClick={closeForm}>
-                  Cancel
+                  Close
                 </Button>
               </Modal.Footer>
             </Modal>
