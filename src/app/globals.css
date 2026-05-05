@@ -7,7 +7,7 @@
   --color-bg: #070a08;
   --color-surface: #0f1511;
   --color-surface-2: #121a15;
-  --color-primary: rgb(34, 197, 94); /* green */
+  --color-primary: rgb(34, 197, 94);
   --color-primary-dim: rgba(34, 197, 94, 0.6);
   --color-text: #ffffff;
   --color-muted: rgba(255, 255, 255, 0.7);
@@ -34,20 +34,9 @@ body {
     radial-gradient(circle at top center, rgba(34, 197, 94, 0.18), transparent 45%),
     linear-gradient(180deg, #050705, #0b120d, #040604);
 
-  background-size:
-    80px 80px,
-    auto,
-    auto;
-
-  background-repeat:
-    repeat,
-    no-repeat,
-    no-repeat;
-
-  background-attachment:
-    fixed,
-    fixed,
-    fixed;
+  background-size: 80px 80px, auto, auto;
+  background-repeat: repeat, no-repeat, no-repeat;
+  background-attachment: fixed, fixed, fixed;
 }
 
 main {
@@ -73,6 +62,50 @@ h3 {
 .wrapper {
   box-sizing: border-box;
   min-height: 100%;
+}
+
+/* =============================
+   Issue #80: text larger on wide screens
+   NOTE: no global main padding / no p max-width
+   ============================= */
+
+@media (min-width: 1200px) {
+  html,
+  body {
+    font-size: 19px;
+  }
+
+  h1 {
+    font-size: 58px;
+  }
+
+  h3 {
+    font-size: 48px;
+  }
+
+  p {
+    font-size: 1.08rem;
+    line-height: 1.6;
+  }
+}
+
+@media (min-width: 1600px) {
+  html,
+  body {
+    font-size: 20px;
+  }
+
+  h1 {
+    font-size: 64px;
+  }
+
+  h3 {
+    font-size: 52px;
+  }
+
+  p {
+    font-size: 1.12rem;
+  }
 }
 
 /* =============================
@@ -153,10 +186,15 @@ h3 {
   color: var(--color-primary);
 }
 
+.custom-navbar .navbar-brand svg,
+.custom-navbar .custom-brand svg {
+  color: #ffffff !important;
+  fill: #ffffff !important;
+}
+
 .custom-navbar .nav-link.active {
   color: var(--color-primary-dim);
   font-weight: 500;
-  
 }
 
 .custom-navbar .dropdown-menu {
@@ -168,7 +206,6 @@ h3 {
   color: var(--color-primary);
   background-color: transparent;
 }
-
 
 /* =============================
    Buttons / Links
@@ -291,13 +328,12 @@ button:hover,
   -ms-overflow-style: none;
 }
 
-
 /* ============================= */
 /* FIX OVERRIDES (BLUE -> GREEN/WHITE CONSISTENCY) */
 /* ============================= */
 
-/* Global links */
-a, a:visited {
+a,
+a:visited {
   color: var(--color-text) !important;
 }
 
@@ -305,7 +341,6 @@ a:hover {
   color: var(--color-primary) !important;
 }
 
-/* Filter / action buttons still showing blue */
 .filter-toggle-btn,
 .added-btn,
 .page-buttons {
@@ -318,7 +353,6 @@ a:hover {
   color: #06110a !important;
 }
 
-/* Bootstrap primary override (common source of leftover blue) */
 .btn-primary {
   background-color: var(--color-primary) !important;
   border-color: var(--color-primary) !important;
@@ -330,7 +364,6 @@ a:hover {
   border-color: rgba(34, 197, 94, 0.85) !important;
 }
 
-/* About page link consistency */
 .about a {
   color: var(--color-text) !important;
 }
@@ -344,27 +377,26 @@ a:hover {
 button.tag-btn {
   background: transparent !important;
   border: 1px solid rgb(34, 197, 94) !important;
-  color: #ffffff !important;
+  color: var(--color-primary) !important;
   font-weight: 500 !important;
   text-shadow: none !important;
 }
 
-/* kill Bootstrap hover behavior completely */
 .tag-btn:hover,
 .tag-btn.btn:hover,
 button.tag-btn:hover {
-  color: rgb(34, 197, 94) !important;
-  background-color: rgba(34, 197, 94, 0.08) !important;
-}
-
-/* active state */
-.tag-btn.active,
-.tag-btn.btn.active {
-  background: rgb(34, 197, 94) !important;
   color: #06110a !important;
+  background-color: var(--color-primary) !important;
 }
 
-/* kill bootstrap focus/active ghost styling */
+.tag-btn.active,
+.tag-btn.btn.active,
+button.tag-btn.active {
+  background: var(--color-primary) !important;
+  color: #06110a !important;
+  border-color: var(--color-primary) !important;
+}
+
 .tag-btn:focus,
 .tag-btn:active {
   box-shadow: none !important;
@@ -375,7 +407,6 @@ button.tag-btn:hover {
    UH GameLink green cleanup
    ============================= */
 
-/* Bootstrap outline-primary is usually the source of blue buttons/text */
 .btn-outline-primary,
 a.btn-outline-primary {
   color: var(--color-primary) !important;
@@ -393,7 +424,6 @@ a.btn-outline-primary:focus {
   box-shadow: 0 0 0 0.2rem rgba(34, 197, 94, 0.25) !important;
 }
 
-/* Add to Profile button/link */
 .add-profile-btn,
 a.add-profile-btn {
   color: var(--color-primary) !important;
@@ -408,39 +438,12 @@ a.add-profile-btn:hover {
   border-color: var(--color-primary) !important;
 }
 
-/* Profile picture border */
 .profile-avatar,
 .profile-pfp {
   border: 3px solid var(--color-primary) !important;
   box-shadow: 0 0 14px rgba(34, 197, 94, 0.45) !important;
 }
 
-/* Game Library filter buttons */
-.tag-btn,
-.tag-btn.btn,
-button.tag-btn {
-  color: var(--color-primary) !important;
-  border-color: var(--color-primary) !important;
-  background-color: transparent !important;
-}
-
-.tag-btn:hover,
-.tag-btn.btn:hover,
-button.tag-btn:hover {
-  color: #06110a !important;
-  background-color: var(--color-primary) !important;
-  border-color: var(--color-primary) !important;
-}
-
-.tag-btn.active,
-.tag-btn.btn.active,
-button.tag-btn.active {
-  color: #06110a !important;
-  background-color: var(--color-primary) !important;
-  border-color: var(--color-primary) !important;
-}
-
-/* Find Players search input green border */
 .find-player-search,
 .find-player-search.form-control {
   border-color: var(--color-primary) !important;
@@ -452,7 +455,6 @@ button.tag-btn.active {
   box-shadow: 0 0 0 0.2rem rgba(34, 197, 94, 0.25) !important;
 }
 
-/* Profile interest divider lines */
 .interest-item {
   border-bottom: 1px solid var(--color-primary) !important;
 }
@@ -521,7 +523,6 @@ button.tag-btn.active {
   background-color: rgba(34, 197, 94, 0.12) !important;
   color: var(--color-primary) !important;
   font-weight: 700;
-  padding: 1rem;
   text-align: center !important;
   vertical-align: middle !important;
   padding: 1.2rem 1rem !important;
@@ -609,70 +610,63 @@ button.tag-btn.active {
 }
 
 .btn-flag {
-  background-color: #129344!important;
+  background-color: #129344 !important;
   border-color: var(--color-primary) !important;
   color: #020905 !important;
   font-weight: 600;
 }
 
 .btn-flag:hover {
-  background-color: #176d38!important;
+  background-color: #176d38 !important;
   border-color: #1a7e40 !important;
   color: #060606 !important;
 }
 
-
 .btn-danger {
-  background-color: #072111!important;
+  background-color: #072111 !important;
   border-color: var(--color-primary) !important;
   color: #38c56c !important;
 }
 
 .btn-danger:hover {
-  background-color: #072111!important;
+  background-color: #072111 !important;
   border-color: var(--color-primary) !important;
   color: #1d6c3a !important;
 }
 
-.flag-font{
+.flag-font {
   font-size: 14.5px;
 }
 
 /* =============================
-   Full screen scaling fix (Issue #80)
+   NAVBAR TEXT FIX
    ============================= */
 
-@media (min-width: 1200px) {
-  main {
-    padding-left: 80px;
-    padding-right: 80px;
-  }
-
-  h1 {
-    font-size: 64px;
-  }
-
-  h3 {
-    font-size: 50px;
-  }
-
-  p {
-    font-size: 1.2rem;
-    max-width: 1200px;
-  }
+.custom-navbar .nav-link {
+  white-space: nowrap;
 }
 
-@media (min-width: 1600px) {
-  main {
-    padding-left: 120px;
-    padding-right: 120px;
-  }
+.custom-navbar .navbar-nav {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
 
-  h1 {
-    font-size: 72px;
-  }
+.custom-navbar .nav-item {
+  display: flex;
+  align-items: center;
+}
 
-  p {
-    font-size: 1.3rem;
-  }
+/* Fix mobile navbar dropdown alignment */
+.navbar-collapse {
+  text-align: left !important;
+}
+
+.navbar-nav {
+  align-items: flex-start !important;
+}
+
+.navbar-nav .nav-link {
+  text-align: left !important;
+  width: 100%;
 }
