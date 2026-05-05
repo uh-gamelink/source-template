@@ -19,8 +19,17 @@ export default async function ReviewsPage() {
 
   return (
     <div className="container py-5">
-    <div className="d-flex justify-content-between align-items-center mb-4">
-      <h1 className="mb-0">Reviews</h1>
+      {/* Header */}
+      <div className="d-flex justify-content-between align-items-start mb-4">
+        <div>
+          <h1 className="mb-0">Reviews</h1>
+
+          <p className="mt-2 mb-0" style={{ maxWidth: '600px' }}>
+            Share your thoughts about UH GameLink. Leave feedback on your experience
+            using the platform, including features, usability, and overall satisfaction.
+            Your input helps us improve the app for everyone.
+          </p>
+        </div>
 
         <Link
           href={
@@ -36,7 +45,10 @@ export default async function ReviewsPage() {
       </div>
 
       {/* Reviews */}
-      <div className="d-flex flex-column gap-3" style={{ maxWidth: '450px' }}>
+      <div
+        className="d-flex flex-column gap-3 mx-auto"
+        style={{ maxWidth: '700px' }}
+      >
         {reviews.map((review) => {
           const isOwner =
             session?.user?.id &&
