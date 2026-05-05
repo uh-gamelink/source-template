@@ -11,6 +11,7 @@ import GameLibraryCard, {
   type Game,
 } from '@/components/gamelibrary/GameLibraryCard';
 import { useSession } from 'next-auth/react';
+import { redirect } from 'next/navigation';
 
 const PAGE_SIZE = 6;
 
@@ -37,7 +38,11 @@ export default function GameLibraryClient({
     useState<number | null>(null);
 
 
-  const { status } = useSession();
+  const { data: session, status } = useSession();
+  
+  if (session?.user.role === 'ADMIN') {
+    redirect('/admin/manage')
+  }
 
   const isLoggedIn =
     status === 'authenticated';

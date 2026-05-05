@@ -16,6 +16,10 @@ export default async function EditReviewPage({
     redirect('/auth/signin');
   }
 
+  if (session?.user.role === 'ADMIN') {
+    redirect('/admin/manage');
+  }
+
   const reviewId = Number(id);
 
   if (Number.isNaN(reviewId)) {

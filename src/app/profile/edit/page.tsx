@@ -16,6 +16,16 @@ import {
 import Image from 'next/image';
 
 export default function ProfileForm() {
+
+  const { data: session } = useSession();
+
+  {/* Admin should not be able to edit their profile using user's page. 
+      Can create + edit in Manage Players insteaad.
+  */}
+  if (session?.user.role === "ADMIN") {
+    redirect('/admin/manage');
+  }
+
   const [isLoadingProfile, setIsLoadingProfile] = useState(true);
   const [preview, setPreview] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -30,16 +40,7 @@ export default function ProfileForm() {
 
   const router = useRouter();
 
-  const { data: session } = useSession();
 
-  {/* Admin should not be able to edit their profile using user's page. 
-      Can create + edit in Manage Players insteaad.
-  */}
-  if (!session) {
-    redirect('/');
-  } else if (session?.user.role === "ADMIN") {
-    redirect('/not-authorized')
-  }
 
   useEffect(() => {
     const fetchProfile = async () => {

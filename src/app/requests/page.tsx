@@ -7,6 +7,10 @@ const RequestsPage = async () => {
 
   if (!session || !session?.user?.email) {
     redirect('/auth/signin');
+  } 
+
+  if (session?.user.role === 'ADMIN') {
+    redirect('/admin/manage');
   }
 
   return <RequestsContent />;

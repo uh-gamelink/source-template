@@ -3,9 +3,15 @@
 import { useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { Card, Container, Form, Button } from 'react-bootstrap';
+import { redirect } from 'next/navigation';
 
 export default function ReviewForm() {
   const { data: session } = useSession(); // ✅ get user
+
+  if (session?.user.role === 'ADMIN') {
+    redirect('/admin/manage')
+  }
+  
   const username = session?.user?.name || 'Anonymous';
 
   const [text, setText] = useState('');

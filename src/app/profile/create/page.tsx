@@ -16,6 +16,16 @@ import {
 import Image from 'next/image';
 
 export default function CreateProfilePage() {
+
+  const { data: session, status } = useSession();
+
+  {/* Admin should not be able to create their profile using user's page. 
+      Can create + edit in Manage Players insteaad.
+  */}
+  if (session?.user.role === "ADMIN") {
+    redirect('/admin/manage');
+  }
+
   const [preview, setPreview] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [error, setError] = useState('');
@@ -27,17 +37,6 @@ export default function CreateProfilePage() {
   const [newInterest, setNewInterest] = useState('');
 
   const router = useRouter();
-
-  const { data: session, status } = useSession();
-
-  {/* Admin should not be able to create their profile using user's page. 
-      Can create + edit in Manage Players insteaad.
-  */}
-  if (!session) {
-    redirect('/');
-  } else if (session?.user.role === "ADMIN") {
-    redirect('/not-authorized')
-  }
 
   useEffect(() => {
     return () => {

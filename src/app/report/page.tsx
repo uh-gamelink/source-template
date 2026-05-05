@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Form, Button, Alert } from 'react-bootstrap';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import { redirect } from 'next/navigation';
 
 const ReportPage = () => {
   const { data: session, status } = useSession();
@@ -20,13 +21,9 @@ const ReportPage = () => {
       router.push('/auth/signin');
     }
   }, [status, router]);
-
-  if (status === 'loading') {
-    return <p>Loading...</p>;
-  }
-
-  if (!session) {
-    return null;
+  
+  if (session?.user?.role === 'ADMIN') {
+    redirect('admin/manage');
   }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {

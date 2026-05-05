@@ -6,6 +6,7 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Card from 'react-bootstrap/Card';
+import { redirect } from 'next/navigation';
 
 const games = [
   '/games/apex-legends.jpg',
@@ -25,6 +26,11 @@ const scrollingGames = [...games, ...games];
 
 const Home = () => {
   const { data: session, status } = useSession();
+
+  if (session?.user.role === 'ADMIN') {
+    redirect('/admin/manage');
+  }
+  
   const communityHref = session ? '/community' : '/auth/signin';
   const communityLabel = session ? 'Find' : 'Join';
   const libraryHref = session ? '/gamelibrary' : '/auth/signin';

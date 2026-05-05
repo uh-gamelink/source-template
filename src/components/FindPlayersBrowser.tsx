@@ -4,7 +4,7 @@ import {
   useState,
   useEffect,
 } from 'react';
-import { useRouter } from 'next/navigation';
+import { redirect, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
@@ -12,6 +12,7 @@ import Image from 'react-bootstrap/Image';
 import Alert from 'react-bootstrap/Alert';
 import Form from 'react-bootstrap/Form';
 import PlayerCard from '@/components/PlayerCard';
+import { useSession } from 'next-auth/react';
 
 type Player = {
   id: number;
@@ -318,6 +319,12 @@ const FindPlayersBrowser = ({
     useState(false);
 
   const router = useRouter();
+
+  const { data: session } = useSession();
+
+  if (session?.user.role === "ADMIN") {
+    redirect('/admin/manage');
+  }
 
   const listingRankOptions = listingGame
     ? getRanksForGame(listingGame)

@@ -15,8 +15,12 @@ type RequestRow = {
 const StatusPage = async () => {
   const session = await auth();
 
-  if (!session?.user?.email) {
+  if (!session || !session?.user?.email) {
     redirect('/auth/signin');
+  }
+
+  if (session?.user.role === 'ADMIN') {
+    redirect('/admin/manage')
   }
 
   const dbUser = await prisma.user.findUnique({
