@@ -322,6 +322,10 @@ const FindPlayersBrowser = ({
 
   const { data: session } = useSession();
 
+  if (!session || !session?.user?.email) {
+    redirect('/auth/signin');
+  }
+
   if (session?.user.role === "ADMIN") {
     redirect('/admin/manage');
   }
