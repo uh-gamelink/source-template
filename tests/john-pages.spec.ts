@@ -145,7 +145,7 @@ test('library pg', async ({ getUserPage }) => {
   ).toBeVisible();
 
   await expect(
-    johnPage.getByText(gameTitle, { exact: true }),
+    johnPage.getByText(gameTitle, { exact: true }).first(),
   ).toBeVisible({ timeout: 10000 });
 
   const favoriteCard = johnPage
