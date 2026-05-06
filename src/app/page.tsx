@@ -181,21 +181,18 @@ const Home = () => {
         </div>
         <Row className="mt-5 mb-5">
           <Col className="text-center">
-            <Card className="custom-card-body p-4 shadow-sm mx-auto" style={{ maxWidth: '600px' }}>
+            <Card className="custom-card-body px-4 py-5 shadow-sm mx-auto" style={{ maxWidth: '800px' }}>
               <h4>Need Help?</h4>
-              <p className="mb-2">_______</p>
+              <p className="mt-0 transparent-line">_______</p>
               <p className="mb-2">
-                For player-related issues, 
+                For player-related issues, see our
+                 Report Player page.
+              </p>
+              <p className="mb-2">
+                For any concerns or technical issues, please contact our 
               </p>
               <p>
-                see our Report Player page.
-              </p>
-              <p className="mb-2">
-                For all other concerns or technical issues,
-              </p>
-              <p>please contact our administrator by email at: </p>
-              <p className="mb-0">
-               📧 <strong>admin@uhgamelink.com</strong>
+              administrator by email at: 📧 <strong>admin@uhgamelink.com</strong>
               </p>
             </Card>
           </Col>

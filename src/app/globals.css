@@ -693,3 +693,8 @@ a.add-profile-btn:hover {
 .admin-manage-link:hover {
   color: #017e0e !important;
 }
+
+.transparent-line{
+  color: rgba(255, 255, 255, 0.677);
+
+}
