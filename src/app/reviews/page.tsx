@@ -24,13 +24,14 @@ export default async function ReviewsPage() {
 
   return (
     <div className="container py-5">
+      {/* Header */}
       <div className="d-flex justify-content-between align-items-start mb-4 flex-wrap gap-3">
         <div>
           <h1 className="mb-0">Reviews</h1>
 
-          <p className="mt-2 mb-0" style={{ maxWidth: '650px' }}>
-            Share your thoughts about UH GameLink. Leave feedback on your experience
-             using the platform, including features, usability, and
+          <p className="mt-2 mb-0" style={{ maxWidth: '600px' }}>
+            Share your thoughts about UH GameLink. Leave feedback on your
+            experience using the platform, including features, usability, and
             overall satisfaction. Your input helps us improve the app for
             everyone.
           </p>
@@ -47,64 +48,48 @@ export default async function ReviewsPage() {
         </Link>
       </div>
 
-      <div className="row g-4 align-items-stretch">
+      {/* Reviews */}
+      <div className="d-flex flex-column gap-3 mx-auto">
         {reviews.map((review) => {
           const isOwner =
             session?.user?.id &&
             Number(session.user.id) === review.userId;
 
           return (
-            <div key={review.id} className="col-12 col-lg-6">
-              <div
-                className="custom-card-body p-4 h-100 d-flex flex-column"
-                style={{
-                  minHeight: '240px',
-                  wordBreak: 'break-word',
-                }}
-              >
-                <div className="d-flex justify-content-between align-items-start gap-2">
-                  <strong className="text-break">
-                    {review.user.profile?.username || review.user.email}
-                  </strong>
+            <div key={review.id} className="custom-card-body p-3">
+              {/* Row 1 */}
+              <div className="d-flex justify-content-between align-items-center">
+                <strong>
+                  {review.user.profile?.username || review.user.email}
+                </strong>
 
-                  <span className="flex-shrink-0">
-                    {'⭐'.repeat(review.rating)}
-                  </span>
-                </div>
+                <span>{'⭐'.repeat(review.rating)}</span>
+              </div>
 
-                <p
-                  className="mt-3 mb-4 text-break"
-                  style={{
-                    fontSize: '0.95rem',
-                    lineHeight: '1.5',
-                    overflowWrap: 'anywhere',
-                    whiteSpace: 'normal',
-                  }}
-                >
-                  {review.text}
-                </p>
+              {/* Row 2 */}
+              <p className="mt-2 mb-2">{review.text}</p>
 
-                <div className="d-flex justify-content-between align-items-center small opacity-75 mt-auto gap-2 flex-wrap">
-                  <span>
-                    {new Date(review.createdAt).toLocaleDateString('en-US', {
-                      year: 'numeric',
-                      month: 'short',
-                      day: 'numeric',
-                    })}
-                  </span>
+              {/* Row 3 */}
+              <div className="d-flex justify-content-between align-items-center small opacity-75">
+                <span>
+                  {new Date(review.createdAt).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                  })}
+                </span>
 
-                  {isOwner && (
-                    <div className="d-flex gap-2">
-                      <Link href={`/reviews/${review.id}/edit`}>
-                        <button className="btn btn-sm btn-outline-light">
-                          Edit
-                        </button>
-                      </Link>
+                {isOwner && (
+                  <div className="d-flex gap-2">
+                    <Link href={`/reviews/${review.id}/edit`}>
+                      <button className="btn btn-sm btn-outline-light">
+                        Edit
+                      </button>
+                    </Link>
 
-                      <DeleteReviewButton id={review.id} />
-                    </div>
-                  )}
-                </div>
+                    <DeleteReviewButton id={review.id} />
+                  </div>
+                )}
               </div>
             </div>
           );
