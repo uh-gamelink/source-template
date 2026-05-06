@@ -765,7 +765,7 @@ export default function ManageClient({
 
               <Modal.Footer>
                 <Button variant="secondary" onClick={closeForm}>
-                  Close
+                  Cancel
                 </Button>
               </Modal.Footer>
             </Modal>
@@ -815,7 +815,7 @@ export default function ManageClient({
 
         <Modal.Footer>
           <Button variant="secondary" onClick={closeJsonEditor}>
-            Cancel
+            Close
           </Button>
 
           <Button type="submit" form="json-edit-form" disabled={isSavingJson}>
