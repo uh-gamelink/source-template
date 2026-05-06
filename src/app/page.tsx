@@ -85,67 +85,114 @@ const Home = () => {
             </Col>
           </Row>
 
-          <Row className="g-4 pb-5 pt-1">
-            <Col md={3}>
-              <Card className="h-100 shadow-sm custom-card-body p-3 text-center">
-                <p> See our game library to add to view our avaible games and add to your favorites.</p>
+          <Row className="g-4 pb-5 pt-1 justify-content-center">
+            <Col xs={12} md={6} lg={4}>
+              <Card className="h-100 shadow-sm custom-card-body px-3 py-5 text-center d-flex flex-column">
+                <p>
+                  See our game library to view available games and add favorites.
+                </p>
+
                 <a
                   href={libraryHref}
-                  className="btn custom-home-btn border-0 w-50 mx-auto d-block"
+                  className="btn custom-home-btn border-0 w-50 mx-auto mt-auto"
                 >
                   {status === 'loading' ? 'Loading...' : LibraryLabel}
                 </a>
               </Card>
             </Col>
-            <Col md={3}>
-              <Card className="h-100 shadow-sm custom-card-body p-3 text-center">
-                <p>Visit our community page to see UH&apos;s Discord game servers.</p>
+
+            <Col xs={12} md={6} lg={4}>
+              <Card className="h-100 shadow-sm custom-card-body px-3 py-5 text-center d-flex flex-column">
+                <p>
+                  Visit our community page to see UH&apos;s Discord game servers.
+                </p>
+
                 <a
                   href={communityHref}
-                  className="btn custom-home-btn border-0 w-50 mx-auto d-block"
+                  className="btn custom-home-btn border-0 w-50 mx-auto mt-auto"
                 >
                   {status === 'loading' ? 'Loading...' : communityLabel}
                 </a>
               </Card>
             </Col>
 
-            <Col md={3}>
-              <Card className="h-100 shadow-sm custom-card-body p-3 text-center">
-                <p>Learn more about the developers behind UH GameLink.</p>
+            <Col xs={12} md={6} lg={4}>
+              <Card className="h-100 shadow-sm custom-card-body px-3 py-5 text-center d-flex flex-column">
+                <p>
+                  Learn more about the developers behind UH GameLink.
+                </p>
+
                 <a
                   href="/about"
-                  className="btn custom-home-btn border-0 w-40 mx-auto d-block"
+                  className="btn custom-home-btn border-0 w-50 mx-auto mt-auto"
                 >
                   Visit
                 </a>
               </Card>
             </Col>
 
-            <Col md={3}>
-              <Card className="h-100 shadow-sm custom-card-body p-3 text-center">
-                <p> Search for other players with other players.</p>
+            <Col xs={12} md={6} lg={4}>
+              <Card className="h-100 shadow-sm custom-card-body px-3 py-5 text-center d-flex flex-column">
+                <p>
+                  Search for and connect with other players.
+                </p>
+
                 <a
                   href={findPlayersHref}
-                  className="btn custom-home-btn border-0 w-50 mx-auto d-block"
+                  className="btn custom-home-btn border-0 w-50 mx-auto mt-auto"
                 >
                   {status === 'loading' ? 'Loading...' : findPlayersLabel}
                 </a>
               </Card>
             </Col>
+
+            <Col xs={12} md={6} lg={4}>
+              <Card className="h-100 shadow-sm custom-card-body px-3 py-5 text-center d-flex flex-column">
+                <p>
+                  See other users&apos; experiences and feedback about UH GameLink.
+                </p>
+
+                <a
+                  href="/reviews"
+                  className="btn custom-home-btn border-0 w-50 mx-auto mt-auto"
+                >
+                  View
+                </a>
+              </Card>
+            </Col>
+            {session && (
+              
+            <Col xs={12} md={6} lg={4}>
+              <Card className="h-100 shadow-sm custom-card-body px-3 py-5 text-center d-flex flex-column">
+                <p>
+                  Help us foster a supportive gaming community on campus, reports of harrassment or miscoduct.
+                </p>
+
+                <a
+                  href="/reviews"
+                  className="btn custom-home-btn border-0 w-50 mx-auto mt-auto"
+                >
+                  Report
+                </a>
+              </Card>
+            </Col>
+            )}
           </Row>
         </div>
         <Row className="mt-5 mb-5">
           <Col className="text-center">
             <Card className="custom-card-body p-4 shadow-sm mx-auto" style={{ maxWidth: '600px' }}>
-              <h5>Need Help?</h5>
+              <h4>Need Help?</h4>
+              <p>_______</p>
               <p className="mb-2">
-                For player-related issues, please use the Report Player page.
+                For player-related issues, see our Report Player page.
               </p>
               <p className="mb-2">
-                For other concerns or technical issues, contact the admin below:
+                For all other concerns or technical issues,
               </p>
+              <p>please contact our administrator by email at: </p>
               <p className="mb-0">
-                📧 <strong>admin@uhgamelink.com</strong>
+               📧 <strong>admin@uhgamelink.com</strong>
               </p>
             </Card>
           </Col>
