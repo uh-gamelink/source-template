@@ -183,9 +183,12 @@ const Home = () => {
           <Col className="text-center">
             <Card className="custom-card-body p-4 shadow-sm mx-auto" style={{ maxWidth: '600px' }}>
               <h4>Need Help?</h4>
-              <p>_______</p>
+              <p className="mb-2">_______</p>
               <p className="mb-2">
-                For player-related issues, see our Report Player page.
+                For player-related issues, 
+              </p>
+              <p>
+                see our Report Player page.
               </p>
               <p className="mb-2">
                 For all other concerns or technical issues,
